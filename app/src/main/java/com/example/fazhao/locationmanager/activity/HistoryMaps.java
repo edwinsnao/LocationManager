@@ -88,8 +88,8 @@ public class HistoryMaps extends MapActivity {
 		for (int i = 0; i < traceItems.size(); i++) {
 			LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
 			historyFromLoad.add(latLng);
-			drawSolidLine1(historyFromLoad);
 		}
+		drawSolidLine1(historyFromLoad);
 		computeDistance();
 		showTime.setText("时间相差：" + dateDiff(crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());

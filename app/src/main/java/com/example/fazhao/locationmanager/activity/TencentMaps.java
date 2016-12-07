@@ -749,8 +749,8 @@ public class TencentMaps extends MapActivity implements
             if (history.size() != 0) {
                 drawSolidLine(history);
             }
-            if (historyFromLoad.size() != 0)
-                drawSolidLine1(historyFromLoad);
+//            if (historyFromLoad.size() != 0)
+//                drawSolidLine1(historyFromLoad);
         }
     }
 
@@ -831,6 +831,10 @@ public class TencentMaps extends MapActivity implements
      * @param locations
      */
     protected void drawSolidLine(List<TencentLocation> locations) {
+        /**
+        * 防止越画越卡？
+        * */
+        tencentMap.clearAllOverlays();
         tencentMap.addPolyline(new PolylineOptions().
                 addAll(getLatLngs(locations)).
                 color(0xff2200ff));
