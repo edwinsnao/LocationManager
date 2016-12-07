@@ -853,7 +853,7 @@ public class TencentMaps extends MapActivity implements
         /**
         * 防止越画越卡？
         * */
-        tencentMap.clearAllOverlays();
+//        tencentMap.clearAllOverlays();
         tencentMap.addPolyline(new PolylineOptions().
                 addAll(getLatLngs(locations)).
                 color(0xff2200ff));
