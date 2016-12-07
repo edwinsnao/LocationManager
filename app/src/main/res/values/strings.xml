@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">LocationManager</string>
+    <string name="sear_data">查询数据(从1开始)</string>
+    <string name="del_data">请输入您想删除的历史第几次数据</string>
+    <string name="compute">计算距离</string>
+    <string name="load">加载</string>
+    <string name="save">保存</string>
+    <string name="goToHere">街景</string>
+    <string name="search_location">查找</string>
+    <string name="et_searchlocation">请输入您想查找</string>
+    <string name="detail_button">详情</string>
 </resources>
