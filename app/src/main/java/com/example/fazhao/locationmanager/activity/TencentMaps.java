@@ -248,7 +248,7 @@ public class TencentMaps extends MapActivity implements
         btnShowLocation = (ImageButton) findViewById(R.id.btn_show_location);
         locationManager = TencentLocationManager.getInstance(TencentMaps.this);
         locationRequest = TencentLocationRequest.create()
-                .setInterval(5000)
+                .setInterval(1000)
                 /**
                  * 连续多次定位建议开启
                  * */
