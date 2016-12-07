@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,7 +124,11 @@ public class TencentMaps extends MapActivity implements
     private TextView steps;
     private TraceDao mTraceDao;
     private TraceItem mTraceItem;
+    private int locateCount = 0;
+    private int distance = 0;
+    private int drawCount = 0;
     List<TencentLocation> history = new ArrayList<>();
+    List<TencentLocation> historyToDraw = new ArrayList<>();
     List<LatLng> historyFromLoad = new ArrayList<LatLng>();
     List<String> historyDate = new ArrayList<String>();
     HistoryAdapter mAdapter;
@@ -746,9 +751,23 @@ public class TencentMaps extends MapActivity implements
             Calendar now = Calendar.getInstance();
             historyDate.add(now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND));
-            if (history.size() != 0) {
-                drawSolidLine(history);
+//            if (history.size() != 0) {
+//                drawSolidLine(history);
+//            }
+            if(locateCount!=0) {
+                /**
+                 * 如果不动，则画的点不需要再包进来重复画耗费性能
+                 * */
+                distance = (int) TencentLocationUtils.distanceBetween(history.get(locateCount-1), history.get(locateCount));
+                if(distance != 0) {
+                    historyToDraw.add(arg0);
+                    drawSolidLine(historyToDraw);
+                    drawCount++;
+                }
             }
+            Log.e("historySize",String.valueOf(history.size()));
+            Log.e("locateCount",String.valueOf(locateCount++));
+            Log.e("drawCount",String.valueOf(drawCount));
 //            if (historyFromLoad.size() != 0)
 //                drawSolidLine1(historyFromLoad);
         }
