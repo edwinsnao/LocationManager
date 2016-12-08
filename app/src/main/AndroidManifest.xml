@@ -49,6 +49,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".baidu_map.IndoorLocationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+<!--
         <activity android:name=".activity.TencentMaps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -56,12 +64,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+-->
         <activity android:name=".activity.HistoryMaps"/>
         <activity android:name=".activity.HistoryDetail"/>
         <activity android:name=".activity.StreetViewActivity"/>
         <meta-data
             android:name="TencentMapSDK"
             android:value="37UBZ-VNDCU-5XEVK-4RULM-5KJK7-VWB2U"/>
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="n2cCvyWROvWPZS4HOccdFMmECqdTh2Lw" />
     </application>
-
 </manifest>

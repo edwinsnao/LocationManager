@@ -2,6 +2,7 @@ package com.example.fazhao.locationmanager.application;
 
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.example.fazhao.locationmanager.activity.DBHelper;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
@@ -36,7 +37,10 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        /**
+        * 百度地图
+        * */
+        SDKInitializer.initialize(getApplicationContext());
         km = new KeyManager(this);
         mCrypto = new Crypto(this);
         dbHelper = new DBHelper(this);
