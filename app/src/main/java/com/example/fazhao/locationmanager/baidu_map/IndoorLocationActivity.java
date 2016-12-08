@@ -55,15 +55,14 @@ public class IndoorLocationActivity extends Activity {
      */
     private int constant=0;
 
-    MapView mMapView;
-    BaiduMap mBaiduMap;
-
-    StripListView stripListView;
-    BaseStripAdapter mFloorListAdapter;
-    MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+    private StripListView stripListView;
+    private BaseStripAdapter mFloorListAdapter;
+    private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
     // UI相关
 
-    Button requestLocButton;
+    private Button requestLocButton,compute;
     boolean isFirstLoc = true; // 是否首次定位
 
     protected MapStatusUpdate msUpdate = null;
@@ -97,6 +96,7 @@ public class IndoorLocationActivity extends Activity {
      * 第一次定位丢失的点数
      */
     private int FLostLoc=0;
+    private int tmp;
     private BitmapDescriptor mBitmap;
 
     @Override
@@ -200,6 +200,14 @@ public class IndoorLocationActivity extends Activity {
         stripListView = new StripListView(this);
         layout.addView(stripListView);
         setContentView(layout);
+        compute = (Button) findViewById(R.id.btn_compute);
+        compute.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tmp = (int) DistanceUtil.getDistance(pointList.get(constant),ll);
+                Toast.makeText(IndoorLocationActivity.this,"距离:"+tmp,Toast.LENGTH_SHORT).show();
+            }
+        });
         mFloorListAdapter = new BaseStripAdapter(IndoorLocationActivity.this);
 
         mBaiduMap.setOnBaseIndoorMapListener(new BaiduMap.OnBaseIndoorMapListener() {
