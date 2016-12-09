@@ -190,9 +190,7 @@ public class IndoorLocationActivity extends Activity {
                 }else{
                     showRealtimeTrack(location);
                 }
-                Log.e("address",String.valueOf(location.getAddress()));
-                Log.e("buildingname",String.valueOf(location.getBuildingName()));
-                Log.e("indoorname",String.valueOf(location.getIndoorLocationSurpportBuidlingName()));
+                Log.e("address",String.valueOf(location.getAddress().address));
                 Log.e("time",String.valueOf(location.getTime()));
                 Log.e("latitude",String.valueOf(location.getLatitude()));
                 Log.e("lontitude",String.valueOf(location.getLongitude()));
@@ -205,6 +203,8 @@ public class IndoorLocationActivity extends Activity {
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(3000);
         option.disableCache(false);
+        option.setNeedDeviceDirect(true);
+        option.setIsNeedAddress(true);
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocClient.setLocOption(option);
         mLocClient.start();
