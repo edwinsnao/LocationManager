@@ -515,7 +515,7 @@ public class IndoorLocationActivity extends Activity {
         mBaiduMap.clear();
         polyline=null;
         MapStatus mMapStatus = new MapStatus.Builder().target(point)
-                .zoom(18)
+                .zoom(20)
                 .build();
 
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);

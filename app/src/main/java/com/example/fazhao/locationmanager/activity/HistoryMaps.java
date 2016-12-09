@@ -79,6 +79,26 @@ public class HistoryMaps extends Activity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		mapView.onResume();
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		mapView.onPause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		mBaiduMap.setMyLocationEnabled(false);
+		mapView.onDestroy();
+		mapView = null;
+		super.onDestroy();
+	}
+
 	private void operation() {
 //		myLocation = tencentMap.addMarker(new MarkerOptions().
 //				position(latLng1).
@@ -87,7 +107,7 @@ public class HistoryMaps extends Activity {
 //		tencentMap.animateTo(latLng1);
 //		tencentMap.setZoom(15);
 		MapStatus mMapStatus= new MapStatus.Builder().target(latLng1)
-				.zoom(18)
+				.zoom(20)
 				.build();
 
 		msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
