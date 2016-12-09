@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -20,7 +24,9 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -42,6 +48,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
@@ -53,6 +60,8 @@ import com.example.fazhao.locationmanager.adapter.HistoryAdapter;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
+import com.tencent.map.geolocation.TencentLocationManager;
+import com.tencent.map.geolocation.TencentLocationRequest;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -136,6 +145,63 @@ public class IndoorLocationActivity extends Activity {
     private Crypto crypto;
     private KeyManager km;
     private List<TraceItem> mDatas,mDatas1;
+    private SensorEventListener mSensorEventListener;
+    private Sensor mStepSensor;
+    private SensorManager mSensorManager;
+    private TextView step;
+
+
+    private BDLocationListener mListener = new BDLocationListener(){
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            Log.e("locClient", String.valueOf(isFirstLoc));
+            Log.e("locTime", String.valueOf(locTime++));
+            // TODO Auto-generated method stub
+            // 将GPS设备采集的原始GPS坐标转换成百度坐标
+            ll = new LatLng(location.getLatitude(),
+                    location.getLongitude());
+            CoordinateConverter converter = new CoordinateConverter();
+            converter.from(CoordinateConverter.CoordType.GPS);
+            // latLng 待转换坐标
+            converter.coord(ll);
+            LatLng desLatLng = converter.convert();
+            MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(100).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
+            // 设置定位数据
+            mBaiduMap.setMyLocationData(locData);
+            if(isFirstLoc){
+                isFirstLoc=false;
+//                    if(constant<pointList.size()){
+//                        if(DistanceUtil.getDistance(pointList.get(constant),ll)>DistanceUtil.getDistance(pointList.get(constant+1),ll)){
+//                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant+1),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
+//                            if(DistanceUtil.getDistance(pointList.get(constant+1),ll)>100&&isGetNewRoute){
+//                                IsGetNewRoute();
+//                            }
+//                            constant++;
+//                        }else{
+//                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
+//                            if(DistanceUtil.getDistance(pointList.get(constant),ll)>100&&isGetNewRoute){
+//                                IsGetNewRoute();
+//                            }
+//                        }
+//                    }
+
+//                drawRealtimePoint(ll);
+                drawRealtimePoint(desLatLng);
+            }else{
+                showRealtimeTrack(location);
+            }
+            history.add(location);
+            Log.e("address",String.valueOf(location.getAddress().address));
+            Log.e("time",String.valueOf(location.getTime()));
+            Log.e("latitude",String.valueOf(location.getLatitude()));
+            Log.e("lontitude",String.valueOf(location.getLongitude()));
+//                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
+
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -192,54 +258,14 @@ public class IndoorLocationActivity extends Activity {
         // 定位初始化
         mLocClient = new LocationClient(getApplicationContext());
 //        mLocClient.registerLocationListener(myListener);
-        mLocClient.registerLocationListener(new BDLocationListener(){
-
-            @Override
-            public void onReceiveLocation(BDLocation location) {
-                Log.e("locClient", String.valueOf(isFirstLoc));
-                Log.e("locTime", String.valueOf(locTime++));
-                // TODO Auto-generated method stub
-                ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
-                        // 此处设置开发者获取到的方向信息，顺时针0-360
-                        .direction(100).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
-                // 设置定位数据
-                mBaiduMap.setMyLocationData(locData);
-                if(isFirstLoc){
-                    isFirstLoc=false;
-//                    if(constant<pointList.size()){
-//                        if(DistanceUtil.getDistance(pointList.get(constant),ll)>DistanceUtil.getDistance(pointList.get(constant+1),ll)){
-//                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant+1),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
-//                            if(DistanceUtil.getDistance(pointList.get(constant+1),ll)>100&&isGetNewRoute){
-//                                IsGetNewRoute();
-//                            }
-//                            constant++;
-//                        }else{
-//                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
-//                            if(DistanceUtil.getDistance(pointList.get(constant),ll)>100&&isGetNewRoute){
-//                                IsGetNewRoute();
-//                            }
-//                        }
-//                    }
-
-                    drawRealtimePoint(ll);
-                }else{
-                    showRealtimeTrack(location);
-                }
-                history.add(location);
-                Log.e("address",String.valueOf(location.getAddress().address));
-                Log.e("time",String.valueOf(location.getTime()));
-                Log.e("latitude",String.valueOf(location.getLatitude()));
-                Log.e("lontitude",String.valueOf(location.getLongitude()));
-
-            }
-        });
+        mLocClient.registerLocationListener(mListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
+        option.setProdName("LocationManager");
         option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(3000);
+        option.setLocationNotify(true);
         option.disableCache(false);
         option.setNeedDeviceDirect(true);
         option.setIsNeedAddress(true);
@@ -250,6 +276,7 @@ public class IndoorLocationActivity extends Activity {
         stripListView = new StripListView(this);
         layout.addView(stripListView);
         setContentView(layout);
+        step = (TextView) findViewById(R.id.steps);
         mTraceDao = BaseApplication.getmTaceDao();
         save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(new OnClickListener() {
@@ -439,6 +466,32 @@ public class IndoorLocationActivity extends Activity {
     private void initData() {
         crypto = BaseApplication.getmCrypto();
         km = BaseApplication.getKm();
+        mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        /**
+         * step
+         * */
+        mSensorEventListener = new SensorEventListener() {
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (event.values[0] == 1.0f) {
+                    mStep++;
+                }
+                StringBuilder builder = new StringBuilder("步数:");
+                builder.append(Integer.toString(mStep));
+                step.setText(builder);
+            }
+        };
+        /**
+         * 如果设置SENSOR_DELAY_FASTEST会浪费电的
+         * */
+        mSensorManager.registerListener(mSensorEventListener, mStepSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     final Runnable saveHistory = new Runnable() {
@@ -496,10 +549,17 @@ public class IndoorLocationActivity extends Activity {
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else {
-            latLng = new LatLng(latitude, longitude);
+//            latLng = new LatLng(latitude, longitude);
+//            CoordinateConverter converter = new CoordinateConverter();
+//            converter.from(CoordinateConverter.CoordType.GPS);
+//            // latLng 待转换坐标
+//            converter.coord(latLng);
+//            LatLng desLatLng = converter.convert();
             if (IsMove(latLng,location)) {
+//            if (IsMove(desLatLng,location)) {
                 // 绘制实时点
                 drawRealtimePoint(latLng);
+//                drawRealtimePoint(desLatLng);
             }
         }
 
@@ -688,6 +748,8 @@ public class IndoorLocationActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        mSensorManager.unregisterListener(mSensorEventListener);
+        mLocClient.unRegisterLocationListener(mListener);
         // 退出时销毁定位
         mLocClient.stop();
         // 关闭定位图层
