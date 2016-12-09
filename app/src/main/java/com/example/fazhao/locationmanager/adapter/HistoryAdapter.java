@@ -106,7 +106,8 @@ public class HistoryAdapter extends BaseAdapter {
 //				holder.time_end.setText("结束时间：" + crypto.armorDecrypt(traceItem1.getDate()));
 				holder.time_end.setText(builder);
 				StringBuilder builder1 = new StringBuilder("目的地：");
-				builder1.append(crypto.armorDecrypt(traceItem1.getName()));
+//				builder1.append(crypto.armorDecrypt(traceItem1.getName()));
+				builder1.append(crypto.armorDecrypt(traceItem1.getAddress()));
 //				holder.address_destination.setText("目的地：" + crypto.armorDecrypt(traceItem1.getName()));
 				holder.address_destination.setText(builder1);
 			} catch (InvalidKeyException e) {
@@ -141,7 +142,8 @@ public class HistoryAdapter extends BaseAdapter {
 			 * 不能用TencemtMaps.crypto，因为已经销毁，onpause()
 			 * */
 			StringBuilder builder3 = new StringBuilder("出发地：");
-			builder3.append(crypto.armorDecrypt(traceItem.getName()));
+//			builder3.append(crypto.armorDecrypt(traceItem.getName()));
+			builder3.append(crypto.armorDecrypt(traceItem.getAddress()));
 //			holder.address_start.setText("出发地：" + crypto.armorDecrypt(traceItem.getName()));
 			holder.address_start.setText(builder3);
 		} catch (InvalidKeyException e) {

@@ -28,7 +28,7 @@ public class TraceDao
     public void add(TraceItem traceItem)
     {
 //        不要了accuracy level provider  ， 减少了无用的列，提高查询速度
-        String sql = "insert into trace_item (name,address,latitude,longitude,date,tag,step) values(?,?,?,?,?,?,?) ;";
+        String sql = "insert into trace_item (address,latitude,longitude,date,tag,step) values(?,?,?,?,?,?) ;";
 //        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
 //        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -37,16 +37,16 @@ public class TraceDao
         * */
         db.beginTransaction();
         SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindString(1,traceItem.getName());
-        ss.bindString(2,traceItem.getAddress());
+//        ss.bindString(1,traceItem.getName());
+        ss.bindString(1,traceItem.getAddress());
 //        ss.bindString(3,traceItem.getProvider());
-        ss.bindDouble(3,traceItem.getLatitude());
-        ss.bindDouble(4,traceItem.getLongitude());
+        ss.bindDouble(2,traceItem.getLatitude());
+        ss.bindDouble(3,traceItem.getLongitude());
 //        ss.bindDouble(6,traceItem.getAccuracy());
 //        ss.bindString(7, String.valueOf(traceItem.getLevel()));
-        ss.bindString(5,traceItem.getDate());
-        ss.bindString(6, String.valueOf(traceItem.getTag()));
-        ss.bindString(7, String.valueOf(traceItem.getStep()));
+        ss.bindString(4,traceItem.getDate());
+        ss.bindString(5, String.valueOf(traceItem.getTag()));
+        ss.bindString(6, String.valueOf(traceItem.getStep()));
         ss.executeInsert();
         /*
         * 效率低
