@@ -26,9 +26,17 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
     </LinearLayout>
-    <com.tencent.tencentmap.mapsdk.map.MapView
+   <!-- <com.tencent.tencentmap.mapsdk.map.MapView
         android:id="@+id/tencentMapView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent" />-->
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/historymap"
+        android:layout_below="@id/ll_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:screenOrientation="portrait"
+        android:clickable="true" />
+
 
 </LinearLayout>

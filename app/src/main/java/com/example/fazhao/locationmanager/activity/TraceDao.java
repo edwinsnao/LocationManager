@@ -154,7 +154,8 @@ public class TraceDao
             /**
             * 在这里加入step会更加好性能，不用在historyAdapter里面的getView进行getLastStep耗时操作
             * */
-            String sql = "select name,address,date,latitude,longitude,step from trace_item where tag = ?";
+//            String sql = "select name,address,date,latitude,longitude,step from trace_item where tag = ?";
+            String sql = "select address,date,latitude,longitude,step from trace_item where tag = ?";
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 //            Cursor c = db.rawQuery(sql, new String[] { newsType + "", offset + "", "" + (offset + 10) });
             final Cursor c = db.rawQuery(sql, new String[] { String.valueOf(tag) });
@@ -178,17 +179,17 @@ public class TraceDao
                 /*
                 *上面是错在忽略了id，id为c.getInt(0);占据了0所以全部需要往后加1才正确
                 * */
-                        String name = c.getString(0);
-                        String address = c.getString(1);
-                        String date = c.getString(2);
-                        double latitude = c.getDouble(3);
-                        double longitude = c.getDouble(4);
-                        int step = c.getInt(5);
+//                        String name = c.getString(0);
+                        String address = c.getString(0);
+                        String date = c.getString(1);
+                        double latitude = c.getDouble(2);
+                        double longitude = c.getDouble(3);
+                        int step = c.getInt(4);
 
-                        Log.e("ename",name);
-                        Log.e("eaddress",address);
-                        Log.e("edate",date);
-                        Log.e("eTag",""+tag);
+//                        Log.e("ename",name);
+//                        Log.e("eaddress",address);
+//                        Log.e("edate",date);
+//                        Log.e("eTag",""+tag);
 
 //                Integer level = c.getInt(6);
 //                String provider = c.getString(7);
@@ -196,7 +197,7 @@ public class TraceDao
 
 //                traceItem.setName(crypto.armorDecrypt(name));
 //                traceItem.setAddress(crypto.armorDecrypt(address));
-                        traceItem.setName(name);
+//                        traceItem.setName(name);
                         traceItem.setAddress(address);
                         traceItem.setDate(date);
                         traceItem.setLatitude(latitude);
