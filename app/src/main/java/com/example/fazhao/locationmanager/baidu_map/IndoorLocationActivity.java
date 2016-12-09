@@ -98,6 +98,7 @@ public class IndoorLocationActivity extends Activity {
     private int FLostLoc=0;
     private int tmp;
     private BitmapDescriptor mBitmap;
+    private int locTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,8 @@ public class IndoorLocationActivity extends Activity {
 
             @Override
             public void onReceiveLocation(BDLocation location) {
+                Log.e("locClient", String.valueOf(isFirstLoc));
+                Log.e("locTime", String.valueOf(locTime++));
                 // TODO Auto-generated method stub
                 //				locData = new MyLocationData.Builder()
                 //				.accuracy(0)
@@ -187,13 +190,22 @@ public class IndoorLocationActivity extends Activity {
                 }else{
                     showRealtimeTrack(location);
                 }
+                Log.e("address",String.valueOf(location.getAddress()));
+                Log.e("buildingname",String.valueOf(location.getBuildingName()));
+                Log.e("indoorname",String.valueOf(location.getIndoorLocationSurpportBuidlingName()));
+                Log.e("time",String.valueOf(location.getTime()));
+                Log.e("latitude",String.valueOf(location.getLatitude()));
+                Log.e("lontitude",String.valueOf(location.getLongitude()));
 
             }
         });
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
+        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);
+        option.setScanSpan(3000);
+        option.disableCache(false);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocClient.setLocOption(option);
         mLocClient.start();
 
@@ -279,7 +291,7 @@ public class IndoorLocationActivity extends Activity {
 	 * 判断手机是否在运动
 	 */
     private boolean IsMove(LatLng latLng,BDLocation location){
-
+//        Log.e("locTime", String.valueOf(locTime++));
         if(pointList.size()>=1){
             Double dis= DistanceUtil.getDistance(pointList.get(pointList.size()-1),latLng);
             //判断手机是否静止,如果静止,判定采集点无效,直接抛弃

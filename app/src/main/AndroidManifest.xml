@@ -64,7 +64,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
 -->
+        <!--不加下面的service就不可以连续定位-->
+        <service
+        android:name="com.baidu.location.f"
+        android:enabled="true"
+        android:process=":remote" >
+        <intent-filter>
+            <action android:name="com.baidu.location.service_v2.2" >
+            </action>
+        </intent-filter>
+    </service>
         <activity android:name=".activity.HistoryMaps"/>
         <activity android:name=".activity.HistoryDetail"/>
         <activity android:name=".activity.StreetViewActivity"/>
