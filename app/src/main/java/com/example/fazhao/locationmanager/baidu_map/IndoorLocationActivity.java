@@ -2,9 +2,11 @@ package com.example.fazhao.locationmanager.baidu_map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -33,6 +35,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -152,7 +155,7 @@ public class IndoorLocationActivity extends Activity {
     private LatLng latLng1;
     List<LatLng> historyFromLoad = new ArrayList<LatLng>();
     private List<TraceItem> traceItems;
-
+    private BaiduReceiver mReceiver;
 
     private BDLocationListener mListener = new BDLocationListener(){
 
@@ -481,6 +484,14 @@ public class IndoorLocationActivity extends Activity {
                 mMapBaseIndoorMapInfo = mapBaseIndoorMapInfo;
             }
         });
+        /**
+        * 监听网络以及百度地图的key是否注册了
+        * */
+        IntentFilter iFilter = new IntentFilter();
+        iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
+        iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
+        mReceiver = new BaiduReceiver();
+        registerReceiver(mReceiver, iFilter);
     }
 
     private void initData() {
@@ -591,10 +602,22 @@ public class IndoorLocationActivity extends Activity {
 
     }
 
-    /*
+    public class BaiduReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            String s = intent.getAction();
+            if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
+                Toast.makeText(IndoorLocationActivity.this,"key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置",Toast.LENGTH_SHORT).show();
+            } else if (s
+                    .equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
+                Toast.makeText(IndoorLocationActivity.this,"网络出错",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
      * 绘制实时点
      *
-     * @param points
+     * @param point
      */
     private void drawRealtimePoint(LatLng point) {
 
@@ -782,6 +805,7 @@ public class IndoorLocationActivity extends Activity {
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
