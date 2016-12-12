@@ -148,7 +148,10 @@ public class IndoorLocationActivity extends Activity {
     private SensorEventListener mSensorEventListener;
     private Sensor mStepSensor;
     private SensorManager mSensorManager;
-    private TextView step;
+    private TextView step,info;
+    private LatLng latLng1;
+    List<LatLng> historyFromLoad = new ArrayList<LatLng>();
+    private List<TraceItem> traceItems;
 
 
     private BDLocationListener mListener = new BDLocationListener(){
@@ -277,6 +280,23 @@ public class IndoorLocationActivity extends Activity {
         layout.addView(stripListView);
         setContentView(layout);
         step = (TextView) findViewById(R.id.steps);
+        info = (TextView) findViewById(R.id.et_streetView);
+        try {
+            info.setText("上次定位距离:"+String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1)))+",时长：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+                    + "分钟"+",步数:"+mTraceDao.getLastStep().getStep());
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
         mTraceDao = BaseApplication.getmTaceDao();
         save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(new OnClickListener() {
@@ -492,6 +512,12 @@ public class IndoorLocationActivity extends Activity {
          * */
         mSensorManager.registerListener(mSensorEventListener, mStepSensor,
                 SensorManager.SENSOR_DELAY_NORMAL);
+        traceItems = mTraceDao.searchData(mTraceDao.maxTag());
+        latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+        for (int i = 0; i < traceItems.size(); i++) {
+            LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
+            historyFromLoad.add(latLng);
+        }
     }
 
     final Runnable saveHistory = new Runnable() {

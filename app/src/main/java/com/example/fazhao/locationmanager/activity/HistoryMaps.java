@@ -17,6 +17,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.baidu_map.BaiduUtils;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.tencent.mapsdk.raster.model.BitmapDescriptorFactory;
@@ -130,7 +131,7 @@ public class HistoryMaps extends Activity {
 		drawSolidLine1();
 //		computeDistance();
 		ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1))));
-		showTime.setText("时间相差：" + dateDiff(crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 	}
 
@@ -200,42 +201,42 @@ public class HistoryMaps extends Activity {
 //		}
 //	}
 
-	public Long dateDiff(String startTime, String endTime, String format, String str) {
-		// 按照传入的格式生成一个simpledateformate对象
-		SimpleDateFormat sd = new SimpleDateFormat(format);
-		long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
-		long nh = 1000 * 60 * 60;// 一小时的毫秒数
-		long nm = 1000 * 60;// 一分钟的毫秒数
-		long ns = 1000;// 一秒钟的毫秒数
-		long diff;
-		long day = 0;
-		long hour = 0;
-		long min = 0;
-		long sec = 0;
-		// 获得两个时间的毫秒时间差异
-		try {
-			diff = sd.parse(endTime).getTime() - sd.parse(startTime).getTime();
-			day = diff / nd;// 计算差多少天
-			hour = diff % nd / nh + day * 24;// 计算差多少小时
-			min = diff % nd % nh / nm + day * 24 * 60;// 计算差多少分钟
-			sec = diff % nd % nh % nm / ns;// 计算差多少秒
-			// 输出结果
-			ToastUtil.showShortToast(HistoryMaps.this, "时间相差：" + day + "天" + (hour - day * 24) + "小时"
-					+ (min - day * 24 * 60) + "分钟" + sec + "秒。");
-			if (str.equalsIgnoreCase("h")) {
-				return hour;
-			} else {
-				return min;
-			}
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (str.equalsIgnoreCase("h")) {
-			return hour;
-		} else {
-			return min;
-		}
-	}
+//	public Long dateDiff(String startTime, String endTime, String format, String str) {
+//		// 按照传入的格式生成一个simpledateformate对象
+//		SimpleDateFormat sd = new SimpleDateFormat(format);
+//		long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
+//		long nh = 1000 * 60 * 60;// 一小时的毫秒数
+//		long nm = 1000 * 60;// 一分钟的毫秒数
+//		long ns = 1000;// 一秒钟的毫秒数
+//		long diff;
+//		long day = 0;
+//		long hour = 0;
+//		long min = 0;
+//		long sec = 0;
+//		// 获得两个时间的毫秒时间差异
+//		try {
+//			diff = sd.parse(endTime).getTime() - sd.parse(startTime).getTime();
+//			day = diff / nd;// 计算差多少天
+//			hour = diff % nd / nh + day * 24;// 计算差多少小时
+//			min = diff % nd % nh / nm + day * 24 * 60;// 计算差多少分钟
+//			sec = diff % nd % nh % nm / ns;// 计算差多少秒
+//			// 输出结果
+//			ToastUtil.showShortToast(HistoryMaps.this, "时间相差：" + day + "天" + (hour - day * 24) + "小时"
+//					+ (min - day * 24 * 60) + "分钟" + sec + "秒。");
+//			if (str.equalsIgnoreCase("h")) {
+//				return hour;
+//			} else {
+//				return min;
+//			}
+//
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		if (str.equalsIgnoreCase("h")) {
+//			return hour;
+//		} else {
+//			return min;
+//		}
+//	}
 }
