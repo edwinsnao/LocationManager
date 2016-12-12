@@ -15,8 +15,8 @@ import com.example.fazhao.locationmanager.encrypt.KeyManager;
 public class BaseApplication extends Application {
     private static TraceDao mTaceDao;
     private static DBHelper dbHelper;
-    private static Crypto mCrypto;
-    private static KeyManager km;
+//    private static Crypto mCrypto;
+//    private static KeyManager km;
 
     public static TraceDao getmTaceDao() {
         return mTaceDao;
@@ -26,13 +26,13 @@ public class BaseApplication extends Application {
         return dbHelper;
     }
 
-    public static Crypto getmCrypto() {
-        return mCrypto;
-    }
+//    public static Crypto getmCrypto() {
+//        return mCrypto;
+//    }
 
-    public static KeyManager getKm() {
-        return km;
-    }
+//    public static KeyManager getKm() {
+//        return km;
+//    }
 
     @Override
     public void onCreate() {
@@ -41,8 +41,8 @@ public class BaseApplication extends Application {
         * 百度地图
         * */
         SDKInitializer.initialize(getApplicationContext());
-        km = new KeyManager(this);
-        mCrypto = new Crypto(this);
+        Crypto.init(this);
+        KeyManager.init(this);
         dbHelper = new DBHelper(this);
         mTaceDao = new TraceDao();
 

@@ -265,7 +265,7 @@ public class IndoorLocationActivity extends Activity {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setProdName("LocationManager");
-        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
+//        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(3000);
         option.setLocationNotify(true);
@@ -484,8 +484,8 @@ public class IndoorLocationActivity extends Activity {
     }
 
     private void initData() {
-        crypto = BaseApplication.getmCrypto();
-        km = BaseApplication.getKm();
+        crypto = Crypto.getsInstance();
+        km = KeyManager.getsInstace();
         mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         /**

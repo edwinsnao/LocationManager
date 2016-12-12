@@ -1,23 +1,23 @@
 package com.example.fazhao.locationmanager.encrypt;
 
-import android.content.Context;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.content.Context;
+
 
 public class KeyManager {
     private static final String TAG = "KeyManager";
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
-
-    private static Context ctx;
+    private static KeyManager sInstace;
+    private Context ctx;
 
     public KeyManager(Context cntx) {
-        ctx = cntx;
+        ctx = cntx.getApplicationContext();
     }
 
     public void setId(byte[] data) {
@@ -40,7 +40,7 @@ public class KeyManager {
         byte[] data = null;
         try {
             int bytesRead = 0;
-            FileInputStream fis = ctx.openFileInput(file);
+            FileInputStream fis = ctx.getApplicationContext().openFileInput(file);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] b = new byte[1024];
             while ((bytesRead = fis.read(b)) != -1) {
@@ -53,9 +53,17 @@ public class KeyManager {
         return data;
     }
 
+    public static void init(Context context){
+        sInstace = new KeyManager(context.getApplicationContext());
+    }
+
+    public static KeyManager getsInstace(){
+        return sInstace;
+    }
+
     public void writer(byte[] data, String file) {
         try {
-            FileOutputStream fos = ctx.openFileOutput(file,
+            FileOutputStream fos = ctx.getApplicationContext().openFileOutput(file,
                     Context.MODE_PRIVATE);
             fos.write(data);
             fos.flush();

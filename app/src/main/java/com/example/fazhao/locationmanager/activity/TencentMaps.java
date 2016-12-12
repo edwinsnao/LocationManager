@@ -173,7 +173,7 @@ public class TencentMaps extends MapActivity implements
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                km = BaseApplication.getKm();
+                km = KeyManager.getsInstace();
                 /**
                  * 耗时
                  * */
@@ -196,7 +196,7 @@ public class TencentMaps extends MapActivity implements
     }
 
     protected void init() {
-        crypto = BaseApplication.getmCrypto();
+        crypto = Crypto.getsInstance();
         mFooterView = LayoutInflater.from(TencentMaps.this).inflate(R.layout.maps_list_footer, null);
         final Runnable saveHistory = new Runnable() {
             @Override

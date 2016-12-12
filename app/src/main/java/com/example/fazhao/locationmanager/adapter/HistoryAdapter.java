@@ -32,7 +32,7 @@ public class HistoryAdapter extends BaseAdapter {
 	private List<TraceItem> mDatas1;
 	private SwipeDeleteListView listView;
 //	private TraceDao mTraceDao = BaseApplication.getTraceDao();
-	private Crypto crypto = BaseApplication.getmCrypto();
+	private Crypto crypto = Crypto.getsInstance();
 	String key = "12345678909876543212345678909876";
 	String iv = "1234567890987654";
 
