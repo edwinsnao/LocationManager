@@ -216,7 +216,6 @@ public class IndoorLocationActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         RelativeLayout layout = new RelativeLayout(this);
 
-        initData();
 //        mBitmap = BitmapDescriptorFactory.fromResource(R.mipmap.map_d);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
@@ -278,11 +277,12 @@ public class IndoorLocationActivity extends Activity {
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocClient.setLocOption(option);
         mLocClient.start();
-
         stripListView = new StripListView(this);
         layout.addView(stripListView);
         setContentView(layout);
         step = (TextView) findViewById(R.id.steps);
+        mTraceDao = BaseApplication.getmTaceDao();
+        initData();
         info = (TextView) findViewById(R.id.et_streetView);
         try {
             info.setText("上次定位距离:"+String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1)))+",时长：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
@@ -300,7 +300,6 @@ public class IndoorLocationActivity extends Activity {
         } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
-        mTraceDao = BaseApplication.getmTaceDao();
         save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(new OnClickListener() {
             @Override
