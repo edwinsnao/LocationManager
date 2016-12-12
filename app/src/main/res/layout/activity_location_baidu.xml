@@ -11,15 +11,15 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
-        <TextView
+       <!-- <TextView
             android:id="@+id/tvMonitor"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+           <!-- <EditText
                 android:id="@+id/et_streetView"
                 android:gravity="center"
                 android:layout_width="0dp"
@@ -48,8 +48,9 @@
                 android:id="@+id/btn_streetView"
                 android:text="@string/goToHere"
                 android:background="@color/white"
-                android:layout_height="50dp" />
+                android:layout_height="50dp" />-->
             <Button
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -64,6 +65,26 @@
                 android:layout_weight="1"
                 android:id="@+id/btn_load"
                 android:text="@string/load"
+                android:layout_height="50dp" />
+            <TextView
+                android:background="@color/white"
+                android:id="@+id/steps"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:text="步数:0"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_width="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="50dp"/>
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/btn_compute"
+                android:text="@string/compute"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:layout_width="0dp"
                 android:layout_height="50dp" />
         </LinearLayout>
 
@@ -104,7 +125,7 @@
                 android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp" />-->
-            <TextView
+            <!--<TextView
                 android:background="@color/white"
                 android:id="@+id/steps"
                 android:gravity="center"
@@ -123,7 +144,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp" />
+                android:layout_height="50dp" />-->
 
         </LinearLayout>
     </LinearLayout>
