@@ -65,6 +65,14 @@
                 android:background="@color/white"
                 android:layout_height="50dp" />-->
             <Button
+                android:layout_weight="1"
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:background="@color/white"
+                android:layout_height="50dp"
+                android:layout_marginRight="10dp"
+                />
+            <Button
                 android:layout_marginRight="10dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -152,14 +160,13 @@
         android:clickable="true" />
 
 
-    <Button
+    <!--<Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="25dp"
-        android:visibility="gone"
-        android:layout_marginTop="10dip" />
+        android:layout_marginTop="10dip" />-->
 
 </RelativeLayout>

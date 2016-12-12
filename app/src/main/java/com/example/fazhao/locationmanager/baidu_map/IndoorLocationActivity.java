@@ -221,7 +221,7 @@ public class IndoorLocationActivity extends Activity {
 
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
         requestLocButton = (Button) mainview.findViewById(R.id.button1);
-        mCurrentMode = LocationMode.NORMAL;
+        mCurrentMode = LocationMode.COMPASS;
         requestLocButton.setText("普通");
         OnClickListener btnClickListener = new OnClickListener() {
             public void onClick(View v) {
