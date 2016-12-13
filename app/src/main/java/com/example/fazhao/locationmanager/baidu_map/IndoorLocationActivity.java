@@ -164,6 +164,9 @@ public class IndoorLocationActivity extends Activity {
         public void onReceiveLocation(BDLocation location) {
             Log.e("locClient", String.valueOf(isFirstLoc));
             Log.e("locTime", String.valueOf(locTime++));
+//            Log.e("pointSize", String.valueOf(pointList.size()));
+//            if(pointList.size()!=0)
+//            Log.e("point", String.valueOf(pointList.get(constant))+","+constant);
             // TODO Auto-generated method stub
             // 将GPS设备采集的原始GPS坐标转换成百度坐标
             ll = new LatLng(location.getLatitude(),
@@ -469,7 +472,7 @@ public class IndoorLocationActivity extends Activity {
             @Override
             public void onClick(View view) {
                 tmp = (int) DistanceUtil.getDistance(pointList.get(constant),ll);
-                Toast.makeText(IndoorLocationActivity.this,"距离:"+tmp,Toast.LENGTH_SHORT).show();
+                Toast.makeText(IndoorLocationActivity.this,"pointList:"+pointList.get(constant)+"ll:"+ll+"距离:"+tmp,Toast.LENGTH_SHORT).show();
             }
         });
         mFloorListAdapter = new BaseStripAdapter(IndoorLocationActivity.this);
@@ -593,7 +596,7 @@ public class IndoorLocationActivity extends Activity {
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else {
-//            latLng = new LatLng(latitude, longitude);
+            latLng = new LatLng(latitude, longitude);
 //            CoordinateConverter converter = new CoordinateConverter();
 //            converter.from(CoordinateConverter.CoordType.GPS);
 //            // latLng 待转换坐标
