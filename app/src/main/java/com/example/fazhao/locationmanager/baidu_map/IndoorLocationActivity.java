@@ -99,7 +99,8 @@ public class IndoorLocationActivity extends Activity {
     private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
     // UI相关
 
-    private Button requestLocButton,compute,save,load;
+    private Button compute,save,load;
+    private ImageButton requestLocButton;
     boolean isFirstLoc = true; // 是否首次定位
 
     protected MapStatusUpdate msUpdate = null;
@@ -222,29 +223,32 @@ public class IndoorLocationActivity extends Activity {
         layout.addView(mainview);
 
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
-        requestLocButton = (Button) mainview.findViewById(R.id.button1);
+        requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
         mCurrentMode = LocationMode.COMPASS;
-        requestLocButton.setText("普通");
+//        requestLocButton.setText("普通");
         OnClickListener btnClickListener = new OnClickListener() {
             public void onClick(View v) {
                 switch (mCurrentMode) {
                     case NORMAL:
-                        requestLocButton.setText("跟随");
+//                        requestLocButton.setText("跟随");
                         mCurrentMode = LocationMode.FOLLOWING;
                         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
                                 mCurrentMarker));
+                        Toast.makeText(IndoorLocationActivity.this,"跟随模式",Toast.LENGTH_SHORT).show();
                         break;
                     case COMPASS:
-                        requestLocButton.setText("普通");
+//                        requestLocButton.setText("普通");
                         mCurrentMode = LocationMode.NORMAL;
                         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
                                 mCurrentMarker));
+                        Toast.makeText(IndoorLocationActivity.this,"普通模式",Toast.LENGTH_SHORT).show();
                         break;
                     case FOLLOWING:
-                        requestLocButton.setText("罗盘");
+//                        requestLocButton.setText("罗盘");
                         mCurrentMode = LocationMode.COMPASS;
                         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
                                 mCurrentMarker));
+                        Toast.makeText(IndoorLocationActivity.this,"罗盘模式",Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
