@@ -288,21 +288,23 @@ public class IndoorLocationActivity extends Activity {
         mTraceDao = BaseApplication.getmTaceDao();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
-        try {
-            info.setText("上次定位距离:"+String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1)))+",时长：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
-                    + "分钟"+",步数:"+mTraceDao.getLastStep().getStep());
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
+        if(traceItems.size() !=0) {
+            try {
+                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            }
         }
         save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(new OnClickListener() {
@@ -527,10 +529,12 @@ public class IndoorLocationActivity extends Activity {
         mSensorManager.registerListener(mSensorEventListener, mStepSensor,
                 SensorManager.SENSOR_DELAY_NORMAL);
         traceItems = mTraceDao.searchData(mTraceDao.maxTag());
-        latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
-        for (int i = 0; i < traceItems.size(); i++) {
-            LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
-            historyFromLoad.add(latLng);
+        if(traceItems.size()!=0) {
+            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+            for (int i = 0; i < traceItems.size(); i++) {
+                LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
+                historyFromLoad.add(latLng);
+            }
         }
     }
 
