@@ -167,11 +167,11 @@ public class IndoorLocationActivity extends Activity {
             // 将GPS设备采集的原始GPS坐标转换成百度坐标
             ll = new LatLng(location.getLatitude(),
                     location.getLongitude());
-            CoordinateConverter converter = new CoordinateConverter();
-            converter.from(CoordinateConverter.CoordType.GPS);
-            // latLng 待转换坐标
-            converter.coord(ll);
-            LatLng desLatLng = converter.convert();
+//            CoordinateConverter converter = new CoordinateConverter();
+//            converter.from(CoordinateConverter.CoordType.GPS);
+//            // latLng 待转换坐标
+//            converter.coord(ll);
+//            LatLng desLatLng = converter.convert();
             MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
                     // 此处设置开发者获取到的方向信息，顺时针0-360
                     .direction(100).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
@@ -194,8 +194,8 @@ public class IndoorLocationActivity extends Activity {
 //                        }
 //                    }
 
-//                drawRealtimePoint(ll);
-                drawRealtimePoint(desLatLng);
+                drawRealtimePoint(ll);
+//                drawRealtimePoint(desLatLng);
             }else{
                 showRealtimeTrack(location);
             }
