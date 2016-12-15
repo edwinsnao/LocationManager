@@ -154,7 +154,7 @@ public class IndoorLocationActivity extends Activity {
     private SensorManager mSensorManager;
     private TextView step,info;
     private LatLng latLng1;
-    List<LatLng> historyFromLoad = new ArrayList<LatLng>();
+    List<LatLng> historyFromLoad = BaseApplication.getHistory();
     private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
 
@@ -291,7 +291,8 @@ public class IndoorLocationActivity extends Activity {
         mTraceDao = BaseApplication.getmTaceDao();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
-        if(traceItems.size() !=0) {
+//        if(traceItems.size() !=0) {
+        if(BaseApplication.isHasHistory()){
             try {
                 info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
@@ -531,14 +532,14 @@ public class IndoorLocationActivity extends Activity {
          * */
         mSensorManager.registerListener(mSensorEventListener, mStepSensor,
                 SensorManager.SENSOR_DELAY_NORMAL);
-        traceItems = mTraceDao.searchData(mTraceDao.maxTag());
-        if(traceItems.size()!=0) {
-            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
-            for (int i = 0; i < traceItems.size(); i++) {
-                LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
-                historyFromLoad.add(latLng);
-            }
-        }
+//        traceItems = mTraceDao.searchData(mTraceDao.maxTag());
+//        if(traceItems.size()!=0) {
+//            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+//            for (int i = 0; i < traceItems.size(); i++) {
+//                LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
+//                historyFromLoad.add(latLng);
+//            }
+//        }
     }
 
     final Runnable saveHistory = new Runnable() {
