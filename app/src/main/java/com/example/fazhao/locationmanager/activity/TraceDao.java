@@ -58,6 +58,85 @@ public class TraceDao
         db.close();
     }
 
+    public void addTime(String start,String end){
+        String sql = "insert into time_item (date_start,date_end) values(?,?) ;";
+//        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
+//        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        /*
+        * 开启事务
+        * */
+//        db.beginTransaction();
+        SQLiteStatement ss = db.compileStatement(sql);
+//        ss.bindString(1,traceItem.getName());
+        ss.bindString(1,start);
+//        ss.bindString(3,traceItem.getProvider());
+        ss.bindString(2,end);
+        ss.executeInsert();
+        /*
+        * 效率低
+        * */
+//        db.execSQL(sql1,
+//                new Object[] { traceItem.getLatitude(), traceItem.getLongitude()});
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
+        db.close();
+    }
+
+    public void addDistance(double latitude_start,double latitude_end,double longitude_start,double longitude_end){
+        String sql = "insert into distance_item (latitude_start,latitude_end,longitude_start,longitude_end) values(?,?,?,?) ;";
+//        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
+//        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        /*
+        * 开启事务
+        * */
+//        db.beginTransaction();
+        SQLiteStatement ss = db.compileStatement(sql);
+//        ss.bindString(1,traceItem.getName());
+        ss.bindDouble(1,latitude_start);
+//        ss.bindString(3,traceItem.getProvider());
+        ss.bindDouble(2,latitude_end);
+        ss.bindDouble(3,longitude_start);
+        ss.bindDouble(4,longitude_end);
+        ss.executeInsert();
+        /*
+        * 效率低
+        * */
+//        db.execSQL(sql1,
+//                new Object[] { traceItem.getLatitude(), traceItem.getLongitude()});
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
+        db.close();
+    }
+
+    public void addRoute(String start,String end)
+    {
+//        不要了accuracy level provider  ， 减少了无用的列，提高查询速度
+        String sql = "insert into route_item (address_start,address_end) values(?,?) ;";
+//        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
+//        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        /*
+        * 开启事务
+        * */
+//        db.beginTransaction();
+        SQLiteStatement ss = db.compileStatement(sql);
+//        ss.bindString(1,traceItem.getName());
+        ss.bindString(1,start);
+//        ss.bindString(3,traceItem.getProvider());
+        ss.bindString(2,end);
+        ss.executeInsert();
+        /*
+        * 效率低
+        * */
+//        db.execSQL(sql1,
+//                new Object[] { traceItem.getLatitude(), traceItem.getLongitude()});
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
+        db.close();
+    }
+
     public TraceItem getLast(){
         int tag = maxTag();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -76,6 +155,79 @@ public class TraceDao
         c.close();
         db.close();
         return traceItem;
+    }
+    /**
+    * 用其他表查询的
+    * */
+    public List<TraceItem> getLastDistance(){
+        List<TraceItem> list = new ArrayList<>(2);
+        int tag = maxTag();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "select latitude_start,latitude_end,longitude_start,longitude_end from distance_item where tag = ?";
+        Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
+        TraceItem traceItem = null;
+        TraceItem traceItem1 = null;
+
+        while (c.moveToNext())
+        {
+            traceItem = new TraceItem();
+            double latitude_start = c.getDouble(0);
+            double longitude_start = c.getDouble(1);
+            traceItem.setLatitude(latitude_start);
+            traceItem.setLongitude(longitude_start);
+            traceItem1 = new TraceItem();
+            double latitude_end = c.getDouble(0);
+            double longitude_end = c.getDouble(1);
+            traceItem1.setLatitude(latitude_end);
+            traceItem1.setLongitude(longitude_end);
+        }
+        list.add(traceItem);
+        list.add(traceItem1);
+        c.close();
+        db.close();
+        return list;
+    }
+    /**
+    * 用其他表查询的
+    * */
+    public List<String> getLastRoute(){
+        List<String> list = new ArrayList<>(2);
+        int tag = maxTag();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "select address_start,address_end from route_item where tag = ?";
+        Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
+
+        while (c.moveToNext())
+        {
+            String address_start = c.getString(0);
+            String address_end = c.getString(1);
+            list.add(address_start);
+            list.add(address_end);
+        }
+        c.close();
+        db.close();
+        return list;
+    }
+    /**
+    * 用其他表查询的
+    * */
+    public List<String> getLastTime(){
+        List<String> list = new ArrayList<>(2);
+        int tag = maxTag();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "select date_start,date_end from time_item where tag = ?";
+        Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
+
+        while (c.moveToNext())
+        {
+            String date_start = c.getString(0);
+            String date_end = c.getString(1);
+            list.add(date_start);
+            list.add(date_end);
+        }
+        c.close();
+        db.close();
+        return list;
     }
 
     public TraceItem getLastStep(){

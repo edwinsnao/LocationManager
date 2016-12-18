@@ -295,8 +295,19 @@ public class IndoorLocationActivity extends Activity {
 //        if(traceItems.size() !=0) {
         if(BaseApplication.isHasHistory()){
             try {
-                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+                List<String> time = mTraceDao.getLastTime();
+                List<TraceItem> distance = mTraceDao.getLastDistance();
+                List<String> route = mTraceDao.getLastRoute();
+                LatLng latLng = new LatLng(distance.get(0).getLatitude(),distance.get(0).getLongitude());
+                LatLng latLng1 = new LatLng(distance.get(1).getLatitude(),distance.get(1).getLongitude());
+                /**
+                * 多表查询
+                * */
+//            出发地:route.get(0),目的地:route.get(1)
+                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(time.get(0)), crypto.armorDecrypt(time.get(1)), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
+//                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+//                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
@@ -549,41 +560,49 @@ public class IndoorLocationActivity extends Activity {
         public void run() {
             if (mTraceDao.searchAllData() != null)
                 tag = mTraceDao.maxTag() + 1;
-            for (int i = 0; i < history.size(); i++) {
-                mTraceItem = new TraceItem();
-                try {
+
+            /**
+            * 插入数据到多表
+            * */
+            try {
+                int history_size = history.size()-1;
+                mTraceDao.addTime(crypto.armorEncrypt(history.get(0).getTime().getBytes()),crypto.armorEncrypt(history.get(history_size).getTime().getBytes()));
+                mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes()),crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()));
+                mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude(),history.get(0).getLongitude(),history.get(history_size).getLongitude());
+                for (int i = 0; i < history.size(); i++) {
+                    mTraceItem = new TraceItem();
 //                    mTraceItem.setName(crypto.armorEncrypt(history.get(i).getName().getBytes()));
-                    mTraceItem.setAddress(crypto.armorEncrypt(history.get(i).getAddress().address.getBytes()));
-                    mTraceItem.setLatitude(history.get(i).getLatitude());
-                    mTraceItem.setLongitude(history.get(i).getLongitude());
-                    mTraceItem.setTag(tag);
-                    /**
-                     * 这里是导致一个tag的所有记录的时间都是相同的，所以时间差为0或很接近
-                     * 应该把这里放到onlocationchanged里（history里setDate）
-                     * 而这里就拿history的date
-                     * */
-                    mTraceItem.setDate(crypto.armorEncrypt(history.get(i).getTime().getBytes()));
-                    /**
-                     * 在最后一个插入步数
-                     * 如果是0也插入，证明不是走路（是交通工具）
-                     * */
+                        mTraceItem.setAddress(crypto.armorEncrypt(history.get(i).getAddress().address.getBytes()));
+                        mTraceItem.setLatitude(history.get(i).getLatitude());
+                        mTraceItem.setLongitude(history.get(i).getLongitude());
+                        mTraceItem.setTag(tag);
+                        /**
+                         * 这里是导致一个tag的所有记录的时间都是相同的，所以时间差为0或很接近
+                         * 应该把这里放到onlocationchanged里（history里setDate）
+                         * 而这里就拿history的date
+                         * */
+                        mTraceItem.setDate(crypto.armorEncrypt(history.get(i).getTime().getBytes()));
+                        /**
+                         * 在最后一个插入步数
+                         * 如果是0也插入，证明不是走路（是交通工具）
+                         * */
 //                        if(i == history.size() - 1){
-                    mTraceItem.setStep(mStep);
+                        mTraceItem.setStep(mStep);
 //                        }
-                    mTraceDao.add(mTraceItem);
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
+                        mTraceDao.add(mTraceItem);
                 }
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
             }
         }
     };

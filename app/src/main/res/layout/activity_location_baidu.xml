@@ -11,11 +11,11 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
-        <TextView
+       <!-- <TextView
             android:id="@+id/tvMonitor"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
