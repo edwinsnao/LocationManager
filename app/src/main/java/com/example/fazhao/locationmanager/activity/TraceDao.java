@@ -369,7 +369,7 @@ public class TraceDao
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
         try
         {
-            /*
+            /**
             *在？那里不需要加'和%
             * %是在String那里加
             * */
@@ -504,7 +504,7 @@ public class TraceDao
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
         try
         {
-            /*
+            /**
             *在？那里不需要加'和%
             * %是在String那里加
             * */
@@ -566,7 +566,7 @@ public class TraceDao
 
     }
 
-    /*
+    /**
     * 查询有多少tag（保存了多少次）
     * */
     public int maxTag(){
@@ -581,7 +581,7 @@ public class TraceDao
         db.close();
         return tag;
     }
-/*
+/**
 * 根据哪一次来删除
 * */
     public void deleteAll(int tag)

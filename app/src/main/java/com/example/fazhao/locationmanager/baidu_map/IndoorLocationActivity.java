@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -216,7 +217,7 @@ public class IndoorLocationActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         RelativeLayout layout = new RelativeLayout(this);
 
@@ -519,9 +520,10 @@ public class IndoorLocationActivity extends Activity {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                if (event.values[0] == 1.0f) {
-                    mStep++;
-                }
+//                if (event.values[0] == 1.0f) {
+//                    mStep++;
+//                }
+                mStep+=(int)event.values[0];
                 StringBuilder builder = new StringBuilder("步数:");
                 builder.append(Integer.toString(mStep));
                 step.setText(builder);
@@ -594,6 +596,7 @@ public class IndoorLocationActivity extends Activity {
     protected void showRealtimeTrack(BDLocation location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+        location.get
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else {
