@@ -163,8 +163,8 @@ public class IndoorLocationActivity extends Activity {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            Log.e("locClient", String.valueOf(isFirstLoc));
-            Log.e("locTime", String.valueOf(locTime++));
+//            Log.e("locClient", String.valueOf(isFirstLoc));
+//            Log.e("locTime", String.valueOf(locTime++));
 //            Log.e("pointSize", String.valueOf(pointList.size()));
 //            if(pointList.size()!=0)
 //            Log.e("point", String.valueOf(pointList.get(constant))+","+constant);
@@ -205,11 +205,11 @@ public class IndoorLocationActivity extends Activity {
                 showRealtimeTrack(location);
             }
             history.add(location);
-            Log.e("address",String.valueOf(location.getAddress().address));
-            Log.e("time",String.valueOf(location.getTime()));
-            Log.e("latitude",String.valueOf(location.getLatitude()));
-            Log.e("lontitude",String.valueOf(location.getLongitude()));
-            Log.e("size",String.valueOf(history));
+//            Log.e("address",String.valueOf(location.getAddress().address));
+//            Log.e("time",String.valueOf(location.getTime()));
+//            Log.e("latitude",String.valueOf(location.getLatitude()));
+//            Log.e("lontitude",String.valueOf(location.getLongitude()));
+//            Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
 
         }
@@ -368,8 +368,6 @@ public class IndoorLocationActivity extends Activity {
                                     }
                                 });
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);
-                                Log.e("mDatas1",mDatas.size()+"");
-                                Log.e("mDatas2",mDatas1.size()+"");
                                 lv.setDivider(getResources().getDrawable(R.drawable.divider));
                                 lv.setAdapter(mAdapter);
                                 lv.setFooterDividersEnabled(true);
@@ -476,8 +474,6 @@ public class IndoorLocationActivity extends Activity {
                         tag = mTraceDao.maxTag();
                         mDatas = mTraceDao.searchDistinctDataStart();
                         mDatas1 = mTraceDao.searchDistinctDataDestination();
-                        Log.e("mDatas1",mDatas.size()+"");
-                        Log.e("mDatas2",mDatas1.size()+"");
                         handler.sendEmptyMessage(0);
                     }
                 };

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 
 import com.baidu.mapapi.model.LatLng;
 import com.example.fazhao.locationmanager.R;
@@ -24,8 +25,8 @@ public class SplashActivity extends Activity {
     private LatLng latLng1;
     private List<LatLng> historyFromLoad = BaseApplication.getHistory();
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.baidu_splash_activity);
         initData();
         loadData();
@@ -37,6 +38,7 @@ public class SplashActivity extends Activity {
         Intent it = new Intent();
         it.setClass(SplashActivity.this,IndoorLocationActivity.class);
         startActivity(it);
+        finish();
     }
 
     private void setData() {
@@ -57,6 +59,9 @@ public class SplashActivity extends Activity {
         }
         else
             BaseApplication.setHasHistory(false);
+        Log.e("hasHistory?",String.valueOf(BaseApplication.isHasHistory()));
+        BaseApplication.setHistory(historyFromLoad);
+        Log.e("traceItemSize?",String.valueOf(traceItems.size()));
     }
 
     private void initData() {

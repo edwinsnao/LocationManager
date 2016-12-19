@@ -9,6 +9,7 @@ import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ import java.util.List;
 public class BaseApplication extends Application {
     private static TraceDao mTaceDao;
     private static DBHelper dbHelper;
-    private static List<LatLng> historyFromLoad;
+    private static List<LatLng> historyFromLoad = new ArrayList<>();
     private static boolean hasHistory;
 
     public static boolean isHasHistory() {

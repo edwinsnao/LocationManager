@@ -165,7 +165,7 @@ public class TraceDao
         List<TraceItem> list = new ArrayList<>(2);
         int tag = maxTag();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sql = "select latitude_start,latitude_end,longitude_start,longitude_end from distance_item where tag = ?";
+        String sql = "select latitude_start,latitude_end,longitude_start,longitude_end from distance_item where _id = ?";
         Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
         TraceItem traceItem = null;
         TraceItem traceItem1 = null;
@@ -196,7 +196,7 @@ public class TraceDao
         List<String> list = new ArrayList<>(2);
         int tag = maxTag();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sql = "select address_start,address_end from route_item where tag = ?";
+        String sql = "select address_start,address_end from route_item where _id = ?";
         Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
 
         while (c.moveToNext())
@@ -217,7 +217,7 @@ public class TraceDao
         List<String> list = new ArrayList<>(2);
         int tag = maxTag();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sql = "select date_start,date_end from time_item where tag = ?";
+        String sql = "select date_start,date_end from time_item where _id = ?";
         Cursor c = db.rawQuery(sql,new String[]{String.valueOf(tag)});
 
         while (c.moveToNext())
