@@ -14,22 +14,26 @@ import javax.crypto.spec.SecretKeySpec;
 import android.content.Context;
 import android.util.Base64;
 
+import com.example.fazhao.locationmanager.application.BaseApplication;
+
 public class Crypto {
     private static final String engine = "AES";
     private static final String crypto = "AES/CBC/PKCS5Padding";
-    private Context ctx;
-    private static Crypto sInstance;
+    private static Context ctx;
+//    private static Crypto sInstance;
 
     public Crypto(Context cntx) {
-        ctx = cntx.getApplicationContext();
+//        ctx = cntx.getApplicationContext();
+        ctx = cntx;
     }
 
     public byte[] cipher(byte[] data, int mode)
             throws NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidKeyException, IllegalBlockSizeException,
             BadPaddingException, InvalidAlgorithmParameterException {
-//        KeyManager km = new KeyManager(ctx);
-        KeyManager km = KeyManager.getsInstace();
+        KeyManager km = new KeyManager(ctx);
+//        KeyManager km = KeyManager.getsInstace();
+//        KeyManager km = BaseApplication.getKm();
         SecretKeySpec sks = new SecretKeySpec(km.getId(), engine);
         IvParameterSpec iv = new IvParameterSpec(km.getIv());
         Cipher c = Cipher.getInstance(crypto);
@@ -65,12 +69,12 @@ public class Crypto {
         return new String(decrypt(Base64.decode(data, Base64.DEFAULT)));
     }
 
-    public static void init(Context context){
-        sInstance = new Crypto(context.getApplicationContext());
-    }
-
-    public static Crypto getsInstance(){
-        return sInstance;
-    }
+//    public static void init(Context context){
+//        sInstance = new Crypto(context.getApplicationContext());
+//    }
+//
+//    public static Crypto getsInstance(){
+//        return sInstance;
+//    }
 
 }

@@ -28,8 +28,8 @@ public class BaseApplication extends Application {
     public static void setHasHistory(boolean hasHistory) {
         BaseApplication.hasHistory = hasHistory;
     }
-    //    private static Crypto mCrypto;
-//    private static KeyManager km;
+        private static Crypto mCrypto;
+    private static KeyManager km;
 
 
     public static List<LatLng> getHistory() {
@@ -48,13 +48,13 @@ public class BaseApplication extends Application {
         return dbHelper;
     }
 
-//    public static Crypto getmCrypto() {
-//        return mCrypto;
-//    }
+    public static Crypto getmCrypto() {
+        return mCrypto;
+    }
 
-//    public static KeyManager getKm() {
-//        return km;
-//    }
+    public static KeyManager getKm() {
+        return km;
+    }
 
     @Override
     public void onCreate() {
@@ -63,8 +63,10 @@ public class BaseApplication extends Application {
         * 百度地图
         * */
         SDKInitializer.initialize(getApplicationContext());
-        Crypto.init(this);
-        KeyManager.init(this);
+//        Crypto.init(this);
+        mCrypto = new Crypto(this);
+        km = new KeyManager(this);
+//        KeyManager.init(this);
         dbHelper = new DBHelper(this);
         mTaceDao = new TraceDao();
 

@@ -13,7 +13,9 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+* this is for baidu_map
+* */
 public class TraceDao
 {
 
@@ -599,7 +601,8 @@ public class TraceDao
             * %是在String那里加
             * */
 //            String sql = "select * from trace_item group by tag ";
-            String sql = "select name,address,date,latitude,longitude,tag from trace_item group by tag ";
+//            String sql = "select name,address,date,latitude,longitude,tag from trace_item group by tag ";
+            String sql = "select address,date,latitude,longitude,tag from trace_item group by tag ";
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 //            Cursor c = db.rawQuery(sql, new String[] { newsType + "", offset + "", "" + (offset + 10) });
             Cursor c = db.rawQuery(sql, null);
@@ -610,17 +613,17 @@ public class TraceDao
             while (c.moveToNext())
             {
                 traceItem = new TraceItem();
-                String name = c.getString(0);
-                String address = c.getString(1);
-                String date = c.getString(2);
-                double latitude = c.getDouble(3);
-                double longitude = c.getDouble(4);
+//                String name = c.getString(0);
+                String address = c.getString(0);
+                String date = c.getString(1);
+                double latitude = c.getDouble(2);
+                double longitude = c.getDouble(3);
 //                Integer level = c.getInt(6);
 //                String provider = c.getString(7);
 //                Double accuracy = c.getDouble(8);
-                int tag  = c.getInt(5);
+                int tag  = c.getInt(4);
 
-                traceItem.setName(name);
+//                traceItem.setName(name);
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
@@ -661,7 +664,8 @@ public class TraceDao
             * %是在String那里加
             * */
 //            String sql = "select *,min(date) from trace_item group by tag ";
-            String sql = "select name,address,min(date),latitude,longitude,tag from trace_item group by tag";
+//            String sql = "select name,address,min(date),latitude,longitude,tag from trace_item group by tag";
+            String sql = "select address,min(date),latitude,longitude,tag from trace_item group by tag";
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 //            Cursor c = db.rawQuery(sql, new String[] { newsType + "", offset + "", "" + (offset + 10) });
             Cursor c = db.rawQuery(sql, null);
@@ -672,15 +676,15 @@ public class TraceDao
             while (c.moveToNext())
             {
                 traceItem = new TraceItem();
-                String name = c.getString(0);
-                String address = c.getString(1);
-                String date = c.getString(2);
-                double latitude = c.getDouble(3);
-                double longitude = c.getDouble(4);
+//                String name = c.getString(0);
+                String address = c.getString(0);
+                String date = c.getString(1);
+                double latitude = c.getDouble(2);
+                double longitude = c.getDouble(3);
 //                Integer level = c.getInt(6);
 //                String provider = c.getString(7);
 //                Double accuracy = c.getDouble(8);
-                int tag  = c.getInt(5);
+                int tag  = c.getInt(4);
 
 //                traceItem.setName(crypto.armorDecrypt(name));
 //                traceItem.setAddress(crypto.armorDecrypt(address));
@@ -692,7 +696,7 @@ public class TraceDao
 //                traceItem.setAccuracy(accuracy);
 //                traceItem.setTag(tag);
 
-                traceItem.setName(name);
+//                traceItem.setName(name);
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);

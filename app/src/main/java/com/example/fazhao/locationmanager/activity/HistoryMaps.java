@@ -54,7 +54,8 @@ public class HistoryMaps extends Activity {
 	List<LatLng> historyFromLoad = new ArrayList<LatLng>();
 	Button detail;
 	TextView showTime;
-	Crypto crypto = Crypto.getsInstance();
+//	Crypto crypto = Crypto.getsInstance();
+	Crypto crypto = BaseApplication.getmCrypto();
 
 	@Override
 	protected void onCreate(Bundle bundle) {

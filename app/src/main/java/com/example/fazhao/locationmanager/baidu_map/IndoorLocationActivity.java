@@ -209,6 +209,7 @@ public class IndoorLocationActivity extends Activity {
             Log.e("time",String.valueOf(location.getTime()));
             Log.e("latitude",String.valueOf(location.getLatitude()));
             Log.e("lontitude",String.valueOf(location.getLongitude()));
+            Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
 
         }
@@ -367,6 +368,8 @@ public class IndoorLocationActivity extends Activity {
                                     }
                                 });
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);
+                                Log.e("mDatas1",mDatas.size()+"");
+                                Log.e("mDatas2",mDatas1.size()+"");
                                 lv.setDivider(getResources().getDrawable(R.drawable.divider));
                                 lv.setAdapter(mAdapter);
                                 lv.setFooterDividersEnabled(true);
@@ -473,6 +476,8 @@ public class IndoorLocationActivity extends Activity {
                         tag = mTraceDao.maxTag();
                         mDatas = mTraceDao.searchDistinctDataStart();
                         mDatas1 = mTraceDao.searchDistinctDataDestination();
+                        Log.e("mDatas1",mDatas.size()+"");
+                        Log.e("mDatas2",mDatas1.size()+"");
                         handler.sendEmptyMessage(0);
                     }
                 };
@@ -516,8 +521,17 @@ public class IndoorLocationActivity extends Activity {
     }
 
     private void initData() {
-        crypto = Crypto.getsInstance();
-        km = KeyManager.getsInstace();
+//        crypto = Crypto.getsInstance();
+//        crypto = BaseApplication.getmCrypto();
+        km = new KeyManager(IndoorLocationActivity.this);
+        final String key = "12345678909876543212345678909876";
+        final String iv = "1234567890987654";
+        km.setIv(iv.getBytes());
+        km.setId(key.getBytes());
+        crypto = new Crypto(this);
+//        km = KeyManager.getsInstace();
+//        km = BaseApplication.getKm();
+//        km = new KeyManager(IndoorLocationActivity.this.getApplicationContext());
         mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         /**
@@ -604,6 +618,7 @@ public class IndoorLocationActivity extends Activity {
             } catch (InvalidAlgorithmParameterException e) {
                 e.printStackTrace();
             }
+            BaseApplication.setHasHistory(true);
         }
     };
 
@@ -615,7 +630,6 @@ public class IndoorLocationActivity extends Activity {
     protected void showRealtimeTrack(BDLocation location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        location.get
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else {

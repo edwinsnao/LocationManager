@@ -13,11 +13,11 @@ public class KeyManager {
     private static final String TAG = "KeyManager";
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
-    private static KeyManager sInstace;
-    private Context ctx;
+//    private static KeyManager sInstace;
+    private static Context ctx;
 
     public KeyManager(Context cntx) {
-        ctx = cntx.getApplicationContext();
+        ctx = cntx;
     }
 
     public void setId(byte[] data) {
@@ -47,19 +47,18 @@ public class KeyManager {
                 bos.write(b, 0, bytesRead);
             }
             data = bos.toByteArray();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        }  catch (IOException e) {
         }
         return data;
     }
 
-    public static void init(Context context){
-        sInstace = new KeyManager(context.getApplicationContext());
-    }
-
-    public static KeyManager getsInstace(){
-        return sInstace;
-    }
+//    public static void init(Context context){
+//        sInstace = new KeyManager(context.getApplicationContext());
+//    }
+//
+//    public static KeyManager getsInstace(){
+//        return sInstace;
+//    }
 
     public void writer(byte[] data, String file) {
         try {
@@ -68,8 +67,7 @@ public class KeyManager {
             fos.write(data);
             fos.flush();
             fos.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        }  catch (IOException e) {
         }
     }
 
