@@ -161,6 +161,7 @@ public class IndoorLocationActivity extends Activity {
     List<LatLng> historyFromLoad = BaseApplication.getHistory();
     private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
+    private static LocationClientOption option;
 
     public static class LocationService extends Service {
         public LocationService(){
@@ -179,11 +180,11 @@ public class IndoorLocationActivity extends Activity {
             // TODO Auto-generated method stub
             super.onCreate();
             mLocClient = new LocationClient(this.getApplicationContext());
-            LocationClientOption option = new LocationClientOption();
-            option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);//ÉèÖÃ¶¨Î»Ä£Ê½
-            option.setCoorType("bd09ll");//·µ»ØµÄ¶¨Î»½á¹ûÊÇ°Ù¶È¾­Î³¶È£¬Ä¬ÈÏÖµgcj02
-            int span=3000;
-            option.setScanSpan(span);//ÉèÖÃ·¢Æð¶¨Î»ÇëÇóµÄ¼ä¸ôÊ±¼äÎª5000ms
+//            LocationClientOption option = new LocationClientOption();
+//            option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);//ÉèÖÃ¶¨Î»Ä£Ê½
+//            option.setCoorType("bd09ll");//·µ»ØµÄ¶¨Î»½á¹ûÊÇ°Ù¶È¾­Î³¶È£¬Ä¬ÈÏÖµgcj02
+//            int span=3000;
+//            option.setScanSpan(span);//ÉèÖÃ·¢Æð¶¨Î»ÇëÇóµÄ¼ä¸ôÊ±¼äÎª5000ms
             mLocClient.setLocOption(option);
             mLocClient.setLocOption(option);
             mLocClient.registerLocationListener(mListener);
@@ -350,13 +351,13 @@ public class IndoorLocationActivity extends Activity {
                 showRealtimeTrack(location);
             }
             history.add(location);
-            Log.e("address",String.valueOf(location.getAddress().address));
-            if(location.getAddress().address != null)
-            Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
-            Log.e("time",String.valueOf(location.getTime()));
-            Log.e("latitude",String.valueOf(location.getLatitude()));
-            Log.e("lontitude",String.valueOf(location.getLongitude()));
-            Log.e("size",String.valueOf(history));
+//            Log.e("address",String.valueOf(location.getAddress().address));
+//            if(location.getAddress().address != null)
+//            Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
+//            Log.e("time",String.valueOf(location.getTime()));
+//            Log.e("latitude",String.valueOf(location.getLatitude()));
+//            Log.e("lontitude",String.valueOf(location.getLongitude()));
+//            Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
 
         }
@@ -453,7 +454,7 @@ public class IndoorLocationActivity extends Activity {
 //        mLocClient = new LocationClient(getApplicationContext());
 //        mLocClient.registerLocationListener(myListener);
 //        mLocClient.registerLocationListener(mListener);
-        LocationClientOption option = new LocationClientOption();
+        option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setProdName("LocationManager");
 //        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
