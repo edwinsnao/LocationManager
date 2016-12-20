@@ -1,4 +1,4 @@
-package com.example.fazhao.locationmanager.baidu_map;
+package com.example.fazhao.locationmanager.baidu_map.util;
 
 import android.content.Context;
 

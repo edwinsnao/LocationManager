@@ -1,9 +1,8 @@
-package com.example.fazhao.locationmanager.baidu_map;
+package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 
 import com.baidu.mapapi.model.LatLng;
@@ -12,7 +11,6 @@ import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
