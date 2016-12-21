@@ -107,7 +107,7 @@ public class IndoorLocationActivity extends Activity {
     // UI相关
 
     private Button compute,save,load;
-    private CheckBox traffice,satelite,scale;
+    private CheckBox traffice,satelite,scale,scaleBtn;
     private ImageButton requestLocButton;
     public static boolean isFirstLoc = true; // 是否首次定位
 
@@ -413,6 +413,7 @@ public class IndoorLocationActivity extends Activity {
         traffice = (CheckBox) mainview.findViewById(R.id.cb_traffic);
         scale = (CheckBox) mainview.findViewById(R.id.cb_scale);
         satelite = (CheckBox) mainview.findViewById(R.id.cb_satelite);
+        scaleBtn = (CheckBox) mainview.findViewById(R.id.cb_scale_btn);
         traffice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton button, boolean b) {
@@ -446,6 +447,16 @@ public class IndoorLocationActivity extends Activity {
         /**
         * 缩放按钮
         * */
+        scaleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean b) {
+                if(b){
+                    mMapView.showZoomControls(true);
+                }else{
+                    mMapView.showZoomControls(false);
+                }
+            }
+        });
         mCurrentMode = LocationMode.COMPASS;
 //        requestLocButton.setText("普通");
         OnClickListener btnClickListener = new OnClickListener() {
@@ -495,7 +506,7 @@ public class IndoorLocationActivity extends Activity {
         option.setProdName("LocationManager");
 //        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(3000);
+        option.setScanSpan(5000);
         option.setLocationNotify(true);
         option.disableCache(false);
         option.setNeedDeviceDirect(true);

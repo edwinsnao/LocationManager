@@ -119,7 +119,15 @@
                 android:id="@+id/cb_scale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="比例尺"
+                android:text="比例"
+                android:textColor="@android:color/white" />
+            <CheckBox
+                android:checked="true"
+                android:layout_marginRight="5dp"
+                android:id="@+id/cb_scale_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="缩放"
                 android:textColor="@android:color/white" />
             <!--<Button
                 android:id="@+id/btn_animate"
@@ -137,7 +145,7 @@
                 android:textSize="15sp"
                 android:text="步数:0"
                 android:layout_marginRight="10dp"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_height="50dp"/>

@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -43,6 +45,7 @@ public class HistoryMaps extends Activity {
 	private Marker myLocation;
 	private BaiduMap mBaiduMap;
 	private TraceDao mTraceDao;
+	private CheckBox traffice,satelite,scale,scaleBtn;
 	private com.baidu.mapapi.map.PolylineOptions polyline = null;
 	protected MapStatusUpdate msUpdate = null;
 	List<LatLng> historyFromLoad = new ArrayList<LatLng>();
@@ -145,6 +148,53 @@ public class HistoryMaps extends Activity {
 				bundle.putInt("choice", getIntent().getIntExtra("choice", 0));
 				it.putExtras(bundle);
 				startActivity(it);
+			}
+		});
+		traffice = (CheckBox) findViewById(R.id.cb_traffic);
+		scale = (CheckBox) findViewById(R.id.cb_scale);
+		satelite = (CheckBox) findViewById(R.id.cb_satelite);
+		scaleBtn = (CheckBox) findViewById(R.id.cb_scale_btn);
+		traffice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton button, boolean b) {
+				if(b){
+					mBaiduMap.setTrafficEnabled(true);
+				}else{
+					mBaiduMap.setTrafficEnabled(false);
+				}
+			}
+		});
+		satelite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton button, boolean b) {
+				if(b){
+					mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+				}else{
+					mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+				}
+			}
+		});
+		scale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton button, boolean b) {
+				if(b){
+					mapView.showScaleControl(true);
+				}else{
+					mapView.showScaleControl(false);
+				}
+			}
+		});
+		/**
+		 * 缩放按钮
+		 * */
+		scaleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton button, boolean b) {
+				if(b){
+					mapView.showZoomControls(true);
+				}else{
+					mapView.showZoomControls(false);
+				}
 			}
 		});
 

@@ -26,6 +26,51 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
     </LinearLayout>
+    <LinearLayout
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:checked="false"
+            android:layout_weight="1"
+            android:id="@+id/cb_traffic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="交通"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/white" />
+
+        <CheckBox
+            android:layout_weight="1"
+            android:checked="false"
+            android:id="@+id/cb_satelite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="卫星"
+            android:textColor="@android:color/white" />
+
+        <CheckBox
+            android:layout_weight="1"
+            android:checked="true"
+            android:layout_marginRight="5dp"
+            android:id="@+id/cb_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="比例尺"
+            android:textColor="@android:color/white" />
+        <CheckBox
+            android:layout_weight="1"
+            android:checked="true"
+            android:layout_marginRight="5dp"
+            android:id="@+id/cb_scale_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="缩放按钮"
+            android:textColor="@android:color/white" />
+        </LinearLayout>
    <!-- <com.tencent.tencentmap.mapsdk.map.MapView
         android:id="@+id/tencentMapView"
         android:layout_width="fill_parent"
