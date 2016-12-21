@@ -11,7 +11,9 @@ import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.SwipeDeleteListView;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
+import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
+import com.example.fazhao.locationmanager.encrypt.KeyManager;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -31,11 +33,10 @@ public class HistoryAdapter extends BaseAdapter {
 	private List<TraceItem> mDatas;
 	private List<TraceItem> mDatas1;
 	private SwipeDeleteListView listView;
+	private Crypto crypto;
+	private KeyManager km;
 //	private TraceDao mTraceDao = BaseApplication.getTraceDao();
 //	private Crypto crypto = Crypto.getsInstance();
-	private Crypto crypto = BaseApplication.getmCrypto();
-	String key = "12345678909876543212345678909876";
-	String iv = "1234567890987654";
 
 
 	/**
@@ -45,12 +46,23 @@ public class HistoryAdapter extends BaseAdapter {
 	public HistoryAdapter(Context context, List<TraceItem> datas) {
 		this.mDatas = datas;
 		mInflater = LayoutInflater.from(context);
+		initData(context);
+	}
+
+	private void initData(Context context) {
+		km = new KeyManager(context);
+		String key = "12345678909876543212345678909876";
+		String iv = "1234567890987654";
+		km.setIv(iv.getBytes());
+		km.setId(key.getBytes());
+		crypto = new Crypto(context);
 	}
 
 	public HistoryAdapter(Context context, List<TraceItem> datas, SwipeDeleteListView lv) {
 		this.mDatas = datas;
 		mInflater = LayoutInflater.from(context);
 		listView = lv;
+		initData(context);
 	}
 
 	public HistoryAdapter(Context context, List<TraceItem> datas, List<TraceItem> datas1, SwipeDeleteListView lv) {
@@ -58,6 +70,7 @@ public class HistoryAdapter extends BaseAdapter {
 		this.mDatas1 = datas1;
 		mInflater = LayoutInflater.from(context);
 		listView = lv;
+		initData(context);
 	}
 
 	public void addAll(List<TraceItem> mDatas) {

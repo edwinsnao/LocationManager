@@ -391,9 +391,6 @@ public class IndoorLocationActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        tmpIntent.setAction("com.fazhao.locationservice");
-        Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
-        startService(serviceIt);
     }
 
     @Override
@@ -695,6 +692,9 @@ public class IndoorLocationActivity extends Activity {
         iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
         mReceiver = new BaiduReceiver();
         registerReceiver(mReceiver, iFilter);
+        tmpIntent.setAction("com.fazhao.locationservice");
+        Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
+        startService(serviceIt);
     }
 
     private void initData() {
