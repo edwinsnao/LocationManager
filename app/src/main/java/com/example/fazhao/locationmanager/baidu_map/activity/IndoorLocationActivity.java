@@ -31,6 +31,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -43,6 +45,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapBaseIndoorMapInfo;
 import com.baidu.mapapi.map.MapStatus;
@@ -104,6 +107,7 @@ public class IndoorLocationActivity extends Activity {
     // UI相关
 
     private Button compute,save,load;
+    private CheckBox traffice,satelite,scale;
     private ImageButton requestLocButton;
     public static boolean isFirstLoc = true; // 是否首次定位
 
@@ -404,9 +408,41 @@ public class IndoorLocationActivity extends Activity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
         layout.addView(mainview);
-
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
         requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
+        traffice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean b) {
+                if(b){
+                    mBaiduMap.setTrafficEnabled(true);
+                }else{
+                    mBaiduMap.setTrafficEnabled(false);
+                }
+            }
+        });
+        satelite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean b) {
+                if(b){
+                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                }else{
+                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                }
+            }
+        });
+        scale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean b) {
+                if(b){
+                    mMapView.showScaleControl(true);
+                }else{
+                    mMapView.showScaleControl(false);
+                }
+            }
+        });
+        /**
+        * 缩放按钮
+        * */
         mCurrentMode = LocationMode.COMPASS;
 //        requestLocButton.setText("普通");
         OnClickListener btnClickListener = new OnClickListener() {

@@ -32,6 +32,10 @@ public class Crypto {
             InvalidKeyException, IllegalBlockSizeException,
             BadPaddingException, InvalidAlgorithmParameterException {
         KeyManager km = new KeyManager(ctx);
+        String key = "12345678909876543212345678909876";
+        String iv1 = "1234567890987654";
+        km.setIv(iv1.getBytes());
+        km.setId(key.getBytes());
 //        KeyManager km = KeyManager.getsInstace();
 //        KeyManager km = BaseApplication.getKm();
         SecretKeySpec sks = new SecretKeySpec(km.getId(), engine);
