@@ -410,6 +410,9 @@ public class IndoorLocationActivity extends Activity {
         layout.addView(mainview);
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
         requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
+        traffice = (CheckBox) mainview.findViewById(R.id.cb_traffic);
+        scale = (CheckBox) mainview.findViewById(R.id.cb_scale);
+        satelite = (CheckBox) mainview.findViewById(R.id.cb_satelite);
         traffice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton button, boolean b) {

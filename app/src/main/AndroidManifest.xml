@@ -92,7 +92,8 @@
             </intent-filter>
         </service>
         <activity android:name=".activity.HistoryMaps"/>
-        <activity android:name=".activity.HistoryDetail"/>
+        <activity android:name=".activity.HistoryDetail"
+                  android:theme="@style/translucent"/>
         <activity android:name=".activity.StreetViewActivity"/>
         <meta-data
             android:name="TencentMapSDK"
