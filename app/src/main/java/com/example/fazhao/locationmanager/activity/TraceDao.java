@@ -743,8 +743,14 @@ public class TraceDao
     public void deleteAll(int tag)
     {
         String sql = "delete from trace_item where tag = ?";
+        String sql1 = "delete from time_item where _id = ?";
+        String sql2 = "delete from route_item where _id = ?";
+        String sql3 = "delete from distance_item where _id = ?";
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL(sql, new Object[] { tag });
+        db.execSQL(sql1, new Object[] { tag });
+        db.execSQL(sql2, new Object[] { tag });
+        db.execSQL(sql3, new Object[] { tag });
         db.close();
     }
     public void deleteAll()

@@ -1,6 +1,7 @@
 package com.example.fazhao.locationmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.SwipeDeleteListView;
+import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
@@ -35,7 +37,7 @@ public class HistoryAdapter extends BaseAdapter {
 	private SwipeDeleteListView listView;
 	private Crypto crypto;
 	private KeyManager km;
-//	private TraceDao mTraceDao = BaseApplication.getTraceDao();
+	private TraceDao mTraceDao = BaseApplication.getmTaceDao();
 //	private Crypto crypto = Crypto.getsInstance();
 
 
@@ -181,6 +183,7 @@ public class HistoryAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				mDatas.remove(position);
+				mTraceDao.deleteAll(position+1);
 				notifyDataSetChanged();
 				listView.turnToNormal();
 			}
