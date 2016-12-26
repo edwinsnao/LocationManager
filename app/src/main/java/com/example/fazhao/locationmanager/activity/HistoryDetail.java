@@ -48,6 +48,10 @@ public class HistoryDetail extends Activity {
 		lv.setAdapter(mAdapter);
 		lv.addFooterView(mFooterView);
 
+		/**
+		* wrong
+		 * Only the original thread that created a view hierarchy can touch its views.
+		* */
 //		HandlerThread thread = new HandlerThread("MyThread");
 //		thread.start();
 //		final Handler handler = new Handler(thread.getLooper()) {

@@ -253,6 +253,7 @@ public class TraceDao
         return traceItem;
     }
 
+
 //    public void add(TraceItem1 traceItem)
 //    {
 //        String sql = "insert into trace_item (name,address,provider,latitude,longitude,accuracy,level,date,tag) values(?,?,?,?,?,?,?,?,?) ;";
@@ -747,6 +748,7 @@ public class TraceDao
 * */
     public void deleteAll(int tag)
     {
+        int max = maxTag();
         String sql = "delete from trace_item where tag = ?";
         String sql1 = "delete from time_item where _id = ?";
         String sql2 = "delete from route_item where _id = ?";
@@ -756,6 +758,23 @@ public class TraceDao
         db.execSQL(sql1, new Object[] { tag });
         db.execSQL(sql2, new Object[] { tag });
         db.execSQL(sql3, new Object[] { tag });
+        /**
+        * 更新删除后序列不连续的问题
+        * */
+        for(int i = tag;i<max;i++){
+            String sql4 = "update  trace_item set tag = ? where tag = ?";
+            String sql5 = "update  time_item set _id = ? where _id = ?";
+            String sql6 = "update  distance_item set _id = ? where _id = ?";
+            String sql7 = "update  route_item set _id = ? where _id = ?";
+//            String sql4 = "update  trace_item set tag = " + i +"where tag = "+i+1;
+//            String sql5 = "update  time_item set _id = " + i + "where _id = "+i+1;
+//            String sql6 = "update  distance_item set _id = "+i+ "where _id = "+i+1;
+//            String sql7 = "update  route_item set _id = "+i+ "where _id = "+i+1;
+            db.execSQL(sql4, new Object[] { i,i+1 });
+            db.execSQL(sql5, new Object[] { i,i+1 });
+            db.execSQL(sql6, new Object[] { i,i+1 });
+            db.execSQL(sql7, new Object[] { i,i+1 });
+        }
         db.close();
     }
     public void deleteAll()
