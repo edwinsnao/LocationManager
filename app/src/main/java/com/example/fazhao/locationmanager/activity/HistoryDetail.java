@@ -48,9 +48,10 @@ public class HistoryDetail extends Activity {
 		lv.setAdapter(mAdapter);
 		lv.addFooterView(mFooterView);
 
-		HandlerThread thread = new HandlerThread("MyThread");
-		thread.start();
-		final Handler handler = new Handler(thread.getLooper()) {
+//		HandlerThread thread = new HandlerThread("MyThread");
+//		thread.start();
+//		final Handler handler = new Handler(thread.getLooper()) {
+		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
@@ -85,17 +86,17 @@ public class HistoryDetail extends Activity {
 
 	}
 
-	class MyIntentService extends IntentService {
-
-		public MyIntentService(String name) {
-			super(name);
-		}
-
-		@Override
-		protected void onHandleIntent(Intent intent) {
-			mDatas = mTraceDao.searchData(tag);
-			mAdapter.notifyDataSetChanged();
-		}
-	}
+//	class MyIntentService extends IntentService {
+//
+//		public MyIntentService(String name) {
+//			super(name);
+//		}
+//
+//		@Override
+//		protected void onHandleIntent(Intent intent) {
+//			mDatas = mTraceDao.searchData(tag);
+//			mAdapter.notifyDataSetChanged();
+//		}
+//	}
 
 }

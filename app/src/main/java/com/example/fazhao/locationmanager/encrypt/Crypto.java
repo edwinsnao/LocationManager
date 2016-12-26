@@ -13,6 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.example.fazhao.locationmanager.application.BaseApplication;
 
@@ -34,8 +35,16 @@ public class Crypto {
         KeyManager km = new KeyManager(ctx);
         String key = "12345678909876543212345678909876";
         String iv1 = "1234567890987654";
+        Log.e("iv1",""+iv1);
+        Log.e("iv1",""+iv1.getBytes());
+        Log.e("key",""+key);
+        Log.e("key",""+key.getBytes());
         km.setIv(iv1.getBytes());
         km.setId(key.getBytes());
+        Log.e("kmiv1",""+km.getIv());
+        Log.e("kmkey",""+km.getId());
+        Log.e("kmiv1Null?", String.valueOf(km.getIv() == null));
+        Log.e("kmkeyNull?", String.valueOf(km.getId() == null));
 //        KeyManager km = KeyManager.getsInstace();
 //        KeyManager km = BaseApplication.getKm();
         SecretKeySpec sks = new SecretKeySpec(km.getId(), engine);

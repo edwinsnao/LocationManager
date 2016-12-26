@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.example.fazhao.locationmanager.application.BaseApplication;
+import com.example.fazhao.locationmanager.encrypt.Crypto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +20,14 @@ import java.util.List;
 * */
 public class TraceDao
 {
-
+    private Crypto crypto;
 //    Crypto crypto = TencentMaps.crypto;
     private DBHelper dbHelper;
 
     public TraceDao()
     {
         dbHelper = BaseApplication.getDbHelper();
+        crypto = BaseApplication.getmCrypto();
     }
 
     public void add(TraceItem traceItem)
@@ -334,8 +337,10 @@ public class TraceDao
                 *上面是错在忽略了id，id为c.getInt(0);占据了0所以全部需要往后加1才正确
                 * */
 //                        String name = c.getString(0);
-                        String address = c.getString(0);
-                        String date = c.getString(1);
+//                        String address = c.getString(0);
+//                        String date = c.getString(1);
+                        String address = crypto.armorDecrypt(c.getString(0));
+                        String date = crypto.armorDecrypt(c.getString(1));
                         double latitude = c.getDouble(2);
                         double longitude = c.getDouble(3);
                         int step = c.getInt(4);
@@ -614,8 +619,8 @@ public class TraceDao
             {
                 traceItem = new TraceItem();
 //                String name = c.getString(0);
-                String address = c.getString(0);
-                String date = c.getString(1);
+                String address = crypto.armorDecrypt(c.getString(0));
+                String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
 //                Integer level = c.getInt(6);
@@ -677,8 +682,8 @@ public class TraceDao
             {
                 traceItem = new TraceItem();
 //                String name = c.getString(0);
-                String address = c.getString(0);
-                String date = c.getString(1);
+                String address = crypto.armorDecrypt(c.getString(0));
+                String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
 //                Integer level = c.getInt(6);

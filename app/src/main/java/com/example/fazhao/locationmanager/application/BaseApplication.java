@@ -72,8 +72,8 @@ public class BaseApplication extends Application {
             return;
         }
 //        Crypto.init(this);
-        mCrypto = new Crypto(this);
         km = new KeyManager(this);
+        mCrypto = new Crypto(this);
 //        KeyManager.init(this);
         dbHelper = new DBHelper(this);
         mTaceDao = new TraceDao();

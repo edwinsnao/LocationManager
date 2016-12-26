@@ -53,6 +53,7 @@ public class HistoryMaps extends Activity {
 	TextView showTime;
 //	Crypto crypto = Crypto.getsInstance();
 	Crypto crypto = BaseApplication.getmCrypto();
+//	Crypto crypto = new Crypto(this);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -129,8 +130,10 @@ public class HistoryMaps extends Activity {
 		drawSolidLine1();
 //		computeDistance();
 		ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1))));
-		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
 				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
+//		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
+//				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 	}
 
 	private void initView() {

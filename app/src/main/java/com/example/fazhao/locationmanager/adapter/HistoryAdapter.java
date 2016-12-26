@@ -116,29 +116,31 @@ public class HistoryAdapter extends BaseAdapter {
 		}
 		if (mDatas1 != null) {
 			TraceItem traceItem1 = mDatas1.get(position);
-			try {
+//			try {
 				StringBuilder builder = new StringBuilder("结束时间：");
-				builder.append(crypto.armorDecrypt(traceItem1.getDate()));
+//				builder.append(crypto.armorDecrypt(traceItem1.getDate()));
+				builder.append(traceItem1.getDate());
 //				holder.time_end.setText("结束时间：" + crypto.armorDecrypt(traceItem1.getDate()));
 				holder.time_end.setText(builder);
 				StringBuilder builder1 = new StringBuilder("目的地：");
 //				builder1.append(crypto.armorDecrypt(traceItem1.getName()));
-				builder1.append(crypto.armorDecrypt(traceItem1.getAddress()));
+//				builder1.append(crypto.armorDecrypt(traceItem1.getAddress()));
+				builder1.append(traceItem1.getAddress());
 //				holder.address_destination.setText("目的地：" + crypto.armorDecrypt(traceItem1.getName()));
 				holder.address_destination.setText(builder1);
-			} catch (InvalidKeyException e) {
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (NoSuchPaddingException e) {
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				e.printStackTrace();
-			} catch (InvalidAlgorithmParameterException e) {
-				e.printStackTrace();
-			}
+//			} catch (InvalidKeyException e) {
+//				e.printStackTrace();
+//			} catch (NoSuchAlgorithmException e) {
+//				e.printStackTrace();
+//			} catch (NoSuchPaddingException e) {
+//				e.printStackTrace();
+//			} catch (IllegalBlockSizeException e) {
+//				e.printStackTrace();
+//			} catch (BadPaddingException e) {
+//				e.printStackTrace();
+//			} catch (InvalidAlgorithmParameterException e) {
+//				e.printStackTrace();
+//			}
 		} else {
 			holder.time_end.setVisibility(View.GONE);
 			holder.address_destination.setVisibility(View.GONE);
@@ -149,9 +151,10 @@ public class HistoryAdapter extends BaseAdapter {
 		builder.append(traceItem.getTag());
 //		holder.tag.setText("编号：" + traceItem.getTag());
 		holder.tag.setText(builder);
-		try {
+//		try {
 			StringBuilder builder2 = new StringBuilder("出发时间：");
-			builder2.append(crypto.armorDecrypt(traceItem.getDate()));
+//			builder2.append(crypto.armorDecrypt(traceItem.getDate()));
+			builder2.append(traceItem.getDate());
 //			holder.time_start.setText("出发时间：" + crypto.armorDecrypt(traceItem.getDate()));
 			holder.time_start.setText(builder2);
 			/**
@@ -159,22 +162,23 @@ public class HistoryAdapter extends BaseAdapter {
 			 * */
 			StringBuilder builder3 = new StringBuilder("出发地：");
 //			builder3.append(crypto.armorDecrypt(traceItem.getName()));
-			builder3.append(crypto.armorDecrypt(traceItem.getAddress()));
+//			builder3.append(crypto.armorDecrypt(traceItem.getAddress()));
+			builder3.append(traceItem.getAddress());
 //			holder.address_start.setText("出发地：" + crypto.armorDecrypt(traceItem.getName()));
 			holder.address_start.setText(builder3);
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
-		}
+//		} catch (InvalidKeyException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchPaddingException e) {
+//			e.printStackTrace();
+//		} catch (IllegalBlockSizeException e) {
+//			e.printStackTrace();
+//		} catch (BadPaddingException e) {
+//			e.printStackTrace();
+//		} catch (InvalidAlgorithmParameterException e) {
+//			e.printStackTrace();
+//		}
 		StringBuilder builder4 = new StringBuilder("步数:");
 //		builder4.append(mTraceDao.getLastStep().getStep());
 		builder4.append(traceItem.getStep());

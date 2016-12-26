@@ -47,6 +47,8 @@ public class KeyManager {
                 bos.write(b, 0, bytesRead);
             }
             data = bos.toByteArray();
+            fis.close();
+            bos.close();
         }  catch (IOException e) {
         }
         return data;
