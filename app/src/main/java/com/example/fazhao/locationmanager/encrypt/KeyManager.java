@@ -14,7 +14,7 @@ public class KeyManager {
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
 //    private static KeyManager sInstace;
-    private static Context ctx;
+    private  Context ctx;
 
     public KeyManager(Context cntx) {
         ctx = cntx;

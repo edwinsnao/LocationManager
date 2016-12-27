@@ -12,8 +12,15 @@ import android.util.Log;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
 * this is for baidu_map
@@ -225,8 +232,24 @@ public class TraceDao
 
         while (c.moveToNext())
         {
-            String date_start = c.getString(0);
-            String date_end = c.getString(1);
+            String date_end = null;
+            String date_start = null;
+            try {
+                date_start = crypto.armorDecrypt(c.getString(0));
+                date_end = crypto.armorDecrypt(c.getString(1));
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            }
             list.add(date_start);
             list.add(date_end);
         }

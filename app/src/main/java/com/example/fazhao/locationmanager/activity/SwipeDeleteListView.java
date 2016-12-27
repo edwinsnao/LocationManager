@@ -52,8 +52,8 @@ public class SwipeDeleteListView extends ListView {
         /**
         * 消耗此事件，防止滑动抬起后被dialog判定为点击
         * */
-        return true;
-//        return super.onTouchEvent(ev);
+//        return true;
+        return super.onTouchEvent(ev);
     }
 
     // 处理action_down事件

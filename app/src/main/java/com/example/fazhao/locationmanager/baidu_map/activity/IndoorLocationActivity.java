@@ -523,7 +523,7 @@ public class IndoorLocationActivity extends Activity {
         info = (TextView) findViewById(R.id.et_streetView);
 //        if(traceItems.size() !=0) {
         if(BaseApplication.isHasHistory()){
-            try {
+//            try {
                 List<String> time = mTraceDao.getLastTime();
                 List<TraceItem> distance = mTraceDao.getLastDistance();
                 List<String> route = mTraceDao.getLastRoute();
@@ -533,23 +533,23 @@ public class IndoorLocationActivity extends Activity {
                 * 多表查询
                 * */
 //            出发地:route.get(0),目的地:route.get(1)
-                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(time.get(0)), crypto.armorDecrypt(time.get(1)), "yyyy-MM-dd-HH:mm:ss", "m")
+                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this,time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
 //                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            }
+//            } catch (InvalidKeyException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchPaddingException e) {
+//                e.printStackTrace();
+//            } catch (IllegalBlockSizeException e) {
+//                e.printStackTrace();
+//            } catch (BadPaddingException e) {
+//                e.printStackTrace();
+//            } catch (InvalidAlgorithmParameterException e) {
+//                e.printStackTrace();
+//            }
         }
         save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(new OnClickListener() {
@@ -588,6 +588,7 @@ public class IndoorLocationActivity extends Activity {
                                          * listview是从0开始，但是我的tag是从1开始，所以position+1
                                          * */
                                         bundle.putInt("choice", position + 1);
+//                                        Log.e("choice",String.valueOf(position + 1));
                                         Intent it = new Intent();
                                         it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
                                         it.putExtras(bundle);

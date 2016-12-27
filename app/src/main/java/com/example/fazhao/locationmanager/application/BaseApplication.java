@@ -103,8 +103,11 @@ public class BaseApplication extends Application {
         }//如果该目录不存在，创建该目录
         String databasefilename = sdpath+"/"+filename;//其值等于database的路径
         File filepath = new File(databasefilename);
-        if(filepath.exists())
-            filepath.delete();
+        /**
+        * 如果重置了，就把下面两行注释掉
+        * */
+//        if(filepath.exists())
+//            filepath.delete();
         if (!filepath.exists()) {//如果文件不存在
             try {
                 InputStream inputStream = getResources().openRawResource(R.raw.trace);//将raw中的test.db放入输入流中
