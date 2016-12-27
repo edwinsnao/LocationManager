@@ -3,6 +3,7 @@ package com.example.fazhao.locationmanager.activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -19,6 +20,15 @@ public class SwipeDeleteListView extends ListView {
     private int mDeleteBtnWidth;// 删除按钮的宽度
 
     private boolean isMove = false;
+    private boolean moved = false;
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
+    }
 
     private boolean isDeleteShown;	// 删除按钮是否正在显示
 
@@ -43,11 +53,13 @@ public class SwipeDeleteListView extends ListView {
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                isMove = false;
                 performActionDown(ev);
                 break;
             case MotionEvent.ACTION_MOVE:
                 return performActionMove(ev);
             case MotionEvent.ACTION_UP:
+                Log.e("isMove",String.valueOf(isMove));
                 if(isMove) {
                     performActionUp();
                     isMove = false;
@@ -55,13 +67,15 @@ public class SwipeDeleteListView extends ListView {
                 }
                 else {
                     performActionUp();
-                    break;
+//                    return false;
+                    return super.onTouchEvent(ev);
                 }
         }
         /**
         * 消耗此事件，防止滑动抬起后被dialog判定为点击
         * */
 //        return true;
+//        return false;
         return super.onTouchEvent(ev);
     }
 
@@ -91,7 +105,6 @@ public class SwipeDeleteListView extends ListView {
     private boolean performActionMove(MotionEvent ev) {
         int nowX = (int) ev.getX();
         int nowY = (int) ev.getY();
-        isMove = true;
         if(Math.abs(nowX - mDownX) > Math.abs(nowY - mDownY)) {
             // 如果向左滑动
             if(nowX < mDownX) {
@@ -105,11 +118,20 @@ public class SwipeDeleteListView extends ListView {
                 mLayoutParams.leftMargin = scroll;
                 mPointChild.getChildAt(0).setLayoutParams(mLayoutParams);
             }
-
+            moved = true;
+            isMove = true;
             return true;
         }
+        if(Math.abs(nowY - mDownY) > Math.abs(nowX - mDownX)){
+            isMove = true;
+            if(moved)
+                turnToNormal();
+            return super.onTouchEvent(ev);
+        }
+        isMove = false;
 //        return super.onTouchEvent(ev);
-        return true;
+        return false;
+//        return true;
     }
 
     // 处理action_up事件

@@ -587,13 +587,18 @@ public class IndoorLocationActivity extends Activity {
                                         /**
                                          * listview是从0开始，但是我的tag是从1开始，所以position+1
                                          * */
-                                        bundle.putInt("choice", position + 1);
+                                        if(lv.isMoved()){
+                                            lv.setMoved(false);
+                                            lv.turnToNormal();
+                                        }else {
+                                            bundle.putInt("choice", position + 1);
 //                                        Log.e("choice",String.valueOf(position + 1));
-                                        Intent it = new Intent();
-                                        it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
-                                        it.putExtras(bundle);
-                                        startActivity(it);
-                                        finish();
+                                            Intent it = new Intent();
+                                            it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
+                                            it.putExtras(bundle);
+                                            startActivity(it);
+                                            finish();
+                                        }
                                     }
                                 });
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);
