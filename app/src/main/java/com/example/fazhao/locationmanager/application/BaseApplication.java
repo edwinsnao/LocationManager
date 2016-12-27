@@ -4,6 +4,9 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.model.LatLng;
 import com.example.fazhao.locationmanager.R;
@@ -29,6 +32,21 @@ public class BaseApplication extends Application {
     private static SQLiteDatabase db;
     private static List<LatLng> historyFromLoad = new ArrayList<>();
     private static boolean hasHistory;
+    private static LocationClient mLocClient;
+    private static LocationClientOption option;
+
+    public static LocationClient getmLocClient() {
+        return mLocClient;
+    }
+
+    public static LocationClientOption getOption() {
+        return option;
+    }
+
+    public static void registerListener(BDLocationListener mListener){
+        mLocClient.registerLocationListener(mListener);
+    }
+
     public static final String sdpath = "/data/data/com.example.fazhao.locationmanager/databases/";//sdpath用于存放保存的路径。
 //    public static final String sdpath = "/data/data/com.example.fazhao.locationmanager/files/";//sdpath用于存放保存的路径。
     public static final String filename = "trace";//filename用于保存文件名。
@@ -89,8 +107,21 @@ public class BaseApplication extends Application {
 //        Crypto.init(this);
         km = new KeyManager(this);
         mCrypto = new Crypto(this);
+        mLocClient = new LocationClient(this);
+        option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setProdName("LocationManager");
+//        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(5000);
+        option.setLocationNotify(true);
+        option.disableCache(false);
+        option.setNeedDeviceDirect(true);
+        option.setIsNeedAddress(true);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
 //        db = getmDb();
 //        KeyManager.init(this);
+        mLocClient.setLocOption(option);
         dbHelper = new DBHelper(this);
         mTaceDao = new TraceDao();
 

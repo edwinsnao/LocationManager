@@ -86,7 +86,7 @@
             </action>
         </intent-filter>
     </service>
-        <service android:name=".baidu_map.activity.IndoorLocationActivity$LocationService">
+        <service android:name=".baidu_map.service.LocationService">
             <intent-filter >
                 <action android:name="com.fazhao.locationservice"/>
             </intent-filter>

@@ -89,8 +89,6 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class IndoorLocationActivity extends Activity {
 
-    // 定位相关
-    static LocationClient mLocClient;
 //    public MyLocationListenner myListener = new MyLocationListenner();
     private LocationMode mCurrentMode;
     BitmapDescriptor mCurrentMarker;
@@ -100,7 +98,7 @@ public class IndoorLocationActivity extends Activity {
     private int constant=0;
 
     private MapView mMapView;
-    private static BaiduMap mBaiduMap;
+    private BaiduMap mBaiduMap;
     private StripListView stripListView;
     private BaseStripAdapter mFloorListAdapter;
     private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
@@ -109,40 +107,40 @@ public class IndoorLocationActivity extends Activity {
     private Button compute,save,load;
     private CheckBox traffice,satelite,scale,scaleBtn;
     private ImageButton requestLocButton;
-    public static boolean isFirstLoc = true; // 是否首次定位
+    public boolean isFirstLoc = true; // 是否首次定位
 
-    protected static  MapStatusUpdate msUpdate = null;
+    protected  MapStatusUpdate msUpdate = null;
     /**
      *  覆盖物
      */
-    protected static OverlayOptions overlay,StartOverlay,EndOverlay;
+    protected OverlayOptions overlay,StartOverlay,EndOverlay;
     /**
      *  路线覆盖物
      */
-    private static PolylineOptions polyline = null;
+    private PolylineOptions polyline = null;
     /**
      * 手机加速度感应器服务注册
      */
-    private static Acc acc=new Acc();
-    private static LatLng latLng,ll;
-    private static List<BDLocation> history = new ArrayList<>();
-    private static List<LatLng> pointList = new ArrayList<LatLng>();
+    private Acc acc=new Acc();
+    private LatLng latLng,ll;
+    private List<BDLocation> history = new ArrayList<>();
+    private List<LatLng> pointList = new ArrayList<LatLng>();
     /**
      * 最小距离单位(米)
      */
-    private static final Double MinDistance=2.0;
+    private final Double MinDistance=2.0;
     /**
      * 因距离太大丢失的点数
      */
-    private static int LostLoc=0;
+    private int LostLoc=0;
     /**
      * 最大距离单位(米)
      */
-    private final static Double MaxDistance=90.00;
+    private final Double MaxDistance=90.00;
     /**
      * 第一次定位丢失的点数
      */
-    private static int FLostLoc=0;
+    private int FLostLoc=0;
     private int tmp;
 //    private BitmapDescriptor mBitmap;
     private int locTime = 0;
@@ -165,151 +163,14 @@ public class IndoorLocationActivity extends Activity {
     List<LatLng> historyFromLoad = BaseApplication.getHistory();
     private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
-    private static LocationClientOption option;
+    LocationClient mLocClient = BaseApplication.getmLocClient();
+    LocationClientOption option = BaseApplication.getOption();
 
-    public static class LocationService extends Service {
-        public LocationService(){
-
-        }
-
-        private PowerManager.WakeLock wakeLock = null;
-        @Override
-        public IBinder onBind(Intent intent) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public void onCreate() {
-            // TODO Auto-generated method stub
-            super.onCreate();
-            mLocClient = new LocationClient(this.getApplicationContext());
-//            LocationClientOption option = new LocationClientOption();
-//            option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);//ÉèÖÃ¶¨Î»Ä£Ê½
-//            option.setCoorType("bd09ll");//·µ»ØµÄ¶¨Î»½á¹ûÊÇ°Ù¶È¾­Î³¶È£¬Ä¬ÈÏÖµgcj02
-//            int span=3000;
-//            option.setScanSpan(span);//ÉèÖÃ·¢Æð¶¨Î»ÇëÇóµÄ¼ä¸ôÊ±¼äÎª5000ms
-            mLocClient.setLocOption(option);
-            mLocClient.setLocOption(option);
-            mLocClient.registerLocationListener(mListener);
-            mLocClient.start();
-
-//            mLocationClient.registerLocationListener(new BDLocationListener() {
-//
-//                @Override
-//                public void onReceiveLocation(BDLocation location) {
-//                    // TODO Auto-generated method stub
-//                    ll = new LatLng(location.getLatitude(),
-//                            location.getLongitude());
-////            CoordinateConverter converter = new CoordinateConverter();
-////            converter.from(CoordinateConverter.CoordType.GPS);
-////            // latLng 待转换坐标
-////            converter.coord(ll);
-////            LatLng desLatLng = converter.convert();
-//                    MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
-//                            // 此处设置开发者获取到的方向信息，顺时针0-360
-//                            .direction(100).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
-//                    // 设置定位数据
-//                    mBaiduMap.setMyLocationData(locData);
-//                    if(isFirstLoc){
-//                        isFirstLoc=false;
-////                    if(constant<pointList.size()){
-////                        if(DistanceUtil.getDistance(pointList.get(constant),ll)>DistanceUtil.getDistance(pointList.get(constant+1),ll)){
-////                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant+1),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
-////                            if(DistanceUtil.getDistance(pointList.get(constant+1),ll)>100&&isGetNewRoute){
-////                                IsGetNewRoute();
-////                            }
-////                            constant++;
-////                        }else{
-////                            save("距离: "+DistanceUtil.getDistance(pointList.get(constant),ll)+" 时间: "+getStringDate()+" 点数: "+constant);
-////                            if(DistanceUtil.getDistance(pointList.get(constant),ll)>100&&isGetNewRoute){
-////                                IsGetNewRoute();
-////                            }
-////                        }
-////                    }
-//
-//                        drawRealtimePoint(ll);
-////                drawRealtimePoint(desLatLng);
-//                    }else{
-//                        showRealtimeTrack(location);
-//                    }
-//                    history.add(location);
-//
-////                StringBuffer sb = new StringBuffer(256);
-////                sb.append("time : ");
-////                sb.append(location.getTime());
-////                sb.append("\nerror code : ");
-////                sb.append(location.getLocType());
-////                sb.append("\nlatitude : ");
-////                sb.append(location.getLatitude());
-////                sb.append("\nlontitude : ");
-////                sb.append(location.getLongitude());
-////                sb.append("\nradius : ");
-////                sb.append(location.getRadius());
-////                if (location.getLocType() == BDLocation.TypeGpsLocation){
-////                    sb.append("\nspeed : ");
-////                    sb.append(location.getSpeed());
-////                    sb.append("\nsatellite : ");
-////                    sb.append(location.getSatelliteNumber());
-////                    sb.append("\ndirection : ");
-////                    sb.append("\naddr : ");
-////                    sb.append(location.getAddrStr());
-////                    sb.append(location.getDirection());
-////                } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
-////                    sb.append("\naddr : ");
-////                    sb.append(location.getAddrStr());
-////                    //ÔËÓªÉÌÐÅÏ¢
-////                    sb.append("\noperationers : ");
-////                    sb.append(location.getOperators());
-////                }
-////
-////                Log.i("BaiduLocationApiDem", sb.toString());
-//                }
-//            });
-//            mLocationClient.start();
-        }
-
-        @Override
-        public void onStart(Intent intent, int startId) {
-            // TODO Auto-generated method stub
-            super.onStart(intent, startId);
-            acquireWakeLock();
-        }
-
-        @Override
-        public void onDestroy() {
-            // TODO Auto-generated method stub
-            super.onDestroy();
-            releaseWakeLock();
-        }
-
-        private void acquireWakeLock() {
-            if (null == wakeLock) {
-                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
-                        | PowerManager.ON_AFTER_RELEASE, getClass()
-                        .getCanonicalName());
-                if (null != wakeLock) {
-                    //   Log.i(TAG, "call acquireWakeLock");
-                    wakeLock.acquire();
-                }
-            }
-        }
-
-        // ÊÍ·ÅÉè±¸µçÔ´Ëø
-        private void releaseWakeLock() {
-            if (null != wakeLock && wakeLock.isHeld()) {
-                //   Log.i(TAG, "call releaseWakeLock");
-                wakeLock.release();
-                wakeLock = null;
-            }
-        }
-    }
 
     private Intent tmpIntent = new Intent();
 //    private Intent serviceIt = new Intent(IndoorLocationActivity.this,LocationService.class);
 
-    private static  BDLocationListener mListener = new BDLocationListener(){
+    private  BDLocationListener mListener = new BDLocationListener(){
 
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -355,13 +216,13 @@ public class IndoorLocationActivity extends Activity {
                 showRealtimeTrack(location);
             }
             history.add(location);
-//            Log.e("address",String.valueOf(location.getAddress().address));
-//            if(location.getAddress().address != null)
-//            Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
-//            Log.e("time",String.valueOf(location.getTime()));
-//            Log.e("latitude",String.valueOf(location.getLatitude()));
-//            Log.e("lontitude",String.valueOf(location.getLongitude()));
-//            Log.e("size",String.valueOf(history));
+            Log.e("address",String.valueOf(location.getAddress().address));
+            if(location.getAddress().address != null)
+            Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
+            Log.e("time",String.valueOf(location.getTime()));
+            Log.e("latitude",String.valueOf(location.getLatitude()));
+            Log.e("lontitude",String.valueOf(location.getLongitude()));
+            Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
 
         }
@@ -501,19 +362,20 @@ public class IndoorLocationActivity extends Activity {
 //        mLocClient = new LocationClient(getApplicationContext());
 //        mLocClient.registerLocationListener(myListener);
 //        mLocClient.registerLocationListener(mListener);
-        option = new LocationClientOption();
-        option.setOpenGps(true); // 打开gps
-        option.setProdName("LocationManager");
-//        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);
-        option.setLocationNotify(true);
-        option.disableCache(false);
-        option.setNeedDeviceDirect(true);
-        option.setIsNeedAddress(true);
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        option = new LocationClientOption();
+//        option.setOpenGps(true); // 打开gps
+//        option.setProdName("LocationManager");
+////        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
+//        option.setCoorType("bd09ll"); // 设置坐标类型
+//        option.setScanSpan(5000);
+//        option.setLocationNotify(true);
+//        option.disableCache(false);
+//        option.setNeedDeviceDirect(true);
+//        option.setIsNeedAddress(true);
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
 //        mLocClient.setLocOption(option);
 //        mLocClient.start();
+        BaseApplication.registerListener(mListener);
         stripListView = new StripListView(this);
         layout.addView(stripListView);
         setContentView(layout);
@@ -862,7 +724,7 @@ public class IndoorLocationActivity extends Activity {
 	 *
 	 * @param realtimeTrack
 	 */
-    protected static void showRealtimeTrack(BDLocation location) {
+    protected void showRealtimeTrack(BDLocation location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
@@ -903,7 +765,7 @@ public class IndoorLocationActivity extends Activity {
      *
      * @param point
      */
-    private static void drawRealtimePoint(LatLng point) {
+    private void drawRealtimePoint(LatLng point) {
 
         mBaiduMap.clear();
         polyline=null;
@@ -930,7 +792,7 @@ public class IndoorLocationActivity extends Activity {
     /*
 	 * 判断手机是否在运动
 	 */
-    private static boolean IsMove(LatLng latLng,BDLocation location){
+    private boolean IsMove(LatLng latLng,BDLocation location){
 //        Log.e("locTime", String.valueOf(locTime++));
         if(pointList.size()>=1){
             Double dis= DistanceUtil.getDistance(pointList.get(pointList.size()-1),latLng);
@@ -977,7 +839,7 @@ public class IndoorLocationActivity extends Activity {
     /*
 	 * 添加地图覆盖物
 	 */
-    protected  static void addMarker() {
+    protected  void addMarker() {
 
         if (null != msUpdate) {
             mBaiduMap.setMapStatus(msUpdate);
