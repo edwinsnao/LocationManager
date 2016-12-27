@@ -18,6 +18,8 @@ public class SwipeDeleteListView extends ListView {
     private int mDownY;			// 按下点的y值
     private int mDeleteBtnWidth;// 删除按钮的宽度
 
+    private boolean isMove = false;
+
     private boolean isDeleteShown;	// 删除按钮是否正在显示
 
     private ViewGroup mPointChild;	// 当前处理的item
@@ -46,8 +48,15 @@ public class SwipeDeleteListView extends ListView {
             case MotionEvent.ACTION_MOVE:
                 return performActionMove(ev);
             case MotionEvent.ACTION_UP:
-                performActionUp();
-                break;
+                if(isMove) {
+                    performActionUp();
+                    isMove = false;
+                    return true;
+                }
+                else {
+                    performActionUp();
+                    break;
+                }
         }
         /**
         * 消耗此事件，防止滑动抬起后被dialog判定为点击
@@ -82,6 +91,7 @@ public class SwipeDeleteListView extends ListView {
     private boolean performActionMove(MotionEvent ev) {
         int nowX = (int) ev.getX();
         int nowY = (int) ev.getY();
+        isMove = true;
         if(Math.abs(nowX - mDownX) > Math.abs(nowY - mDownY)) {
             // 如果向左滑动
             if(nowX < mDownX) {
@@ -98,7 +108,8 @@ public class SwipeDeleteListView extends ListView {
 
             return true;
         }
-        return super.onTouchEvent(ev);
+//        return super.onTouchEvent(ev);
+        return true;
     }
 
     // 处理action_up事件
