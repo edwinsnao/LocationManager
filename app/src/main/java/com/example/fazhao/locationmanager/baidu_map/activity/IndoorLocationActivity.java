@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -69,6 +70,7 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.baidu_map.Acc;
 import com.example.fazhao.locationmanager.baidu_map.StripListView;
 import com.example.fazhao.locationmanager.baidu_map.adapter.BaseStripAdapter;
+import com.example.fazhao.locationmanager.baidu_map.interfaces.TransferListener;
 import com.example.fazhao.locationmanager.baidu_map.util.BaiduUtils;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
@@ -87,7 +89,7 @@ import javax.crypto.NoSuchPaddingException;
 /**
  * 此demo用来展示如何结合定位SDK实现室内定位，并使用MyLocationOverlay绘制定位位置
  */
-public class IndoorLocationActivity extends Activity {
+public class IndoorLocationActivity extends Activity implements TransferListener {
 
 //    public MyLocationListenner myListener = new MyLocationListenner();
     private LocationMode mCurrentMode;
@@ -218,8 +220,7 @@ public class IndoorLocationActivity extends Activity {
             history.add(location);
             if(history.size() >= 2) {
                 save.setClickable(true);
-//                TODO
-//                save.setBackgroundColor();
+                save.setBackgroundColor(getResources().getColor(R.color.gray));
             }
             Log.e("address",String.valueOf(location.getAddress().address));
             if(location.getAddress().address != null)
@@ -230,6 +231,17 @@ public class IndoorLocationActivity extends Activity {
             Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
 
+        }
+    };
+
+
+    private Handler updateDialog = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            historyDialog.setTitle("历史记录有" + (tag-1) + "数据");
+//            ((TextView)(historyDialog.findViewById(R.id.history_num))).setText("历史记录有" + (tag-1) + "数据");
+            Log.e("tag",""+(tag-1));
         }
     };
 
@@ -431,8 +443,7 @@ public class IndoorLocationActivity extends Activity {
             }
         });
         save.setClickable(false);
-//        TODO
-//        save.setBackgroundColor();
+        save.setBackgroundColor(getResources().getColor(R.color.gray));
         load = (Button) findViewById(R.id.btn_load);
         load.setOnClickListener(new OnClickListener() {
             @Override
@@ -472,6 +483,7 @@ public class IndoorLocationActivity extends Activity {
                                     }
                                 });
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);
+//                                mAdapter.setClickListener(IndoorLocationActivity.this);
                                 lv.setDivider(getResources().getDrawable(R.drawable.divider));
                                 lv.setAdapter(mAdapter);
                                 lv.setFooterDividersEnabled(true);
@@ -561,6 +573,7 @@ public class IndoorLocationActivity extends Activity {
                                                 .create().show();
                                     }
                                 });
+//                                historyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
                                 /**
                                  * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
@@ -754,6 +767,10 @@ public class IndoorLocationActivity extends Activity {
 
     }
 
+    @Override
+    public void click() {
+        updateDialog.sendEmptyMessage(0);
+    }
 
 
     public class BaiduReceiver extends BroadcastReceiver {

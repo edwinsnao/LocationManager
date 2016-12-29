@@ -1,5 +1,6 @@
 package com.example.fazhao.locationmanager.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,8 +39,14 @@ public class HistoryAdapter extends BaseAdapter {
 	private Crypto crypto;
 	private KeyManager km;
 	private TraceDao mTraceDao = BaseApplication.getmTaceDao();
+	private Context mContext;
 //	private Crypto crypto = Crypto.getsInstance();
+//	private deleteClick mDeleteClick;
 
+
+//	public void setClickListener(deleteClick deleteClick) {
+//		mDeleteClick = deleteClick;
+//	}
 
 	/**
 	 * 使用了github开源的ImageLoad进行了数据加载
@@ -58,6 +65,7 @@ public class HistoryAdapter extends BaseAdapter {
 		km.setIv(iv.getBytes());
 		km.setId(key.getBytes());
 		crypto = new Crypto(context);
+		mContext = context;
 	}
 
 	public HistoryAdapter(Context context, List<TraceItem> datas, SwipeDeleteListView lv) {
@@ -190,12 +198,19 @@ public class HistoryAdapter extends BaseAdapter {
 				mTraceDao.deleteAll(position+1);
 				notifyDataSetChanged();
 				listView.turnToNormal();
+				IndoorLocationActivity activity = (IndoorLocationActivity) mContext;
+				activity.click();
 			}
 		});
 
 
 		return convertView;
 	}
+
+//	public interface deleteClick{
+//		public void click();
+//
+//	}
 
 	private final class ViewHolder {
 		TextView time_start;
