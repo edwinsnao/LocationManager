@@ -160,7 +160,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private SensorEventListener mSensorEventListener;
     private Sensor mStepSensor;
     private SensorManager mSensorManager;
-    private TextView step,info;
+    private TextView step,info,historyTitle;
     private LatLng latLng1;
     List<LatLng> historyFromLoad = BaseApplication.getHistory();
     private List<TraceItem> traceItems;
@@ -235,15 +235,22 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     };
 
 
-    private Handler updateDialog = new Handler(){
+    private Runnable updateTitle = new Runnable() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            historyDialog.setTitle("历史记录有" + (tag-1) + "数据");
-//            ((TextView)(historyDialog.findViewById(R.id.history_num))).setText("历史记录有" + (tag-1) + "数据");
-            Log.e("tag",""+(tag-1));
+        public void run() {
+            historyTitle.setText("历史记录有" + (tag-1) + "数据");
         }
     };
+
+//    private Handler updateDialog = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+////            historyDialog.setTitle("历史记录有" + (tag-1) + "数据");
+//            ((TextView)(historyDialog.findViewById(R.id.history_num))).setText("历史记录有" + (tag-1) + "数据");
+//            Log.e("tag",""+(tag-1));
+//        }
+//    };
 
     public static Intent createExplicitFromImplicitIntent(Context context, Intent implicitIntent) {
         // Retrieve all services that can match the given intent
@@ -490,7 +497,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                 lv.setHeaderDividersEnabled(true);
                                 lv.addFooterView(mFooterView);
                                 historyDialog = new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
-                                        .setTitle("历史记录有" + tag + "数据").setView(v1)//在这里把写好的这个listview的布局加载dialog中
+//                                        .setTitle("历史记录有" + tag + "数据")
+                                        .setView(v1)//在这里把写好的这个listview的布局加载dialog中
                                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -573,7 +581,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 .create().show();
                                     }
                                 });
-//                                historyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                historyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
                                 /**
                                  * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
@@ -581,6 +589,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                  * 但是这个dialog在activity退出之前没有进行dismiss所以泄漏了
                                  * */
                                 historyDialog.show();
+                                historyTitle = ((TextView)(historyDialog.findViewById(R.id.history_num)));
+                                historyTitle.setText("历史记录有" + tag + "数据");
                                 break;
                         }
                     }
@@ -769,7 +779,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     @Override
     public void click() {
-        updateDialog.sendEmptyMessage(0);
+//        updateDialog.sendEmptyMessage(0);
+//        runOnUiThread(updateTitle);
+        Handler handler = new Handler();
+        handler.post(updateTitle);
     }
 
 
