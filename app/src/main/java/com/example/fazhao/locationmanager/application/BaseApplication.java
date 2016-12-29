@@ -34,6 +34,7 @@ public class BaseApplication extends Application {
     private static boolean hasHistory;
     private static LocationClient mLocClient;
     private static LocationClientOption option;
+    private File filepath;
 
     public static LocationClient getmLocClient() {
         return mLocClient;
@@ -96,7 +97,7 @@ public class BaseApplication extends Application {
         /**
         * 百度地图
         * */
-        getmDb();
+//        getmDb();
         SDKInitializer.initialize(getApplicationContext());
         LeakCanary.install(this);
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -123,40 +124,43 @@ public class BaseApplication extends Application {
 //        KeyManager.init(this);
         mLocClient.setLocOption(option);
         dbHelper = new DBHelper(this);
+        String databasefilename = sdpath+"/"+filename;//其值等于database的路径
+        filepath = new File(databasefilename);
+        db = SQLiteDatabase.openDatabase(filepath.getPath(),null,SQLiteDatabase.OPEN_READWRITE);//利用openDatabase方法打开数据库。
         mTaceDao = new TraceDao();
 
     }
 
-    private void getmDb() {
-        File dir = new File(sdpath);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }//如果该目录不存在，创建该目录
-        String databasefilename = sdpath+"/"+filename;//其值等于database的路径
-        File filepath = new File(databasefilename);
-        /**
-        * 如果重置了，就把下面两行注释掉
-        * */
+//    private void getmDb() {
+//        File dir = new File(sdpath);
+//        if (!dir.exists()) {
+//            dir.mkdir();
+//        }//如果该目录不存在，创建该目录
+//        String databasefilename = sdpath+"/"+filename;//其值等于database的路径
+//        filepath = new File(databasefilename);
+//        /**
+//        * 如果重置了，就把下面两行注释掉
+//        * */
 //        if(filepath.exists())
 //            filepath.delete();
-        if (!filepath.exists()) {//如果文件不存在
-            try {
-                InputStream inputStream = getResources().openRawResource(R.raw.trace);//将raw中的test.db放入输入流中
-                FileOutputStream fileOutputStream = new FileOutputStream(databasefilename);//将新的文件放入输出流中
-                byte[] buff = new byte[8192];
-                int len = 0;
-                while ((len = inputStream.read(buff)) > 0) {
-                    fileOutputStream.write(buff, 0, len);
-                }
-                fileOutputStream.close();
-                inputStream.close();
-            } catch (Exception e) {
-                Log.e("info","无法复制");
-                e.printStackTrace();
-            }
-        }//写入文件结束
-        Log.e("filepath"," "+filepath);
-    }
+//        if (!filepath.exists()) {//如果文件不存在
+//            try {
+//                InputStream inputStream = getResources().openRawResource(R.raw.trace);//将raw中的test.db放入输入流中
+//                FileOutputStream fileOutputStream = new FileOutputStream(databasefilename);//将新的文件放入输出流中
+//                byte[] buff = new byte[8192];
+//                int len = 0;
+//                while ((len = inputStream.read(buff)) > 0) {
+//                    fileOutputStream.write(buff, 0, len);
+//                }
+//                fileOutputStream.close();
+//                inputStream.close();
+//            } catch (Exception e) {
+//                Log.e("info","无法复制");
+//                e.printStackTrace();
+//            }
+//        }//写入文件结束
+//        Log.e("filepath"," "+filepath);
+//    }
 //    private SQLiteDatabase getmDb() {
 //        File dir = new File(sdpath);
 //        if (!dir.exists()) {

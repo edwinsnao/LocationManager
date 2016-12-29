@@ -216,6 +216,11 @@ public class IndoorLocationActivity extends Activity {
                 showRealtimeTrack(location);
             }
             history.add(location);
+            if(history.size() >= 2) {
+                save.setClickable(true);
+//                TODO
+//                save.setBackgroundColor();
+            }
             Log.e("address",String.valueOf(location.getAddress().address));
             if(location.getAddress().address != null)
             Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
@@ -395,7 +400,7 @@ public class IndoorLocationActivity extends Activity {
                 * 多表查询
                 * */
 //            出发地:route.get(0),目的地:route.get(1)
-                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this,time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
+                info.setText("上次定位出发地:"+route.get(0)+",目的地:"+route.get(1)+",距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this,time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
 //                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
@@ -425,6 +430,9 @@ public class IndoorLocationActivity extends Activity {
                 Toast.makeText(IndoorLocationActivity.this, "saved!", Toast.LENGTH_SHORT).show();
             }
         });
+        save.setClickable(false);
+//        TODO
+//        save.setBackgroundColor();
         load = (Button) findViewById(R.id.btn_load);
         load.setOnClickListener(new OnClickListener() {
             @Override
@@ -955,6 +963,10 @@ public class IndoorLocationActivity extends Activity {
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         stopService(serviceIt);
+        /**
+        * 在这里关闭db
+        * */
+        BaseApplication.getDbHelper().close();
         super.onDestroy();
     }
 

@@ -96,6 +96,10 @@ public class HistoryMaps extends Activity {
 		mBaiduMap.setMyLocationEnabled(false);
 		mapView.onDestroy();
 		mapView = null;
+		/**
+		 * 在这里关闭db
+		 * */
+		BaseApplication.getDbHelper().close();
 		super.onDestroy();
 	}
 
