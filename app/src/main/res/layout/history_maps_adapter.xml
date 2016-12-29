@@ -58,7 +58,7 @@
 
     <TextView
         android:id="@+id/delete"
-        android:layout_width="80dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:background="#FFFF0000"
         android:gravity="center"

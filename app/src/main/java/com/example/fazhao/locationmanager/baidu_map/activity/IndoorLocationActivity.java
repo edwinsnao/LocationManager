@@ -162,11 +162,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private SensorManager mSensorManager;
     private TextView step,info,historyTitle;
     private LatLng latLng1;
-    List<LatLng> historyFromLoad = BaseApplication.getHistory();
+    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
     private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
-    LocationClient mLocClient = BaseApplication.getmLocClient();
-    LocationClientOption option = BaseApplication.getOption();
+    private LocationClient mLocClient = BaseApplication.getmLocClient();
+    private LocationClientOption option = BaseApplication.getOption();
+    private Handler handler;
 
 
     private Intent tmpIntent = new Intent();
@@ -781,7 +782,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     public void click() {
 //        updateDialog.sendEmptyMessage(0);
 //        runOnUiThread(updateTitle);
-        Handler handler = new Handler();
+        if(handler == null)
+            handler = new Handler();
         handler.post(updateTitle);
     }
 

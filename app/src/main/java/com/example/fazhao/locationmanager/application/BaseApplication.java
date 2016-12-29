@@ -1,7 +1,9 @@
 package com.example.fazhao.locationmanager.application;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.util.Log;
 
 import com.baidu.location.BDLocationListener;
@@ -19,6 +21,7 @@ import com.squareup.leakcanary.LeakCanary;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +97,21 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        try {
+            /**
+             * 三星手机泄漏内存(editText)，我的手机
+             * */
+            if ("samsung".equalsIgnoreCase(Build.MANUFACTURER) &&
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
+                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                Class cls = Class.forName("android.sec.clipboard.ClipboardUIManager");
+                Method m = cls.getDeclaredMethod("getInstance", Context.class);
+                m.setAccessible(true);
+                Object o = m.invoke(null, getApplicationContext());
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         /**
         * 百度地图
         * */
