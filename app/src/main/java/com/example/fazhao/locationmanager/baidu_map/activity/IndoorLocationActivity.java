@@ -16,6 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -216,7 +217,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             history.add(location);
             if(history.size() >= 2) {
                 save.setClickable(true);
-                save.setBackgroundColor(getResources().getColor(R.color.gray));
+//                save.setBackgroundColor(getResources().getColor(R.color.gray));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    save.setBackground(getResources().getDrawable(R.drawable.button_style));
+                }
             }
             Log.e("address",String.valueOf(location.getAddress().address));
             if(location.getAddress().address != null)
@@ -446,7 +450,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
         });
         save.setClickable(false);
-        save.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            save.setBackground(getResources().getDrawable(R.drawable.button_gray));
+        }
+//        save.setBackgroundColor(getResources().getColor(R.color.gray));
         load = (Button) findViewById(R.id.btn_load);
         load.setOnClickListener(new OnClickListener() {
             @Override
