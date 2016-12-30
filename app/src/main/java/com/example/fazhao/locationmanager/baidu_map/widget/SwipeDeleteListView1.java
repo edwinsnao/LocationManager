@@ -1,4 +1,4 @@
-package com.example.fazhao.locationmanager.activity;
+package com.example.fazhao.locationmanager.baidu_map.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.activity.ScrollLinearLayout;
 
 /**
  * Created by fazhao on 2016/12/30.

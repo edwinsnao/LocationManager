@@ -1,8 +1,6 @@
 package com.example.fazhao.locationmanager.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
-import com.example.fazhao.locationmanager.activity.SwipeDeleteListView;
-import com.example.fazhao.locationmanager.activity.SwipeDeleteListView1;
+import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
@@ -19,14 +16,7 @@ import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActiv
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by Kings on 2016/2/13.

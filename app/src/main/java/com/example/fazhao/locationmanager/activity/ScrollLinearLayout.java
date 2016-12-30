@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
+import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
+
 /**
  * Created by fazhao on 2016/12/30.
  */
