@@ -14,6 +14,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.DBHelper;
 import com.example.fazhao.locationmanager.activity.TraceDao;
+import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
 import com.squareup.leakcanary.LeakCanary;
@@ -38,9 +39,45 @@ public class BaseApplication extends Application {
     private static LocationClient mLocClient;
     private static LocationClientOption option;
     private File filepath;
+    private static List<String> time;
+    private static List<TraceItem> distance;
+    private static List<String> route;
+    private static int lastStep;
+
+    public static int getLastStep() {
+        return lastStep;
+    }
+
+    public static void setLastStep(int lastStep) {
+        BaseApplication.lastStep = lastStep;
+    }
 
     public static LocationClient getmLocClient() {
         return mLocClient;
+    }
+
+    public static List<String> getRoute() {
+        return route;
+    }
+
+    public static void setRoute(List<String> r) {
+        route = r;
+    }
+
+    public static List<String> getTime() {
+        return time;
+    }
+
+    public static void setTime(List<String> t) {
+        time = t;
+    }
+
+    public static List<TraceItem> getDistance() {
+        return distance;
+    }
+
+    public static void setDistance(List<TraceItem> d) {
+        distance = d;
     }
 
     public static LocationClientOption getOption() {

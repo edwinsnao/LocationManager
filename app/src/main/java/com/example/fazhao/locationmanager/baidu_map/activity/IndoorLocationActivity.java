@@ -161,12 +161,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private Sensor mStepSensor;
     private SensorManager mSensorManager;
     private TextView step,info,historyTitle;
-    private LatLng latLng1;
-    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
-    private List<TraceItem> traceItems;
+//    private LatLng latLng1;
+//    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
+//    private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
     private LocationClient mLocClient = BaseApplication.getmLocClient();
-    private LocationClientOption option = BaseApplication.getOption();
+//    private LocationClientOption option = BaseApplication.getOption();
     private Handler handler;
 
 
@@ -411,9 +411,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        if(traceItems.size() !=0) {
         if(BaseApplication.isHasHistory()){
 //            try {
-                List<String> time = mTraceDao.getLastTime();
-                List<TraceItem> distance = mTraceDao.getLastDistance();
-                List<String> route = mTraceDao.getLastRoute();
+                List<String> time = BaseApplication.getTime();
+                List<TraceItem> distance = BaseApplication.getDistance();
+                List<String> route = BaseApplication.getRoute();
                 LatLng latLng = new LatLng(distance.get(0).getLatitude(),distance.get(0).getLongitude());
                 LatLng latLng1 = new LatLng(distance.get(1).getLatitude(),distance.get(1).getLongitude());
                 /**
@@ -421,7 +421,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 * */
 //            出发地:route.get(0),目的地:route.get(1)
                 info.setText("上次定位出发地:"+route.get(0)+",目的地:"+route.get(1)+",距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this,time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
-                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
+                        + "分钟" + ",步数:" + BaseApplication.getLastStep());
 //                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
 //            } catch (InvalidKeyException e) {

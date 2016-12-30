@@ -3,6 +3,7 @@ package com.example.fazhao.locationmanager.baidu_map.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.baidu.mapapi.model.LatLng;
@@ -20,8 +21,12 @@ import java.util.List;
 public class SplashActivity extends Activity {
     private TraceDao mTraceDao;
     private List<TraceItem> traceItems;
-    private LatLng latLng1;
-    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
+    private List<String> time;
+    private List<TraceItem> distance;
+    private List<String> route;
+    private int lastStep;
+//    private LatLng latLng1;
+//    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +34,12 @@ public class SplashActivity extends Activity {
         initData();
         loadData();
         setData();
-        switchActivity();
+        Handler handler = new Handler();
+        /**
+        * 需要延时才可以看到，否则太快看不到
+        * */
+        handler.postDelayed(switchRunnable,500);
+
     }
 
     private void switchActivity() {
@@ -39,17 +49,32 @@ public class SplashActivity extends Activity {
         finish();
     }
 
+    private Runnable switchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            switchActivity();
+        }
+    };
+
     private void setData() {
-        BaseApplication.setHistory(historyFromLoad);
+//        BaseApplication.setHistory(historyFromLoad);
+        BaseApplication.setRoute(route);
+        BaseApplication.setDistance(distance);
+        BaseApplication.setTime(time);
+        BaseApplication.setLastStep(lastStep);
     }
 
+
     private void loadData() {
+        /**
+         * 上次数据
+         * */
         if(traceItems.size()!=0) {
-            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
-            for (int i = 0; i < traceItems.size(); i++) {
-                LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
-                historyFromLoad.add(latLng);
-            }
+//            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+//            for (int i = 0; i < traceItems.size(); i++) {
+//                LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
+//                historyFromLoad.add(latLng);
+//            }
             /**
             * 有history数据
             * */
@@ -57,9 +82,13 @@ public class SplashActivity extends Activity {
         }
         else
             BaseApplication.setHasHistory(false);
-        Log.e("hasHistory?",String.valueOf(BaseApplication.isHasHistory()));
-        BaseApplication.setHistory(historyFromLoad);
-        Log.e("traceItemSize?",String.valueOf(traceItems.size()));
+        time = mTraceDao.getLastTime();
+        route = mTraceDao.getLastRoute();
+        distance = mTraceDao.getLastDistance();
+        lastStep = mTraceDao.getLastStep().getStep();
+//        Log.e("hasHistory?",String.valueOf(BaseApplication.isHasHistory()));
+//        BaseApplication.setHistory(historyFromLoad);
+//        Log.e("traceItemSize?",String.valueOf(traceItems.size()));
     }
 
     private void initData() {
