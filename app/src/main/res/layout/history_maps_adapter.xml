@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal">
+    <TextView
+        android:id="@+id/delete"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="#FFFF0000"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="删除"
+        android:textColor="@android:color/white" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.fazhao.locationmanager.activity.ScrollLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:baselineAligned="true"
                   android:orientation="vertical"
-                  android:layout_height="wrap_content">
+                  android:layout_height="wrap_content"
+                  android:id="@+id/scroll">
 
 
         <TextView
@@ -54,16 +66,7 @@
             android:layout_marginLeft="10dp"
             />
 
-    </LinearLayout>
+    </com.example.fazhao.locationmanager.activity.ScrollLinearLayout>
 
-    <TextView
-        android:id="@+id/delete"
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:background="#FFFF0000"
-        android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="删除"
-        android:textColor="@android:color/white" />
-</LinearLayout>
+
+</FrameLayout>

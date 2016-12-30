@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.SwipeDeleteListView;
+import com.example.fazhao.locationmanager.activity.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
@@ -35,7 +36,7 @@ public class HistoryAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private List<TraceItem> mDatas;
 	private List<TraceItem> mDatas1;
-	private SwipeDeleteListView listView;
+	private SwipeDeleteListView1 listView;
 	private Crypto crypto;
 	private KeyManager km;
 	private TraceDao mTraceDao = BaseApplication.getmTaceDao();
@@ -68,14 +69,14 @@ public class HistoryAdapter extends BaseAdapter {
 		mContext = context;
 	}
 
-	public HistoryAdapter(Context context, List<TraceItem> datas, SwipeDeleteListView lv) {
+	public HistoryAdapter(Context context, List<TraceItem> datas, SwipeDeleteListView1 lv) {
 		this.mDatas = datas;
 		mInflater = LayoutInflater.from(context);
 		listView = lv;
 		initData(context);
 	}
 
-	public HistoryAdapter(Context context, List<TraceItem> datas, List<TraceItem> datas1, SwipeDeleteListView lv) {
+	public HistoryAdapter(Context context, List<TraceItem> datas, List<TraceItem> datas1, SwipeDeleteListView1 lv) {
 		this.mDatas = datas;
 		this.mDatas1 = datas1;
 		mInflater = LayoutInflater.from(context);
@@ -197,7 +198,7 @@ public class HistoryAdapter extends BaseAdapter {
 				mDatas.remove(position);
 				mTraceDao.deleteAll(position+1);
 				notifyDataSetChanged();
-				listView.turnToNormal();
+//				listView.turnToNormal();
 				IndoorLocationActivity activity = (IndoorLocationActivity) mContext;
 				activity.click();
 			}

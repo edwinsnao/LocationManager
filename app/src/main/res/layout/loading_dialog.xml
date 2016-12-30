@@ -27,9 +27,9 @@
         android:hint="@string/sear_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <com.example.fazhao.locationmanager.activity.SwipeDeleteListView
+    <com.example.fazhao.locationmanager.activity.SwipeDeleteListView1
         android:id="@+id/list_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.example.fazhao.locationmanager.activity.SwipeDeleteListView>
+        android:layout_height="match_parent"></com.example.fazhao.locationmanager.activity.SwipeDeleteListView1>
 </LinearLayout>
     </FrameLayout>

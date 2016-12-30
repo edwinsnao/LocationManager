@@ -63,6 +63,7 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
 import com.example.fazhao.locationmanager.activity.SwipeDeleteListView;
+import com.example.fazhao.locationmanager.activity.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.adapter.HistoryAdapter;
@@ -469,17 +470,17 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                             case 0:
                                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                                 final View v1 = inflater.inflate(R.layout.loading_dialog, null);
-                                final SwipeDeleteListView lv = (SwipeDeleteListView) v1.findViewById(R.id.list_history);
+                                final SwipeDeleteListView1 lv = (SwipeDeleteListView1) v1.findViewById(R.id.list_history);
                                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         /**
                                          * listview是从0开始，但是我的tag是从1开始，所以position+1
                                          * */
-                                        if(lv.isMoved()){
-                                            lv.setMoved(false);
-                                            lv.turnToNormal();
-                                        }else {
+//                                        if(lv.isMoved()){
+//                                            lv.setMoved(false);
+//                                            lv.turnToNormal();
+//                                        }else {
                                             bundle.putInt("choice", position + 1);
 //                                        Log.e("choice",String.valueOf(position + 1));
                                             Intent it = new Intent();
@@ -487,7 +488,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                             it.putExtras(bundle);
                                             startActivity(it);
                                             finish();
-                                        }
+//                                        }
                                     }
                                 });
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);

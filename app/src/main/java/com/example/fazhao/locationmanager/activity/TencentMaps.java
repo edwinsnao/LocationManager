@@ -318,7 +318,7 @@ public class TencentMaps extends MapActivity implements
                                         finish();
                                     }
                                 });
-                                mAdapter = new HistoryAdapter(TencentMaps.this, mDatas, mDatas1, lv);
+//                                mAdapter = new HistoryAdapter(TencentMaps.this, mDatas, mDatas1, lv);
                                 lv.setDivider(getResources().getDrawable(R.drawable.divider));
                                 lv.setAdapter(mAdapter);
                                 lv.setFooterDividersEnabled(true);
