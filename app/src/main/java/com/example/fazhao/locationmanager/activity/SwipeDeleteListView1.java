@@ -18,7 +18,7 @@ public class SwipeDeleteListView1 extends ListView {
     private final static String TAG = "Mms/SwipeListView";
     public final static boolean DBG = false;
 
-    private int mDeleteButtonWidth = 120; //original value of delete button width, will get real value from xml
+    private int mDeleteButtonWidth = 80; //original value of delete button width, will get real value from xml
     private Boolean mIsHorizontal; //true, if is moving horizontal; false if is moving vertical
     private View mCurrentItemView; //current item which display delete button
     private ScrollLinearLayout mCurrentScrollView; //the current scroll item
@@ -138,7 +138,7 @@ public class SwipeDeleteListView1 extends ListView {
 
                 if (motionPosition2 >= 0) {
                     View currentItemView = getChildAt(motionPosition2
-                            - getFirstVisiblePosition());
+                           - getFirstVisiblePosition());
                     if (mIsShown){
                         if (currentItemView != mCurrentItemView){
                             mIsGiveupTouchEvent = true;
@@ -148,9 +148,9 @@ public class SwipeDeleteListView1 extends ListView {
                             currentItemView.setPressed(false);
                         }
                     } else {
-                        mCurrentScrollView = (ScrollLinearLayout) findViewById(R.id.scroll);
                         mCurrentItemView = currentItemView;
-                        mDeleteView = mCurrentItemView.findViewById(R.id.delete);
+                        mCurrentScrollView = (ScrollLinearLayout) currentItemView.findViewById(R.id.scroll);
+                        mDeleteView = currentItemView.findViewById(R.id.delete);
                     }
                 } else{
                     if (mIsShown){
@@ -166,7 +166,9 @@ public class SwipeDeleteListView1 extends ListView {
                 if (mIsGiveupTouchEvent){
                     return true;
                 }
-
+                if (mCurrentItemView == null) {
+                    break;
+                }
                 float dx = lastX - mFirstX;
                 float dy = lastY - mFirstY;
 
@@ -298,6 +300,9 @@ public class SwipeDeleteListView1 extends ListView {
                     cancelEvent.recycle();
                     return true;
                 }
+
+                if(mCurrentItemView == null)
+                    break;
 
                 if (mIsHorizontal != null && mIsHorizontal) {
 //              if (mIsReadStatusChanged){
