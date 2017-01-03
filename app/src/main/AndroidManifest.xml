@@ -86,7 +86,9 @@
             </action>
         </intent-filter>
     </service>
-        <service android:name=".baidu_map.service.LocationService">
+        <service android:name=".baidu_map.service.LocationService"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter >
                 <action android:name="com.fazhao.locationservice"/>
             </intent-filter>

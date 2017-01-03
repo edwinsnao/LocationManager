@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.fazhao.locationmanager.application.BaseApplication;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by fazhao on 2016/12/27.
@@ -17,6 +21,9 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 public class LocationService extends Service {
     LocationClient mLocClient = BaseApplication.getmLocClient();
     LocationClientOption option = BaseApplication.getOption();
+    private Timer mTimer = null;
+    private TimerTask mTimerTask = null;
+    private boolean isStop = false;
     public LocationService(){
 
     }
@@ -26,6 +33,84 @@ public class LocationService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        if (mLocClient!=null) {
+            mLocClient.stop();
+        }
+        super.onDestroy();
+        // 停止定时器
+        if (isStop) {
+            Log.i("tag", "定时器服务停止");
+            stopTimer();
+        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // 触发定时器
+        if (!isStop) {
+            Log.i("tag", "定时器启动");
+            startTimer();
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * 定时器 每隔一段时间执行一次
+     */
+    private void startTimer() {
+        isStop = true;//定时器启动后，修改标识，关闭定时器的开关
+        if (mTimer == null) {
+            mTimer = new Timer();
+        }
+        if (mTimerTask == null) {
+            mTimerTask = new TimerTask() {
+
+                @Override
+                public void run() {
+                    do {
+                        try {
+                            Log.d("tag", "isStop="+isStop);
+                            mLocClient.start();
+                            Log.d("tag", "mLocClient.start()");
+                            Log.d("tag", "mLocClient=="+mLocClient);
+                            Thread.sleep(1000*5);//3秒后再次执行
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    } while (isStop);
+
+                }
+            };
+        }
+
+        if (mTimer != null && mTimerTask != null) {
+            Log.d("tag", "mTimer.schedule(mTimerTask, delay)");
+            mTimer.schedule(mTimerTask, 0);//执行定时器中的任务
+        }
+    }
+    /**
+     * 停止定时器，初始化定时器开关
+     */
+    private void stopTimer() {
+
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
+        }
+        isStop = false;//重新打开定时器开关
+        Log.d("tag", "isStop="+isStop);
+
     }
 
     @Override
@@ -122,15 +207,15 @@ public class LocationService extends Service {
     public void onStart(Intent intent, int startId) {
         // TODO Auto-generated method stub
         super.onStart(intent, startId);
-        acquireWakeLock();
+//        acquireWakeLock();
     }
 
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        releaseWakeLock();
-    }
+//    @Override
+//    public void onDestroy() {
+//        // TODO Auto-generated method stub
+//        super.onDestroy();
+//        releaseWakeLock();
+//    }
 
     private void acquireWakeLock() {
         if (null == wakeLock) {

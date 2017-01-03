@@ -75,6 +75,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -122,6 +123,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private Acc acc=new Acc();
     private LatLng latLng,ll;
     private List<BDLocation> history = new ArrayList<>();
+    private List<String> history_time = new ArrayList<>();
     private List<LatLng> pointList = new ArrayList<LatLng>();
     /**
      * 最小距离单位(米)
@@ -215,6 +217,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 showRealtimeTrack(location);
             }
             history.add(location);
+            Calendar now = Calendar.getInstance();
+            String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
+                    + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
+            history_time.add(time);
             if(history.size() >= 2) {
                 save.setClickable(true);
 //                save.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -225,7 +231,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             Log.e("address",String.valueOf(location.getAddress().address));
             if(location.getAddress().address != null)
             Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
-            Log.e("time",String.valueOf(location.getTime()));
+//            Log.e("time",String.valueOf(location.getTime()));
+            Log.e("time",time);
             Log.e("latitude",String.valueOf(location.getLatitude()));
             Log.e("lontitude",String.valueOf(location.getLongitude()));
             Log.e("size",String.valueOf(history));
@@ -709,7 +716,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             * */
             try {
                 int history_size = history.size()-1;
-                mTraceDao.addTime(crypto.armorEncrypt(history.get(0).getTime().getBytes()),crypto.armorEncrypt(history.get(history_size).getTime().getBytes()));
+//                mTraceDao.addTime(crypto.armorEncrypt(history.get(0).getTime().getBytes()),crypto.armorEncrypt(history.get(history_size).getTime().getBytes()));
+                mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes()),crypto.armorEncrypt(history_time.get(history_size).getBytes()));
                 if(history.get(0).getAddress().address != null && history.get(history_size).getAddress().address != null)
                 mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes()),crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()));
                 mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude(),history.get(0).getLongitude(),history.get(history_size).getLongitude());
@@ -726,7 +734,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                          * 应该把这里放到onlocationchanged里（history里setDate）
                          * 而这里就拿history的date
                          * */
-                        mTraceItem.setDate(crypto.armorEncrypt(history.get(i).getTime().getBytes()));
+//                        mTraceItem.setDate(crypto.armorEncrypt(history.get(i).getTime().getBytes()));
+                        mTraceItem.setDate(crypto.armorEncrypt(history_time.get(i).getBytes()));
                         /**
                          * 在最后一个插入步数
                          * 如果是0也插入，证明不是走路（是交通工具）
