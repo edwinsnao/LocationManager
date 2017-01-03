@@ -58,6 +58,7 @@ public class HistoryMaps extends Activity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
 		setContentView(R.layout.history_maps);
 		initView();
 		try {

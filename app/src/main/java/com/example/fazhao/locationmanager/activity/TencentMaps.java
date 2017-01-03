@@ -324,97 +324,97 @@ public class TencentMaps extends MapActivity implements
                                 lv.setFooterDividersEnabled(true);
                                 lv.setHeaderDividersEnabled(true);
                                 lv.addFooterView(mFooterView);
-                                historyDialog = new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
-                                        .setTitle("历史记录有" + tag + "数据").setView(v1)//在这里把写好的这个listview的布局加载dialog中
-                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                // TODO Auto-generated method stub
-                                                int choice = 0;
-                                                EditText et_choice = (EditText) v1.findViewById(R.id.et_searchData);
-                                                if (TextUtils.isEmpty(et_choice.getText())) {
-//                                            加入不输入任何信息，则默认取最新的数据
-                                                    choice = tag;
-                                                } else
-                                                    choice = Integer.valueOf(et_choice.getText().toString());
-                                                bundle.putInt("choice", choice);
-                                                Intent it = new Intent();
-                                                it.setClass(TencentMaps.this, HistoryMaps.class);
-                                                it.putExtras(bundle);
-                                                startActivity(it);
-                                                dialog.cancel();
-                                                TencentMaps.this.finish();
-                                            }
-                                        }).create();
-                                historyDialog.setButton3("清空历史记录", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mTraceDao.deleteAll();
-                                        mAdapter.notifyDataSetChanged();
-                                        dialog.cancel();
-                                    }
-                                });
-                                historyDialog.setButton2("清除指定记录", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                                        final View v = inflater.inflate(R.layout.delete_history_map, null);
-                                        new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
-                                                .setMessage("删除指定记录")
-                                                .setView(v)
-                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        /**
-                                                         * 默认删除第一次记录(最远的记录)
-                                                         * */
-                                                        int choice1 = 1;
-                                                        EditText et_choice = (EditText) v.findViewById(R.id.et_DelteData);
-                                                        if (TextUtils.isEmpty(et_choice.getText())) {
-                                                            choice1 = tag;
-                                                        } else
-                                                            choice1 = Integer.valueOf(et_choice.getText().toString());
-                                                        final int finalChoice = choice1;
-                                                        new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
-                                                                .setMessage("删除记录后不能恢复记录，是否继续？")
-                                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        mTraceDao.deleteAll(finalChoice);
-                                                                        /**
-                                                                         * mDatas是从mTraceDao.searchData得到的
-                                                                         * 因为上面一句 已经删除了
-                                                                         * 所以拿到的已经没有finalchoice了所以报错
-                                                                         * */
-                                                                        mAdapter.notifyDataSetChanged();
-                                                                        dialog.cancel();
-                                                                    }
-                                                                })
-                                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        dialog.cancel();
-                                                                    }
-                                                                })
-                                                                .create().show();
-                                                    }
-                                                })
-                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                    }
-                                                })
-                                                .create().show();
-                                    }
-                                });
-                                historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
-                                /**
-                                * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
-                                 * 然后就会finish这个activity而进入historyActivity
-                                 * 但是这个dialog在activity退出之前没有进行dismiss所以泄漏了
-                                * */
-                                historyDialog.show();
+//                                historyDialog = new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
+//                                        .setTitle("历史记录有" + tag + "数据").setView(v1)//在这里把写好的这个listview的布局加载dialog中
+//                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                // TODO Auto-generated method stub
+//                                                int choice = 0;
+//                                                EditText et_choice = (EditText) v1.findViewById(R.id.et_searchData);
+//                                                if (TextUtils.isEmpty(et_choice.getText())) {
+////                                            加入不输入任何信息，则默认取最新的数据
+//                                                    choice = tag;
+//                                                } else
+//                                                    choice = Integer.valueOf(et_choice.getText().toString());
+//                                                bundle.putInt("choice", choice);
+//                                                Intent it = new Intent();
+//                                                it.setClass(TencentMaps.this, HistoryMaps.class);
+//                                                it.putExtras(bundle);
+//                                                startActivity(it);
+//                                                dialog.cancel();
+//                                                TencentMaps.this.finish();
+//                                            }
+//                                        }).create();
+//                                historyDialog.setButton3("清空历史记录", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        mTraceDao.deleteAll();
+//                                        mAdapter.notifyDataSetChanged();
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                                historyDialog.setButton2("清除指定记录", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//                                        final View v = inflater.inflate(R.layout.delete_history_map, null);
+//                                        new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
+//                                                .setMessage("删除指定记录")
+//                                                .setView(v)
+//                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        /**
+//                                                         * 默认删除第一次记录(最远的记录)
+//                                                         * */
+//                                                        int choice1 = 1;
+//                                                        EditText et_choice = (EditText) v.findViewById(R.id.et_DelteData);
+//                                                        if (TextUtils.isEmpty(et_choice.getText())) {
+//                                                            choice1 = tag;
+//                                                        } else
+//                                                            choice1 = Integer.valueOf(et_choice.getText().toString());
+//                                                        final int finalChoice = choice1;
+//                                                        new AlertDialog.Builder(TencentMaps.this, AlertDialog.THEME_HOLO_LIGHT)
+//                                                                .setMessage("删除记录后不能恢复记录，是否继续？")
+//                                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                                    @Override
+//                                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                                        mTraceDao.deleteAll(finalChoice);
+//                                                                        /**
+//                                                                         * mDatas是从mTraceDao.searchData得到的
+//                                                                         * 因为上面一句 已经删除了
+//                                                                         * 所以拿到的已经没有finalchoice了所以报错
+//                                                                         * */
+//                                                                        mAdapter.notifyDataSetChanged();
+//                                                                        dialog.cancel();
+//                                                                    }
+//                                                                })
+//                                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                                    @Override
+//                                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                                        dialog.cancel();
+//                                                                    }
+//                                                                })
+//                                                                .create().show();
+//                                                    }
+//                                                })
+//                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        dialog.cancel();
+//                                                    }
+//                                                })
+//                                                .create().show();
+//                                    }
+//                                });
+//                                historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
+//                                /**
+//                                * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
+//                                 * 然后就会finish这个activity而进入historyActivity
+//                                 * 但是这个dialog在activity退出之前没有进行dismiss所以泄漏了
+//                                * */
+//                                historyDialog.show();
                                 break;
                         }
                     }

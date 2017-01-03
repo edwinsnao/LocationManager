@@ -169,8 +169,8 @@ public class BaseApplication extends Application {
         option.setProdName("LocationManager");
 //        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
         option.setCoorType("bd09ll"); // 设置坐标类型
-//        option.setScanSpan(5000);
-        option.setScanSpan(1000);
+        option.setScanSpan(5000);
+//        option.setScanSpan(1000);
         option.setLocationNotify(true);
         option.disableCache(false);
         option.setNeedDeviceDirect(true);

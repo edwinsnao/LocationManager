@@ -58,6 +58,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
+import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
 import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
@@ -147,7 +148,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private TraceDao mTraceDao;
     private TraceItem mTraceItem;
     private  int tag;
-    private AlertDialog historyDialog;
+//    private AlertDialog historyDialog;
+    private HistoryDialog historyDialog;
     private int mStep = 0;
     private Bundle bundle = new Bundle();
     private HistoryAdapter mAdapter;
@@ -292,13 +294,14 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         RelativeLayout layout = new RelativeLayout(this);
 
 //        mBitmap = BitmapDescriptorFactory.fromResource(R.mipmap.map_d);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
+        final View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
         layout.addView(mainview);
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
         requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
@@ -476,10 +479,124 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case 0:
-                                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                                final View v1 = inflater.inflate(R.layout.loading_dialog, null);
-                                final SwipeDeleteListView1 lv = (SwipeDeleteListView1) v1.findViewById(R.id.list_history);
-                                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//                                final View v1 = inflater.inflate(R.layout.loading_dialog, null);
+//                                final SwipeDeleteListView1 lv = (SwipeDeleteListView1) v1.findViewById(R.id.list_history);
+//                                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                    @Override
+//                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                        /**
+//                                         * listview是从0开始，但是我的tag是从1开始，所以position+1
+//                                         * */
+////                                        if(lv.isMoved()){
+////                                            lv.setMoved(false);
+////                                            lv.turnToNormal();
+////                                        }else {
+//                                            bundle.putInt("choice", position + 1);
+////                                        Log.e("choice",String.valueOf(position + 1));
+//                                            Intent it = new Intent();
+//                                            it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
+//                                            it.putExtras(bundle);
+//                                            startActivity(it);
+//                                            finish();
+////                                        }
+//                                    }
+//                                });
+//                                mAdapter.setClickListener(IndoorLocationActivity.this);
+//                                lv.setDivider(getResources().getDrawable(R.drawable.divider));
+//                                lv.setAdapter(mAdapter);
+//                                lv.setFooterDividersEnabled(true);
+//                                lv.setHeaderDividersEnabled(true);
+//                                lv.addFooterView(mFooterView);
+                                historyDialog = new HistoryDialog(IndoorLocationActivity.this);
+                                mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, historyDialog.lv);
+//                                historyDialog = new AlertDialog.Builder(IndoorLocationActivity.this, R.style.TANCStyle)
+//                                        .setTitle("历史记录有" + tag + "数据")
+//                                        .setView(v1)//在这里把写好的这个listview的布局加载dialog中
+//                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                // TODO Auto-generated method stub
+//                                                int choice = 0;
+//                                                EditText et_choice = (EditText) v1.findViewById(R.id.et_searchData);
+//                                                if (TextUtils.isEmpty(et_choice.getText())) {
+////                                            加入不输入任何信息，则默认取最新的数据
+//                                                    choice = tag;
+//                                                } else
+//                                                    choice = Integer.valueOf(et_choice.getText().toString());
+//                                                bundle.putInt("choice", choice);
+//                                                Intent it = new Intent();
+//                                                it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
+//                                                it.putExtras(bundle);
+//                                                startActivity(it);
+//                                                dialog.cancel();
+//                                                IndoorLocationActivity.this.finish();
+//                                            }
+//                                        }).create();
+//                                historyDialog.setButton3("清空历史记录", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        mTraceDao.deleteAll();
+//                                        mAdapter.notifyDataSetChanged();
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                                historyDialog.setButton2("清除指定记录", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//                                        final View v = inflater.inflate(R.layout.delete_history_map, null);
+//                                        new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+//                                                .setMessage("删除指定记录")
+//                                                .setView(v)
+//                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        /**
+//                                                         * 默认删除第一次记录(最远的记录)
+//                                                         * */
+//                                                        int choice1 = 1;
+//                                                        EditText et_choice = (EditText) v.findViewById(R.id.et_DelteData);
+//                                                        if (TextUtils.isEmpty(et_choice.getText())) {
+//                                                            choice1 = tag;
+//                                                        } else
+//                                                            choice1 = Integer.valueOf(et_choice.getText().toString());
+//                                                        final int finalChoice = choice1;
+//                                                        new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+//                                                                .setMessage("删除记录后不能恢复记录，是否继续？")
+//                                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                                    @Override
+//                                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                                        mTraceDao.deleteAll(finalChoice);
+//                                                                        /**
+//                                                                         * mDatas是从mTraceDao.searchData得到的
+//                                                                         * 因为上面一句 已经删除了
+//                                                                         * 所以拿到的已经没有finalchoice了所以报错
+//                                                                         * */
+//                                                                        mAdapter.notifyDataSetChanged();
+//                                                                        dialog.cancel();
+//                                                                    }
+//                                                                })
+//                                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                                    @Override
+//                                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                                        dialog.cancel();
+//                                                                    }
+//                                                                })
+//                                                                .create().show();
+//                                                    }
+//                                                })
+//                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        dialog.cancel();
+//                                                    }
+//                                                })
+//                                                .create().show();
+//                                    }
+//                                });
+                                historyDialog.lv.setAdapter(mAdapter);
+                                historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         /**
@@ -489,109 +606,32 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                            lv.setMoved(false);
 //                                            lv.turnToNormal();
 //                                        }else {
-                                            bundle.putInt("choice", position + 1);
+                                        bundle.putInt("choice", position + 1);
 //                                        Log.e("choice",String.valueOf(position + 1));
-                                            Intent it = new Intent();
-                                            it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
-                                            it.putExtras(bundle);
-                                            startActivity(it);
-                                            finish();
+                                        Intent it = new Intent();
+                                        it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
+                                        it.putExtras(bundle);
+                                        startActivity(it);
+                                        finish();
 //                                        }
                                     }
                                 });
-                                mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, lv);
-//                                mAdapter.setClickListener(IndoorLocationActivity.this);
-                                lv.setDivider(getResources().getDrawable(R.drawable.divider));
-                                lv.setAdapter(mAdapter);
-                                lv.setFooterDividersEnabled(true);
-                                lv.setHeaderDividersEnabled(true);
-                                lv.addFooterView(mFooterView);
-                                historyDialog = new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
-//                                        .setTitle("历史记录有" + tag + "数据")
-                                        .setView(v1)//在这里把写好的这个listview的布局加载dialog中
-                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                // TODO Auto-generated method stub
-                                                int choice = 0;
-                                                EditText et_choice = (EditText) v1.findViewById(R.id.et_searchData);
-                                                if (TextUtils.isEmpty(et_choice.getText())) {
-//                                            加入不输入任何信息，则默认取最新的数据
-                                                    choice = tag;
-                                                } else
-                                                    choice = Integer.valueOf(et_choice.getText().toString());
-                                                bundle.putInt("choice", choice);
-                                                Intent it = new Intent();
-                                                it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
-                                                it.putExtras(bundle);
-                                                startActivity(it);
-                                                dialog.cancel();
-                                                IndoorLocationActivity.this.finish();
-                                            }
-                                        }).create();
-                                historyDialog.setButton3("清空历史记录", new DialogInterface.OnClickListener() {
+                                historyDialog.setOnDeleteAllListener(new OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(View view) {
                                         mTraceDao.deleteAll();
                                         mAdapter.notifyDataSetChanged();
-                                        dialog.cancel();
+                                        historyDialog.title.setText("历史记录有0数据");
                                     }
                                 });
-                                historyDialog.setButton2("清除指定记录", new DialogInterface.OnClickListener() {
+                                historyDialog.setOnNegativeListener(new OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                                        final View v = inflater.inflate(R.layout.delete_history_map, null);
-                                        new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
-                                                .setMessage("删除指定记录")
-                                                .setView(v)
-                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        /**
-                                                         * 默认删除第一次记录(最远的记录)
-                                                         * */
-                                                        int choice1 = 1;
-                                                        EditText et_choice = (EditText) v.findViewById(R.id.et_DelteData);
-                                                        if (TextUtils.isEmpty(et_choice.getText())) {
-                                                            choice1 = tag;
-                                                        } else
-                                                            choice1 = Integer.valueOf(et_choice.getText().toString());
-                                                        final int finalChoice = choice1;
-                                                        new AlertDialog.Builder(IndoorLocationActivity.this, AlertDialog.THEME_HOLO_LIGHT)
-                                                                .setMessage("删除记录后不能恢复记录，是否继续？")
-                                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        mTraceDao.deleteAll(finalChoice);
-                                                                        /**
-                                                                         * mDatas是从mTraceDao.searchData得到的
-                                                                         * 因为上面一句 已经删除了
-                                                                         * 所以拿到的已经没有finalchoice了所以报错
-                                                                         * */
-                                                                        mAdapter.notifyDataSetChanged();
-                                                                        dialog.cancel();
-                                                                    }
-                                                                })
-                                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        dialog.cancel();
-                                                                    }
-                                                                })
-                                                                .create().show();
-                                                    }
-                                                })
-                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                    }
-                                                })
-                                                .create().show();
+                                    public void onClick(View view) {
+                                        historyDialog.cancel();
                                     }
                                 });
-                                historyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                                historyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                historyDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                                 historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
                                 /**
                                  * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
