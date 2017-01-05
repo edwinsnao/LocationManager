@@ -1020,7 +1020,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     @Override
     protected void onPause() {
-        mMapView.onPause();
+//        mMapView.onPause();
         if(historyDialog!=null)
             historyDialog.dismiss();
         super.onPause();

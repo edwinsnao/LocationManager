@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,7 +22,10 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.adapter.HistoryAdapter;
+import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 import com.example.fazhao.locationmanager.baidu_map.util.BaiduUtils;
+import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.tencent.mapsdk.raster.model.Marker;
@@ -36,6 +43,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static android.R.attr.tag;
+
 /**
  * Created by Kings on 2016/2/12.
  */
@@ -45,15 +54,20 @@ public class HistoryMaps extends Activity {
 	private Marker myLocation;
 	private BaiduMap mBaiduMap;
 	private TraceDao mTraceDao;
+	private List<TraceItem> mDatas,mDatas1,traceItems;
 	private CheckBox traffice,satelite,scale,scaleBtn;
 	private com.baidu.mapapi.map.PolylineOptions polyline = null;
 	protected MapStatusUpdate msUpdate = null;
-	List<LatLng> historyFromLoad = new ArrayList<LatLng>();
-	Button detail;
-	TextView showTime;
-//	Crypto crypto = Crypto.getsInstance();
-	Crypto crypto = BaseApplication.getmCrypto();
-//	Crypto crypto = new Crypto(this);
+	private List<LatLng> historyFromLoad = new ArrayList<LatLng>();
+	private Button detail,load;
+	private TextView showTime,historyTitle;
+	private int tag;
+//	private Crypto crypto = Crypto.getsInstance();
+	private Crypto crypto = BaseApplication.getmCrypto();
+	private HistoryAdapter mAdapter;
+	private HistoryDialog historyDialog;
+	private Handler mHandler;
+//	private Crypto crypto = new Crypto(this);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -61,8 +75,9 @@ public class HistoryMaps extends Activity {
 		this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
 		setContentView(R.layout.history_maps);
 		initView();
+		int choice = getIntent().getIntExtra("choice", 0);
 		try {
-			initData();
+			initData(choice);
 			operation();
 		} catch (NoSuchPaddingException e) {
 			e.printStackTrace();
@@ -88,6 +103,8 @@ public class HistoryMaps extends Activity {
 
 	@Override
 	protected void onPause() {
+		if(historyDialog!=null)
+			historyDialog.dismiss();
 		mapView.onPause();
 		super.onPause();
 	}
@@ -97,6 +114,8 @@ public class HistoryMaps extends Activity {
 		mBaiduMap.setMyLocationEnabled(false);
 		mapView.onDestroy();
 		mapView = null;
+		if(mHandler!=null)
+			mHandler.removeCallbacksAndMessages(null);
 		/**
 		 * 在这里关闭db
 		 * */
@@ -117,15 +136,16 @@ public class HistoryMaps extends Activity {
 
 		msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
 		mBaiduMap.animateMapStatus(msUpdate);
+		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
+				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 	}
 
-	private void initData() throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+	private void initData(int choice) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
 		if (historyFromLoad.size() != 0)
 			historyFromLoad.clear();
 		mTraceDao = BaseApplication.getmTaceDao();
-		int choice = getIntent().getIntExtra("choice", 0);
 		//TODO 线程
-		List<TraceItem> traceItems = mTraceDao.searchData(choice);
+		traceItems = mTraceDao.searchData(choice);
 		latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
 		for (int i = 0; i < traceItems.size(); i++) {
 			LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
@@ -135,8 +155,8 @@ public class HistoryMaps extends Activity {
 		drawSolidLine1();
 //		computeDistance();
 		ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0),historyFromLoad.get(historyFromLoad.size()-1))));
-		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
-				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
+//		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
+//				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 //		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 	}
@@ -205,7 +225,140 @@ public class HistoryMaps extends Activity {
 				}
 			}
 		});
+		load = (Button) findViewById(R.id.look_history);
+		load.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				/**
+				 * 查询有多少次
+				 * */
+				HandlerThread thread = new HandlerThread("MyThread");
+				thread.start();
+				final Handler handler = new Handler(thread.getLooper()) {
+					@Override
+					public void handleMessage(Message msg) {
+						super.handleMessage(msg);
+						switch (msg.what) {
+							case 0:
+								historyDialog = new HistoryDialog(HistoryMaps.this);
+								mAdapter = new HistoryAdapter(HistoryMaps.this, mDatas, mDatas1, historyDialog.lv);
+								historyDialog.lv.setAdapter(mAdapter);
+								historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+									@Override
+									public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+										/**
+										 * listview是从0开始，但是我的tag是从1开始，所以position+1
+										 * */
 
+//											if(mHandler == null)
+//												mHandler = new Handler();
+//											Runnable runnable = new Runnable() {
+//												@Override
+//												public void run() {
+//													try{
+//														initData(position+1);
+//														operation();
+//														detail.setOnClickListener(new View.OnClickListener() {
+//															@Override
+//															public void onClick(View v) {
+//																Intent it = new Intent(HistoryMaps.this, HistoryDetail.class);
+//																Bundle bundle = new Bundle();
+//																bundle.putInt("choice", position+1);
+//																it.putExtras(bundle);
+//																startActivity(it);
+//															}
+//														});
+//													} catch (NoSuchPaddingException e) {
+//														e.printStackTrace();
+//													} catch (InvalidAlgorithmParameterException e) {
+//														e.printStackTrace();
+//													} catch (NoSuchAlgorithmException e) {
+//														e.printStackTrace();
+//													} catch (IllegalBlockSizeException e) {
+//														e.printStackTrace();
+//													} catch (BadPaddingException e) {
+//														e.printStackTrace();
+//													} catch (InvalidKeyException e) {
+//														e.printStackTrace();
+//													}
+//												}
+//											};
+//										mHandler.post(runnable);
+										runOnUiThread(new Runnable() {
+											@Override
+											public void run() {
+												try{
+													initData(position+1);
+													operation();
+													detail.setOnClickListener(new View.OnClickListener() {
+														@Override
+														public void onClick(View v) {
+															Intent it = new Intent(HistoryMaps.this, HistoryDetail.class);
+															Bundle bundle = new Bundle();
+															bundle.putInt("choice", position+1);
+															it.putExtras(bundle);
+															startActivity(it);
+														}
+													});
+												} catch (NoSuchPaddingException e) {
+													e.printStackTrace();
+												} catch (InvalidAlgorithmParameterException e) {
+													e.printStackTrace();
+												} catch (NoSuchAlgorithmException e) {
+													e.printStackTrace();
+												} catch (IllegalBlockSizeException e) {
+													e.printStackTrace();
+												} catch (BadPaddingException e) {
+													e.printStackTrace();
+												} catch (InvalidKeyException e) {
+													e.printStackTrace();
+												}
+												historyDialog.dismiss();
+											}
+										});
+									}
+								});
+								historyDialog.setOnDeleteAllListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View view) {
+										mTraceDao.deleteAll();
+										mAdapter.notifyDataSetChanged();
+										historyDialog.title.setText("历史记录有0数据");
+									}
+								});
+								historyDialog.setOnNegativeListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View view) {
+										historyDialog.cancel();
+									}
+								});
+								historyDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+								historyDialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
+								/**
+								 * 显示历史的dialog泄露了内存，因为我显示历史后会点击listview的item
+								 * 然后就会finish这个activity而进入historyActivity
+								 * 但是这个dialog在activity退出之前没有进行dismiss所以泄漏了
+								 * */
+								historyDialog.show();
+								historyTitle = ((TextView)(historyDialog.findViewById(R.id.history_num)));
+								historyTitle.setText("历史记录有" + tag + "数据");
+								break;
+						}
+					}
+				};
+				Runnable runnable = new Runnable() {
+					@Override
+					public void run() {
+						tag = mTraceDao.maxTag();
+						mDatas = mTraceDao.searchDistinctDataStart();
+						mDatas1 = mTraceDao.searchDistinctDataDestination();
+					}
+				};
+				handler.post(runnable);
+				handler.sendEmptyMessage(0);
+//
+			}
+		});
 	}
 
 	protected void drawSolidLine1() {
