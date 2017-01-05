@@ -62,8 +62,8 @@ public class HistoryDetail extends Activity {
 				switch (msg.what) {
 					case 0:
 						mAdapter.notifyDataSetChanged();
-						Log.e("eadapter", String.valueOf(mAdapter));
-						Log.e("edatas", String.valueOf(mDatas));
+//						Log.e("eadapter", String.valueOf(mAdapter));
+//						Log.e("edatas", String.valueOf(mDatas));
 						break;
 				}
 			}

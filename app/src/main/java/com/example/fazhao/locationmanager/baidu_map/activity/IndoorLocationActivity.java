@@ -151,6 +151,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //    private AlertDialog historyDialog;
     private HistoryDialog historyDialog;
     private int mStep = 0;
+    private List<Integer> history_step;
     private Bundle bundle = new Bundle();
     private HistoryAdapter mAdapter;
     private View mFooterView;
@@ -223,6 +224,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
             history_time.add(time);
+            history_step.add(mStep);
             if(history.size() >= 2) {
                 save.setClickable(true);
 //                save.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -781,7 +783,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                          * 如果是0也插入，证明不是走路（是交通工具）
                          * */
 //                        if(i == history.size() - 1){
-                        mTraceItem.setStep(mStep);
+                        mTraceItem.setStep(history_step.get(i));
 //                        }
                         mTraceDao.add(mTraceItem);
                 }

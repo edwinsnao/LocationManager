@@ -716,7 +716,7 @@ public class TraceDao
             * */
 //            String sql = "select *,min(date) from trace_item group by tag ";
 //            String sql = "select name,address,min(date),latitude,longitude,tag from trace_item group by tag";
-            String sql = "select address,min(date),latitude,longitude,tag from trace_item group by tag";
+            String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
 //            SQLiteDatabase db = dbHelper.getReadableDatabase();
 //            Cursor c = db.rawQuery(sql, new String[] { newsType + "", offset + "", "" + (offset + 10) });
             Cursor c = db.rawQuery(sql, null);
@@ -736,6 +736,7 @@ public class TraceDao
 //                String provider = c.getString(7);
 //                Double accuracy = c.getDouble(8);
                 int tag  = c.getInt(4);
+                int step = c.getInt(5);
 
 //                traceItem.setName(crypto.armorDecrypt(name));
 //                traceItem.setAddress(crypto.armorDecrypt(address));
@@ -756,6 +757,7 @@ public class TraceDao
 //                traceItem.setProvider(provider);
 //                traceItem.setAccuracy(accuracy);
                 traceItem.setTag(tag);
+                traceItem.setStep(step);
 //                这里也要+？
 
                 traceItems.add(traceItem);
