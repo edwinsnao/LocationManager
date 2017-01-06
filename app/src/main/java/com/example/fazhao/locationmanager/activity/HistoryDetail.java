@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.adapter.HistoryAdapter;
 import com.example.fazhao.locationmanager.application.BaseApplication;
+import com.example.fazhao.locationmanager.baidu_map.widget.SlideLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,25 @@ public class HistoryDetail extends Activity {
 	HistoryAdapter mAdapter;
 	private List<TraceItem> mDatas = new ArrayList<TraceItem>();
 	TraceDao mTraceDao;
+	SlideLayout slide;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_history);
+		initUI();
 		initData();
+	}
+
+	private void initUI() {
+		slide = (SlideLayout) findViewById(R.id.slide);
+		slide.setOnSildingFinishListener(new SlideLayout.OnSildingFinishListener() {
+			@Override
+			public void onSildingFinish() {
+				finish();
+			}
+		});
+		slide.setTouchView(slide);
 	}
 
 	private void initData() {

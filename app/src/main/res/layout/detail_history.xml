@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.fazhao.locationmanager.baidu_map.widget.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical" android:layout_width="match_parent"
+                                                                 android:id="@+id/slide"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_height="match_parent">
 
@@ -23,4 +24,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-</LinearLayout>
+</com.example.fazhao.locationmanager.baidu_map.widget.SlideLayout>
