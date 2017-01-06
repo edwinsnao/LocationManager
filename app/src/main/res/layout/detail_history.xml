@@ -19,8 +19,15 @@
         android:layout_height="?attr/actionBarSize"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>-->
-    <ListView
+    <com.example.fazhao.locationmanager.baidu_map.widget.ScrollListView
         android:id="@+id/detail_lv"
+        android:cacheColorHint="@color/transparent"
+        android:scrollbarSize="3dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/colorPrimaryDark"
+        android:scrollbarTrackVertical="@color/colorAccent"
+        android:scrollbarDefaultDelayBeforeFade="600"
+        android:scrollbarFadeDuration="500"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

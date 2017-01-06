@@ -34,6 +34,13 @@
         <com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1
             android:id="@+id/list_history"
             android:layout_width="match_parent"
+            android:cacheColorHint="@color/transparent"
+            android:scrollbarSize="3dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarDefaultDelayBeforeFade="600"
+            android:scrollbarFadeDuration="500"
+            android:scrollbarTrackVertical="@color/colorAccent"
+            android:scrollbarThumbVertical="@color/colorPrimaryDark"
             android:layout_height="0dp"
             android:layout_weight="1"></com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1>
 

@@ -7,10 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Scroller;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.ScrollLinearLayout;
+
+import static android.R.attr.scrollbarTrackVertical;
 
 /**
  * Created by fazhao on 2016/12/30.
@@ -40,6 +44,8 @@ public class SwipeDeleteListView1 extends ListView {
     private STATUS mStatus = STATUS.IDLE;
     public static final int MAX_Y_OVERSCROLL_DISTANCE = 100;
     private int mMaxYOverscrollDistance;
+    private ViewGroup mParentView;
+    private Scroller mScroller;
     private enum STATUS{
         DRAGGING,
         SHOW,
@@ -78,13 +84,33 @@ public class SwipeDeleteListView1 extends ListView {
 
         final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         final float density = metrics.density;
-
+        setVerticalFadingEdgeEnabled(true);
+        setFadingEdgeLength(50);
+        mScroller = new Scroller(mContext);
         mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        if (changed) {
+            // 获取SildingFinishLayout所在布局的父布局
+            mParentView = (ViewGroup) this.getParent();
+        }
     }
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverscrollDistance, isTouchEvent);
+    }
+
+    @Override
+    public void computeScroll() {
+        // 调用startScroll的时候scroller.computeScrollOffset()返回true，
+        if (mScroller.computeScrollOffset()) {
+            mParentView.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            postInvalidate();
+        }
     }
 
     /**
@@ -310,6 +336,8 @@ public class SwipeDeleteListView1 extends ListView {
                         return true;
                     }
                     mCurrentItemView = null;
+//                    scrollTo(0,getScrollY()+(int)(-dy));
+//                    smoothScrollBy((int) (dy * 2),1000);
                     log(Log.DEBUG, "haha", "mCurrentItemView="+null);
                 }
                 break;

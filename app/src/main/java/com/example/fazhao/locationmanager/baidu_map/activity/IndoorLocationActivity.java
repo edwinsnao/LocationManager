@@ -151,7 +151,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //    private AlertDialog historyDialog;
     private HistoryDialog historyDialog;
     private int mStep = 0;
-    private List<Integer> history_step;
+    private List<Integer> history_step = new ArrayList<>();
     private Bundle bundle = new Bundle();
     private HistoryAdapter mAdapter;
     private View mFooterView;
