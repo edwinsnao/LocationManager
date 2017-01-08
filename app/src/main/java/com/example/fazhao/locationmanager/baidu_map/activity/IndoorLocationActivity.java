@@ -425,14 +425,18 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 List<String> time = BaseApplication.getTime();
                 List<TraceItem> distance = BaseApplication.getDistance();
                 List<String> route = BaseApplication.getRoute();
-                LatLng latLng = new LatLng(distance.get(0).getLatitude(),distance.get(0).getLongitude());
-                LatLng latLng1 = new LatLng(distance.get(1).getLatitude(),distance.get(1).getLongitude());
+            try {
+                LatLng latLng = new LatLng(distance.get(0).getLatitude(), distance.get(0).getLongitude());
+                LatLng latLng1 = new LatLng(distance.get(1).getLatitude(), distance.get(1).getLongitude());
                 /**
-                * 多表查询
-                * */
+                 * 多表查询
+                 * */
 //            出发地:route.get(0),目的地:route.get(1)
-                info.setText("上次定位出发地:"+route.get(0)+",目的地:"+route.get(1)+",距离:" + String.valueOf(DistanceUtil.getDistance(latLng,latLng1)) + ",时长：" + BaiduUtils.dateDiff(this,time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
+                info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" + String.valueOf(DistanceUtil.getDistance(latLng, latLng1)) + ",时长：" + BaiduUtils.dateDiff(this, time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + BaseApplication.getLastStep());
+            }catch (Exception e ){
+
+            }
 //                info.setText("上次定位距离:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))) + ",时长：" + BaiduUtils.dateDiff(this, crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //                        + "分钟" + ",步数:" + mTraceDao.getLastStep().getStep());
 //            } catch (InvalidKeyException e) {

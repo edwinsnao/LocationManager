@@ -39,6 +39,7 @@
             android:scrollbarStyle="insideInset"
             android:scrollbarDefaultDelayBeforeFade="600"
             android:scrollbarFadeDuration="500"
+            android:listSelector="@android:color/transparent"
             android:scrollbarTrackVertical="@color/colorAccent"
             android:scrollbarThumbVertical="@color/colorPrimaryDark"
             android:layout_height="0dp"

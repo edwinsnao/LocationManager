@@ -336,9 +336,9 @@ public class SwipeDeleteListView1 extends ListView {
                         return true;
                     }
                     mCurrentItemView = null;
-//                    scrollTo(0,getScrollY()+(int)(-dy));
-//                    smoothScrollBy((int) (dy * 2),1000);
-                    log(Log.DEBUG, "haha", "mCurrentItemView="+null);
+//                    scrollBy(0,(int)(dy));
+//                    smoothScrollBy((int) (-dy),100);
+//                    log(Log.DEBUG, "、haha", "mCurrentItemView="+null);
                 }
                 break;
 
