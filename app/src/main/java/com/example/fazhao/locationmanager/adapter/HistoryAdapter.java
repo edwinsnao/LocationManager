@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.activity.HistoryMaps;
 import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
@@ -221,8 +222,13 @@ public class HistoryAdapter extends BaseAdapter {
 				mValueAnimator.start();
 
 //				listView.turnToNormal();
-				IndoorLocationActivity activity = (IndoorLocationActivity) mContext;
-				activity.click();
+				if(mContext instanceof IndoorLocationActivity) {
+					IndoorLocationActivity activity = (IndoorLocationActivity) mContext;
+					activity.click();
+				}else if(mContext instanceof HistoryMaps){
+					HistoryMaps activity = (HistoryMaps) mContext;
+					activity.click();
+				}
 			}
 		});
 

@@ -48,7 +48,7 @@ import static android.R.attr.tag;
 /**
  * Created by Kings on 2016/2/12.
  */
-public class HistoryMaps extends Activity {
+public class HistoryMaps extends Activity{
 	private MapView mapView;
 	private LatLng latLng1;
 	private Marker myLocation;
@@ -67,6 +67,7 @@ public class HistoryMaps extends Activity {
 	private HistoryAdapter mAdapter;
 	private HistoryDialog historyDialog;
 	private Handler mHandler;
+	private Handler handler;
 //	private Crypto crypto = new Crypto(this);
 
 	@Override
@@ -116,6 +117,8 @@ public class HistoryMaps extends Activity {
 		mapView = null;
 		if(mHandler!=null)
 			mHandler.removeCallbacksAndMessages(null);
+		if(handler!=null)
+			handler.removeCallbacksAndMessages(null);
 		/**
 		 * 在这里关闭db
 		 * */
@@ -160,6 +163,7 @@ public class HistoryMaps extends Activity {
 //		showTime.setText("时间相差：" + BaiduUtils.dateDiff(this,crypto.armorDecrypt(traceItems.get(0).getDate()), crypto.armorDecrypt(traceItems.get(traceItems.size() - 1).getDate()), "yyyy-MM-dd-HH:mm:ss", "m")
 //				+ "分钟"+"上次步数:"+mTraceDao.getLastStep().getStep());
 	}
+
 
 	private void initView() {
 		showTime = (TextView) findViewById(R.id.show_time);
@@ -368,6 +372,19 @@ public class HistoryMaps extends Activity {
 			mBaiduMap.addOverlay(polyline);
 		}
 	}
+
+	public void click() {
+		if(handler == null)
+			handler = new Handler();
+		handler.post(updateTitle);
+	}
+
+	private Runnable updateTitle = new Runnable() {
+		@Override
+		public void run() {
+			historyTitle.setText("历史记录有" + (tag-1) + "数据");
+		}
+	};
 //	protected void drawSolidLine1(List<LatLng> latLngs) {
 //		tencentMap.addPolyline(new PolylineOptions().
 //				addAll(latLngs).
