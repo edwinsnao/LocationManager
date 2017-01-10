@@ -1,5 +1,8 @@
 package com.example.fazhao.locationmanager.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +35,12 @@ public class HistoryAdapter extends BaseAdapter {
 	private TraceDao mTraceDao = BaseApplication.getmTaceDao();
 	private Context mContext;
 //	private Crypto crypto = Crypto.getsInstance();
-//	private deleteClick mDeleteClick;
+	private deleteClick mDeleteClick;
 
 
-//	public void setClickListener(deleteClick deleteClick) {
-//		mDeleteClick = deleteClick;
-//	}
+	public void setClickListener(deleteClick deleteClick) {
+		mDeleteClick = deleteClick;
+	}
 
 	/**
 	 * 使用了github开源的ImageLoad进行了数据加载
@@ -94,7 +97,8 @@ public class HistoryAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, final ViewGroup parent) {
+		final SwipeDeleteListView1 mListView = (SwipeDeleteListView1) parent;
 		ViewHolder holder = null;
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.history_maps_adapter, parent, false);
@@ -182,12 +186,40 @@ public class HistoryAdapter extends BaseAdapter {
 //		builder4.append(mTraceDao.getLastStep().getStep());
 		builder4.append(traceItem.getStep());
 		holder.step.setText(builder4);
+		final ViewHolder finalHolder = holder;
 		holder.delete.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				mDatas.remove(position);
-				mTraceDao.deleteAll(position+1);
-				notifyDataSetChanged();
+			public void onClick(final View v) {
+				final View dismissView = (View) v.getParent();
+				ValueAnimator mValueAnimator;
+//				动画
+				final ViewGroup.LayoutParams lp = dismissView.getLayoutParams();
+				final int originalHeight = dismissView.getHeight();
+
+				mValueAnimator = ValueAnimator.ofInt(originalHeight, 0).setDuration(400);
+				mValueAnimator.addListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						mDatas.remove(position);
+						mTraceDao.deleteAll(position+1);
+						notifyDataSetChanged();
+						mListView.hiddenDeleteButton(true,true);
+						mListView.clearState();
+						finalHolder.delete.setVisibility(View.GONE);
+					}
+				});
+
+				mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+					@Override
+					public void onAnimationUpdate(ValueAnimator valueAnimator) {
+						lp.height = (Integer) valueAnimator.getAnimatedValue();
+						if (lp.height > 0) {
+							dismissView.setLayoutParams(lp);
+						}
+					}
+				});
+				mValueAnimator.start();
+
 //				listView.turnToNormal();
 				IndoorLocationActivity activity = (IndoorLocationActivity) mContext;
 				activity.click();
@@ -198,10 +230,10 @@ public class HistoryAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-//	public interface deleteClick{
-//		public void click();
-//
-//	}
+	public interface deleteClick{
+		public void click(int position);
+
+	}
 
 	private final class ViewHolder {
 		TextView time_start;

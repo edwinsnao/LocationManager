@@ -714,33 +714,33 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        km = KeyManager.getsInstace();
 //        km = BaseApplication.getKm();
 //        km = new KeyManager(IndoorLocationActivity.this.getApplicationContext());
-        mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
-        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        /**
-         * step
-         * */
-        mSensorEventListener = new SensorEventListener() {
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            }
-
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-//                if (event.values[0] == 1.0f) {
-//                    mStep++;
-//                }
-                mStep+=(int)event.values[0];
-                StringBuilder builder = new StringBuilder("步数:");
-                builder.append(Integer.toString(mStep));
-                step.setText(builder);
-            }
-        };
-        /**
-         * 如果设置SENSOR_DELAY_FASTEST会浪费电的
-         * */
-        mSensorManager.registerListener(mSensorEventListener, mStepSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+//        mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+//        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+//        /**
+//         * step
+//         * */
+//        mSensorEventListener = new SensorEventListener() {
+//            @Override
+//            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//            }
+//
+//            @Override
+//            public void onSensorChanged(SensorEvent event) {
+////                if (event.values[0] == 1.0f) {
+////                    mStep++;
+////                }
+//                mStep+=(int)event.values[0];
+//                StringBuilder builder = new StringBuilder("步数:");
+//                builder.append(Integer.toString(mStep));
+//                step.setText(builder);
+//            }
+//        };
+//        /**
+//         * 如果设置SENSOR_DELAY_FASTEST会浪费电的
+//         * */
+//        mSensorManager.registerListener(mSensorEventListener, mStepSensor,
+//                SensorManager.SENSOR_DELAY_NORMAL);
 //        traceItems = mTraceDao.searchData(mTraceDao.maxTag());
 //        if(traceItems.size()!=0) {
 //            latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
@@ -1036,6 +1036,33 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     @Override
     protected void onResume() {
         mMapView.onResume();
+        mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        /**
+         * step
+         * */
+        mSensorEventListener = new SensorEventListener() {
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+//                if (event.values[0] == 1.0f) {
+//                    mStep++;
+//                }
+                mStep+=(int)event.values[0];
+                StringBuilder builder = new StringBuilder("步数:");
+                builder.append(Integer.toString(mStep));
+                step.setText(builder);
+            }
+        };
+        /**
+         * 如果设置SENSOR_DELAY_FASTEST会浪费电的
+         * */
+        mSensorManager.registerListener(mSensorEventListener, mStepSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
     }
 
