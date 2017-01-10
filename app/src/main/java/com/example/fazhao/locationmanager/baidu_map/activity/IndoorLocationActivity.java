@@ -820,17 +820,18 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //            Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else {
             latLng = new LatLng(latitude, longitude);
+            pointList.add(latLng);
 //            CoordinateConverter converter = new CoordinateConverter();
 //            converter.from(CoordinateConverter.CoordType.GPS);
 //            // latLng 待转换坐标
 //            converter.coord(latLng);
 //            LatLng desLatLng = converter.convert();
-            if (IsMove(latLng,location)) {
+//            if (IsMove(latLng,location)) {
 //            if (IsMove(desLatLng,location)) {
                 // 绘制实时点
                 drawRealtimePoint(latLng);
 //                drawRealtimePoint(desLatLng);
-            }
+//            }
         }
 
     }
@@ -889,49 +890,49 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     /*
 	 * 判断手机是否在运动
 	 */
-    private boolean IsMove(LatLng latLng,BDLocation location){
-//        Log.e("locTime", String.valueOf(locTime++));
-        if(pointList.size()>=1){
-            Double dis= DistanceUtil.getDistance(pointList.get(pointList.size()-1),latLng);
-            //判断手机是否静止,如果静止,判定采集点无效,直接抛弃
-            if(!acc.is_Acc&&acc.IsRun){
-                acc.IsRun=false;
-                return false;
-            }
-            //判断是否是第一次定位置,如果是第一次定位并且因为第一次抛弃的位置数量小于10个则判断两点间距离大小
-            if(FLostLoc<10){
-                FLostLoc=FLostLoc+1;
-                if(dis>10&&FLostLoc<6){//距离大于十米,而且被抛弃数量少于5个则说明有可能是获取位置失败
-                    pointList.clear();
-                    pointList.add(latLng);//更新位置
-                    return false;
-                }
-                if(dis>0&&dis<10&&FLostLoc>=6)//如果距离在10米内,则表示客户正在运动,直接跳出
-                    FLostLoc=11;
-            }
-            //根据两点间距离判断是否发生定位漂移,如果漂移距离小于MinDistance则抛弃,如果漂移距离大于MaxDistance则取两点的中间点.
-            if(dis<=MinDistance){
-                if((dis<=MinDistance||dis>=MaxDistance)){
-                    return false;
-                }
-
-                if(LostLoc>=4){
-                    Double newlatitude=(latLng.latitude+pointList.get(pointList.size()-1).latitude)/2;
-                    Double newlongitude=(latLng.longitude+pointList.get(pointList.size()-1).longitude)/2;
-                    latLng = new LatLng(newlatitude, newlongitude);
-                }else{
-                    LostLoc=LostLoc+1;
-                    return false;
-                }
-
-            }
-            LostLoc=0;//重置丢失点的个数
-            //			pointList.add(latLng);
-            acc.is_Acc=false;
-        }
-        pointList.add(latLng);
-        return true;
-    }
+//    private boolean IsMove(LatLng latLng,BDLocation location){
+////        Log.e("locTime", String.valueOf(locTime++));
+//        if(pointList.size()>=1){
+//            Double dis= DistanceUtil.getDistance(pointList.get(pointList.size()-1),latLng);
+//            //判断手机是否静止,如果静止,判定采集点无效,直接抛弃
+//            if(!acc.is_Acc&&acc.IsRun){
+//                acc.IsRun=false;
+//                return false;
+//            }
+//            //判断是否是第一次定位置,如果是第一次定位并且因为第一次抛弃的位置数量小于10个则判断两点间距离大小
+//            if(FLostLoc<10){
+//                FLostLoc=FLostLoc+1;
+//                if(dis>10&&FLostLoc<6){//距离大于十米,而且被抛弃数量少于5个则说明有可能是获取位置失败
+//                    pointList.clear();
+//                    pointList.add(latLng);//更新位置
+//                    return false;
+//                }
+//                if(dis>0&&dis<10&&FLostLoc>=6)//如果距离在10米内,则表示客户正在运动,直接跳出
+//                    FLostLoc=11;
+//            }
+//            //根据两点间距离判断是否发生定位漂移,如果漂移距离小于MinDistance则抛弃,如果漂移距离大于MaxDistance则取两点的中间点.
+//            if(dis<=MinDistance){
+//                if((dis<=MinDistance||dis>=MaxDistance)){
+//                    return false;
+//                }
+//
+//                if(LostLoc>=4){
+//                    Double newlatitude=(latLng.latitude+pointList.get(pointList.size()-1).latitude)/2;
+//                    Double newlongitude=(latLng.longitude+pointList.get(pointList.size()-1).longitude)/2;
+//                    latLng = new LatLng(newlatitude, newlongitude);
+//                }else{
+//                    LostLoc=LostLoc+1;
+//                    return false;
+//                }
+//
+//            }
+//            LostLoc=0;//重置丢失点的个数
+//            //			pointList.add(latLng);
+//            acc.is_Acc=false;
+//        }
+//        pointList.add(latLng);
+//        return true;
+//    }
 
     /*
 	 * 添加地图覆盖物
