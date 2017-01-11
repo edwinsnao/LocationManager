@@ -66,7 +66,7 @@ public class HistoryMaps extends Activity{
 	private Crypto crypto = BaseApplication.getmCrypto();
 	private HistoryAdapter mAdapter;
 	private HistoryDialog historyDialog;
-	private Handler mHandler;
+//	private Handler mHandler;
 	private Handler handler;
 //	private Crypto crypto = new Crypto(this);
 
@@ -114,11 +114,9 @@ public class HistoryMaps extends Activity{
 	protected void onDestroy() {
 		mBaiduMap.setMyLocationEnabled(false);
 		mapView.onDestroy();
-		mapView = null;
-		if(mHandler!=null)
-			mHandler.removeCallbacksAndMessages(null);
 		if(handler!=null)
 			handler.removeCallbacksAndMessages(null);
+		mapView = null;
 		/**
 		 * 在这里关闭db
 		 * */
@@ -244,7 +242,8 @@ public class HistoryMaps extends Activity{
 						super.handleMessage(msg);
 						switch (msg.what) {
 							case 0:
-								historyDialog = new HistoryDialog(HistoryMaps.this);
+//								if(historyDialog == null)
+									historyDialog = new HistoryDialog(HistoryMaps.this);
 								mAdapter = new HistoryAdapter(HistoryMaps.this, mDatas, mDatas1, historyDialog.lv);
 								historyDialog.lv.setAdapter(mAdapter);
 								historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -382,6 +381,7 @@ public class HistoryMaps extends Activity{
 	private Runnable updateTitle = new Runnable() {
 		@Override
 		public void run() {
+			historyTitle = ((TextView)(historyDialog.findViewById(R.id.history_num)));
 			historyTitle.setText("历史记录有" + (tag-1) + "数据");
 		}
 	};

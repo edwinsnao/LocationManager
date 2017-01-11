@@ -514,7 +514,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                lv.setFooterDividersEnabled(true);
 //                                lv.setHeaderDividersEnabled(true);
 //                                lv.addFooterView(mFooterView);
-                                historyDialog = new HistoryDialog(IndoorLocationActivity.this);
+                                if(historyDialog == null)
+                                    historyDialog = new HistoryDialog(IndoorLocationActivity.this);
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, historyDialog.lv);
 //                                historyDialog = new AlertDialog.Builder(IndoorLocationActivity.this, R.style.TANCStyle)
 //                                        .setTitle("历史记录有" + tag + "数据")
@@ -762,11 +763,16 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             * */
             try {
                 int history_size = history.size()-1;
-//                mTraceDao.addTime(crypto.armorEncrypt(history.get(0).getTime().getBytes()),crypto.armorEncrypt(history.get(history_size).getTime().getBytes()));
-                mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes()),crypto.armorEncrypt(history_time.get(history_size).getBytes()));
-                if(history.get(0).getAddress().address != null && history.get(history_size).getAddress().address != null)
-                mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes()),crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()));
-                mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude(),history.get(0).getLongitude(),history.get(history_size).getLongitude());
+//                mTraceDao.addTime(crypto.armorEncrypt(history.get(0).getTime().getBytes())
+// ,crypto.armorEncrypt(history.get(history_size).getTime().getBytes()));
+                mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes())
+                        ,crypto.armorEncrypt(history_time.get(history_size).getBytes()),tag);
+                if(history.get(0).getAddress().address != null
+                        && history.get(history_size).getAddress().address != null)
+                mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
+                        ,crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()),tag);
+                mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude()
+                        ,history.get(0).getLongitude(),history.get(history_size).getLongitude(),tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
 //                    mTraceItem.setName(crypto.armorEncrypt(history.get(i).getName().getBytes()));

@@ -72,7 +72,7 @@ public class TraceDao
 //        db.close();
     }
 
-    public void addTime(String start,String end){
+    public void addTime(String start,String end,int tag){
         String sql = "insert into time_item (date_start,date_end,tag) values(?,?,?) ;";
 //        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
 //        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
@@ -86,7 +86,7 @@ public class TraceDao
         ss.bindString(1,start);
 //        ss.bindString(3,traceItem.getProvider());
         ss.bindString(2,end);
-        ss.bindString(3,String.valueOf(maxTag()+1));
+        ss.bindString(3, String.valueOf(tag));
         ss.executeInsert();
         /*
         * 效率低
@@ -98,7 +98,7 @@ public class TraceDao
 //        db.close();
     }
 
-    public void addDistance(double latitude_start,double latitude_end,double longitude_start,double longitude_end){
+    public void addDistance(double latitude_start,double latitude_end,double longitude_start,double longitude_end,int tag){
         String sql = "insert into distance_item (latitude_start,latitude_end,longitude_start,longitude_end,tag) values(?,?,?,?,?) ;";
 //        String sql = "insert into trace_item (name,address,date,tag) values(?,?,?,?) ;";
 //        String sql1 = "insert into trace_item (latitude,longitude) values(?,?) ;";
@@ -114,7 +114,7 @@ public class TraceDao
         ss.bindDouble(2,latitude_end);
         ss.bindDouble(3,longitude_start);
         ss.bindDouble(4,longitude_end);
-        ss.bindString(5,String.valueOf(maxTag()+1));
+        ss.bindString(5,String.valueOf(tag));
         ss.executeInsert();
         /*
         * 效率低
@@ -126,7 +126,7 @@ public class TraceDao
 //        db.close();
     }
 
-    public void addRoute(String start,String end)
+    public void addRoute(String start,String end,int tag)
     {
 //        不要了accuracy level provider  ， 减少了无用的列，提高查询速度
         String sql = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
@@ -142,7 +142,7 @@ public class TraceDao
         ss.bindString(1,start);
 //        ss.bindString(3,traceItem.getProvider());
         ss.bindString(2,end);
-        ss.bindString(3,String.valueOf(maxTag()+1));
+        ss.bindString(3,String.valueOf(tag));
         ss.executeInsert();
         /*
         * 效率低
