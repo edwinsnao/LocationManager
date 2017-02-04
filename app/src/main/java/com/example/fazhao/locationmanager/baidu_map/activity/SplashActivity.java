@@ -2,9 +2,14 @@ package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.model.LatLng;
 import com.example.fazhao.locationmanager.R;
@@ -12,6 +17,7 @@ import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -32,6 +38,17 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
 //        this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         setContentView(R.layout.baidu_splash_activity);
+        FrameLayout layout = (FrameLayout)findViewById(R.id.main);
+        InputStream is ;
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        opt.inSampleSize = 2;
+        is= getResources().openRawResource(R.drawable.splash3);
+        Bitmap bm = BitmapFactory.decodeStream(is, null, opt);
+        BitmapDrawable bd = new BitmapDrawable(getResources(), bm);
+        layout.setBackgroundDrawable(bd);
         initData();
         loadData();
         setData();
