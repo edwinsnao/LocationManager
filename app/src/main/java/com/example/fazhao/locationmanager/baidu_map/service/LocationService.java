@@ -77,6 +77,7 @@ public class LocationService extends Service {
                         try {
                             Log.d("tag", "isStop="+isStop);
                             mLocClient.start();
+                            mLocClient.requestLocation();
                             Log.d("tag", "mLocClient.start()");
                             Log.d("tag", "mLocClient=="+mLocClient);
                             Thread.sleep(1000*5);//3秒后再次执行

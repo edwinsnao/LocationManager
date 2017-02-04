@@ -30,7 +30,7 @@ public class SplashActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+//        this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         setContentView(R.layout.baidu_splash_activity);
         initData();
         loadData();
