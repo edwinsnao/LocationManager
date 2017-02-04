@@ -197,6 +197,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     .direction(100).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
             // 设置定位数据
             mBaiduMap.setMyLocationData(locData);
+            history.add(location);
             if(isFirstLoc){
                 isFirstLoc=false;
 //                    if(constant<pointList.size()){
@@ -219,7 +220,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }else{
                 showRealtimeTrack(location);
             }
-            history.add(location);
             Calendar now = Calendar.getInstance();
             String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
@@ -822,8 +822,16 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     protected void showRealtimeTrack(BDLocation location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+//        Log.e("latitude",String.valueOf(latitude));
+//        Log.e("longitude",String.valueOf(longitude));
+//        Log.e("lastLatitude",String.valueOf(history.get(history.size() - 1).getLatitude()));
+//        Log.e("lastLongi",String.valueOf(history.get(history.size() - 1).getLongitude()));
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
-//            Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
+            Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
+        } else if(Math.abs(latitude - history.get(history.size() - 1).getLatitude()) < 0.000001 &&
+                Math.abs(longitude - history.get(history.size() - 1).getLongitude()) < 0.000001){
+//            Log.d("not move","not move");
+            Toast.makeText(IndoorLocationActivity.this,"原地不动",Toast.LENGTH_SHORT).show();
         } else {
             latLng = new LatLng(latitude, longitude);
             pointList.add(latLng);
