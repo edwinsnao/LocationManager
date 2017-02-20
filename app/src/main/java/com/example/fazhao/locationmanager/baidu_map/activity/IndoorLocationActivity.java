@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -602,9 +603,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         LatLng latLng = new LatLng(latitude,longitude);
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
-        }else if(DistanceUtil.getDistance(pointList.get(pointList.size() - 1),ll)>50){
-//            5秒走50米是不可能的，所以该定位点舍弃
         }
+//        else if(DistanceUtil.getDistance(pointList.get(pointList.size() - 1),ll)>50){
+//            5秒走50米是不可能的，所以该定位点舍弃
+//        }
         else {
             latLng = new LatLng(latitude, longitude);
             pointList.add(latLng);
@@ -628,6 +630,23 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             String s = intent.getAction();
             if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
                 Toast.makeText(IndoorLocationActivity.this,"key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(IndoorLocationActivity.this);
+                builder.setTitle("当前没有网络")
+                        .setMessage("您是否进入系统设置开启网络?")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface anInterface, int i) {
+                                Intent it = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                                startActivity(it);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface anInterface, int i) {
+
+                            }
+                        })
+                        .show();
             } else if (s
                     .equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
                 Toast.makeText(IndoorLocationActivity.this,"网络出错",Toast.LENGTH_SHORT).show();
