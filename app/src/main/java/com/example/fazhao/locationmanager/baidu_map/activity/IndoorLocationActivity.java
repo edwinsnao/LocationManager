@@ -696,12 +696,18 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
 
-
-        if (pointList.size() >=2 && pointList.size() <= 100000) {
-            // 添加路线（轨迹）
-            polyline = new PolylineOptions().width(10)
-                    .color(Color.RED).points(pointList);
-        }
+        /**
+        * 因为drawReal的方法只调用一次（第一次定位），所以下面的代码一定不会执行，不要浪费性能
+        * */
+//        if (pointList.size() >=2 && pointList.size() <= 100000) {
+//            // 添加路线（轨迹）
+//            polyline = new PolylineOptions().width(10)
+//                    .color(Color.RED).points(pointList);
+//        }
+        /**
+        * 不要忘记加入pointList
+        * */
+        pointList.add(point);
         mBaiduMap.animateMapStatus(msUpdate);
         addMarker();
 
