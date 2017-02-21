@@ -59,6 +59,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
+import com.example.fazhao.locationmanager.baidu_map.service.StepService;
 import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
 import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
@@ -170,9 +171,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private LocationClient mLocClient = BaseApplication.getmLocClient();
 //    private LocationClientOption option = BaseApplication.getOption();
     private Handler handler;
-
+    private StepReceiver mStepReceiver;
+    private Intent mStepService;
 
     private Intent tmpIntent = new Intent();
+    private Intent tmpIntent1 = new Intent();
 
     private  BDLocationListener mListener = new BDLocationListener(){
 
@@ -265,12 +268,33 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         super.onStart();
     }
 
+    public void registerStepReceiver(){
+        mStepReceiver = new StepReceiver();
+        IntentFilter filter = new IntentFilter(StepService.BROADCAST_ACTION);
+        registerReceiver(mStepReceiver,filter);
+    }
+
+    public void unRegisterStepReceiver(){
+        unregisterReceiver(mStepReceiver);
+    }
+
+//    public void startStepService(){
+//        mStepService = new Intent(IndoorLocationActivity.this,StepService.class);
+//        startService(mStepService);
+//    }
+//
+//    public void stopStepService(){
+//        stopService(mStepService);
+//    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        registerStepReceiver();
+//        startStepService();
         RelativeLayout layout = new RelativeLayout(this);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -524,6 +548,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         startService(serviceIt);
+        tmpIntent1.setAction("com.fazhao.stepservice");
+        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
+        startService(serviceIt1);
     }
 
     private void initData() {
@@ -722,38 +749,37 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     @Override
     protected void onResume() {
         mMapView.onResume();
-        if(mSensorManager == null) {
-            mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
-            mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-            /**
-             * step
-             * */
-            mSensorEventListener = new SensorEventListener() {
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-                }
-
-                @Override
-                public void onSensorChanged(SensorEvent event) {
-                    mStep += (int) event.values[0];
-                    StringBuilder builder = new StringBuilder("步数:");
-                    builder.append(Integer.toString(mStep));
-                    step.setText(builder);
-                }
-            };
-            /**
-             * 如果设置SENSOR_DELAY_FASTEST会浪费电的
-             * */
-            mSensorManager.registerListener(mSensorEventListener, mStepSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
-        }
+//        if(mSensorManager == null) {
+//            mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+//            mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+//            /**
+//             * step
+//             * */
+//            mSensorEventListener = new SensorEventListener() {
+//                @Override
+//                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//                }
+//
+//                @Override
+//                public void onSensorChanged(SensorEvent event) {
+//                    mStep += (int) event.values[0];
+//                    StringBuilder builder = new StringBuilder("步数:");
+//                    builder.append(Integer.toString(mStep));
+//                    step.setText(builder);
+//                }
+//            };
+//            /**
+//             * 如果设置SENSOR_DELAY_FASTEST会浪费电的
+//             * */
+//            mSensorManager.registerListener(mSensorEventListener, mStepSensor,
+//                    SensorManager.SENSOR_DELAY_NORMAL);
+//        }
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
-        mSensorManager.unregisterListener(mSensorEventListener);
         mLocClient.unRegisterLocationListener(mListener);
         // 退出时销毁定位
         mLocClient.stop();
@@ -765,12 +791,30 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         stopService(serviceIt);
+        tmpIntent1.setAction("com.fazhao.stepservice");
+        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
+        stopService(serviceIt1);
         /**
         * 在这里关闭db
         * */
         BaseApplication.getDbHelper().close();
+        unRegisterStepReceiver();
+//        stopStepService();
         super.onDestroy();
     }
+    public class StepReceiver extends BroadcastReceiver{
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if(StepService.BROADCAST_ACTION.equals(action)){
+                Bundle bundle = intent.getExtras();
+                StringBuilder mStepCount = new StringBuilder("步数:");
+                mStepCount.append(bundle.getString("step"));
+                step.setText(mStepCount);
+            }
+        }
+    }
 }
 

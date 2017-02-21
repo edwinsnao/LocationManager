@@ -93,6 +93,13 @@
                 <action android:name="com.fazhao.locationservice"/>
             </intent-filter>
         </service>
+        <service android:name=".baidu_map.service.StepService"
+                 android:enabled="true"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="com.fazhao.stepservice"/>
+            </intent-filter>
+        </service>
         <activity android:name=".activity.HistoryMaps"/>
         <activity android:name=".activity.HistoryDetail"
                   android:theme="@style/translucent"/>

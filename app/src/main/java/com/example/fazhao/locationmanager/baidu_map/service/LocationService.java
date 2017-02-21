@@ -24,6 +24,7 @@ public class LocationService extends Service {
     private Timer mTimer = null;
     private TimerTask mTimerTask = null;
     private boolean isStop = false;
+    private PowerManager.WakeLock m_wklk;
     public LocationService(){
 
     }
@@ -48,6 +49,10 @@ public class LocationService extends Service {
             Log.i("tag", "定时器服务停止");
             stopTimer();
         }
+        if (m_wklk != null) {
+            m_wklk.release();
+            m_wklk = null;
+        }
     }
 
     @Override
@@ -57,7 +62,7 @@ public class LocationService extends Service {
             Log.i("tag", "定时器启动");
             startTimer();
         }
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
     /**
@@ -202,6 +207,9 @@ public class LocationService extends Service {
 //                }
 //            });
 //            mLocationClient.start();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        m_wklk = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LocationService.class.getName());
+        m_wklk.acquire();
     }
 
     @Override
