@@ -19,8 +19,8 @@ import java.util.TimerTask;
  */
 
 public class LocationService extends Service {
-    LocationClient mLocClient = BaseApplication.getmLocClient();
-    LocationClientOption option = BaseApplication.getOption();
+    private LocationClient mLocClient = BaseApplication.getmLocClient();
+    private LocationClientOption option = BaseApplication.getOption();
     private Timer mTimer = null;
     private TimerTask mTimerTask = null;
     private boolean isStop = false;
@@ -45,10 +45,10 @@ public class LocationService extends Service {
         }
         super.onDestroy();
         // 停止定时器
-        if (isStop) {
-            Log.i("tag", "定时器服务停止");
-            stopTimer();
-        }
+//        if (isStop) {
+//            Log.i("tag", "定时器服务停止");
+//            stopTimer();
+//        }
         if (m_wklk != null) {
             m_wklk.release();
             m_wklk = null;
@@ -58,10 +58,10 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 触发定时器
-        if (!isStop) {
-            Log.i("tag", "定时器启动");
-            startTimer();
-        }
+//        if (!isStop) {
+//            Log.i("tag", "定时器启动");
+//            startTimer();
+//        }
         return Service.START_STICKY;
     }
 

@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -169,6 +170,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //    private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
     private LocationClient mLocClient = BaseApplication.getmLocClient();
+    private LocationClientOption mOption = BaseApplication.getOption();
 //    private LocationClientOption option = BaseApplication.getOption();
     private Handler handler;
     private StepReceiver mStepReceiver;
@@ -216,6 +218,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             Log.e("lontitude",String.valueOf(location.getLongitude()));
             Log.e("size",String.valueOf(history));
 //                Log.e("getSatelliteNumber",String.valueOf(location.getSatelliteNumber()));
+
+        }
+
+        @Override
+        public void onConnectHotSpotMessage(String s, int i) {
 
         }
     };
@@ -296,7 +303,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         registerStepReceiver();
 //        startStepService();
         RelativeLayout layout = new RelativeLayout(this);
-
+        mLocClient.setLocOption(mOption);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
         layout.addView(mainview);

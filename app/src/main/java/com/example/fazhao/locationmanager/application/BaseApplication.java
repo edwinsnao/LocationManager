@@ -173,6 +173,7 @@ public class BaseApplication extends Application {
 //        option.setScanSpan(1000);
         option.setLocationNotify(true);
         option.disableCache(false);
+        option.setAddrType("all");
         option.setNeedDeviceDirect(true);
         option.setIsNeedAddress(true);
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
