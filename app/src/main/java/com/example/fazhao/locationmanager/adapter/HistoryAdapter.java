@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
+import com.example.fazhao.locationmanager.baidu_map.widget.ScrollListView;
 import com.example.fazhao.locationmanager.baidu_map.widget.SwipeDeleteListView1;
 import com.example.fazhao.locationmanager.activity.TraceDao;
 import com.example.fazhao.locationmanager.activity.TraceItem;
@@ -99,7 +101,11 @@ public class HistoryAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		final SwipeDeleteListView1 mListView = (SwipeDeleteListView1) parent;
+		ListView mListView = null;
+		if(parent instanceof SwipeDeleteListView1)
+			mListView = (SwipeDeleteListView1) parent;
+		else
+			mListView = (ScrollListView) parent;
 		ViewHolder holder = null;
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.history_maps_adapter, parent, false);
@@ -188,6 +194,7 @@ public class HistoryAdapter extends BaseAdapter {
 		builder4.append(traceItem.getStep());
 		holder.step.setText(builder4);
 		final ViewHolder finalHolder = holder;
+		final ListView finalMListView = mListView;
 		holder.delete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View v) {
@@ -204,8 +211,10 @@ public class HistoryAdapter extends BaseAdapter {
 						mDatas.remove(position);
 						mTraceDao.deleteAll(position+1);
 						notifyDataSetChanged();
-						mListView.hiddenDeleteButton(true,true);
-						mListView.clearState();
+						if(finalMListView instanceof SwipeDeleteListView1) {
+							((SwipeDeleteListView1)finalMListView).hiddenDeleteButton(true, true);
+							((SwipeDeleteListView1)finalMListView).clearState();
+						}
 						finalHolder.delete.setVisibility(View.GONE);
 					}
 				});
