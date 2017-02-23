@@ -643,7 +643,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        }
         else {
             latLng = new LatLng(latitude, longitude);
-            pointList.add(latLng);
+            /**
+            * 因为drawRealTime里面已经有一个pointList.add
+             * 所以下面会导致重复的
+            * */
+//            pointList.add(latLng);
                 // 绘制实时点
                 drawRealtimePoint(latLng);
 //            }
@@ -695,7 +699,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
      */
     private void drawRealtimePoint(LatLng point) {
 
-        mBaiduMap.clear();
+        /**
+        * 这一句会导致没有东西
+        * */
+//        mBaiduMap.clear();
         polyline=null;
         MapStatus mMapStatus = new MapStatus.Builder().target(point)
                 .zoom(20)
