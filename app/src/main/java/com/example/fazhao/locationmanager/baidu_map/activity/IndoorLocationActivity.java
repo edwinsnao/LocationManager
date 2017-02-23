@@ -285,14 +285,14 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         unregisterReceiver(mStepReceiver);
     }
 
-//    public void startStepService(){
-//        mStepService = new Intent(IndoorLocationActivity.this,StepService.class);
-//        startService(mStepService);
-//    }
-//
-//    public void stopStepService(){
-//        stopService(mStepService);
-//    }
+    public void startStepService(){
+        mStepService = new Intent(IndoorLocationActivity.this,StepService.class);
+        startService(mStepService);
+    }
+
+    public void stopStepService(){
+        stopService(mStepService);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -301,7 +301,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         registerStepReceiver();
-//        startStepService();
+        startStepService();
         RelativeLayout layout = new RelativeLayout(this);
         mLocClient.setLocOption(mOption);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -555,9 +555,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         startService(serviceIt);
-        tmpIntent1.setAction("com.fazhao.stepservice");
-        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
-        startService(serviceIt1);
+//        tmpIntent1.setAction("com.fazhao.stepservice");
+//        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
+//        startService(serviceIt1);
     }
 
     private void initData() {
@@ -710,14 +710,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
 
-        /**
-        * 因为drawReal的方法只调用一次（第一次定位），所以下面的代码一定不会执行，不要浪费性能
-        * */
-//        if (pointList.size() >=2 && pointList.size() <= 100000) {
-//            // 添加路线（轨迹）
-//            polyline = new PolylineOptions().width(10)
-//                    .color(Color.RED).points(pointList);
-//        }
+        if (pointList.size() >=2 && pointList.size() <= 100000) {
+            // 添加路线（轨迹）
+            polyline = new PolylineOptions().width(10)
+                    .color(Color.RED).points(pointList);
+        }
         /**
         * 不要忘记加入pointList
         * */
@@ -811,15 +808,15 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         stopService(serviceIt);
-        tmpIntent1.setAction("com.fazhao.stepservice");
-        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
-        stopService(serviceIt1);
+//        tmpIntent1.setAction("com.fazhao.stepservice");
+//        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
+//        stopService(serviceIt1);
         /**
         * 在这里关闭db
         * */
         BaseApplication.getDbHelper().close();
         unRegisterStepReceiver();
-//        stopStepService();
+        stopStepService();
         super.onDestroy();
     }
     public class StepReceiver extends BroadcastReceiver{

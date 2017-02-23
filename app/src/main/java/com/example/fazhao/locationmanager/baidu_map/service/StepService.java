@@ -65,6 +65,7 @@ public class StepService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("stepservice","stepservice");
         if(mSensorManager == null) {
             mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
             mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
