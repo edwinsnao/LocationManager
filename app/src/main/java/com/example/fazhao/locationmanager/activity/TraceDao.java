@@ -43,7 +43,13 @@ public class TraceDao {
          * */
         db.beginTransaction();
         SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindString(1, traceItem.getAddress());
+        /**
+        * 不联网(只使用gps的模式下)是可以定位，但是没有地址名字
+        * */
+        if(traceItem.getAddress() != null)
+            ss.bindString(1, traceItem.getAddress());
+        else
+            ss.bindString(1, "没有联网下定位导致无法获取地址名称");
         ss.bindDouble(2, traceItem.getLatitude());
         ss.bindDouble(3, traceItem.getLongitude());
         ss.bindString(4, traceItem.getDate());
