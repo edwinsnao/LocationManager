@@ -173,11 +173,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private LocationClientOption mOption = BaseApplication.getOption();
 //    private LocationClientOption option = BaseApplication.getOption();
     private Handler handler;
-    private StepReceiver mStepReceiver;
+//    private StepReceiver mStepReceiver;
     private Intent mStepService;
 
     private Intent tmpIntent = new Intent();
     private Intent tmpIntent1 = new Intent();
+    public static Handler mHandler;
 
     private  BDLocationListener mListener = new BDLocationListener(){
 
@@ -275,15 +276,15 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         super.onStart();
     }
 
-    public void registerStepReceiver(){
-        mStepReceiver = new StepReceiver();
-        IntentFilter filter = new IntentFilter(StepService.BROADCAST_ACTION);
-        registerReceiver(mStepReceiver,filter);
-    }
+//    public void registerStepReceiver(){
+//        mStepReceiver = new StepReceiver();
+//        IntentFilter filter = new IntentFilter(StepService.BROADCAST_ACTION);
+//        registerReceiver(mStepReceiver,filter);
+//    }
 
-    public void unRegisterStepReceiver(){
-        unregisterReceiver(mStepReceiver);
-    }
+//    public void unRegisterStepReceiver(){
+//        unregisterReceiver(mStepReceiver);
+//    }
 
     public void startStepService(){
         mStepService = new Intent(IndoorLocationActivity.this,StepService.class);
@@ -300,7 +301,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        registerStepReceiver();
+//        registerStepReceiver();
         startStepService();
         RelativeLayout layout = new RelativeLayout(this);
         mLocClient.setLocOption(mOption);
@@ -555,6 +556,15 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this,tmpIntent));
         startService(serviceIt);
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                StringBuilder mStepCount = new StringBuilder("步数:");
+                mStepCount.append(msg.obj);
+                step.setText(mStepCount);
+            }
+        };
 //        tmpIntent1.setAction("com.fazhao.stepservice");
 //        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
 //        startService(serviceIt1);
@@ -815,23 +825,23 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         * 在这里关闭db
         * */
         BaseApplication.getDbHelper().close();
-        unRegisterStepReceiver();
+//        unRegisterStepReceiver();
         stopStepService();
         super.onDestroy();
     }
-    public class StepReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if(StepService.BROADCAST_ACTION.equals(action)){
-                Bundle bundle = intent.getExtras();
-                StringBuilder mStepCount = new StringBuilder("步数:");
-                mStepCount.append(bundle.getString("step"));
-                step.setText(mStepCount);
-            }
-        }
-    }
+//    public class StepReceiver extends BroadcastReceiver{
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//
+//            if(StepService.BROADCAST_ACTION.equals(action)){
+//                Bundle bundle = intent.getExtras();
+//                StringBuilder mStepCount = new StringBuilder("步数:");
+//                mStepCount.append(bundle.getString("step"));
+//                step.setText(mStepCount);
+//            }
+//        }
+//    }
 }
 

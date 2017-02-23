@@ -9,9 +9,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 
 import static com.baidu.location.h.j.S;
 import static com.example.fazhao.locationmanager.R.id.step;
@@ -55,12 +58,12 @@ public class StepService extends Service {
         mSensorManager.unregisterListener(mSensorEventListener);
     }
 
-    public void sendStepBroadcast(int step){
-        bundle.putString("step", String.valueOf(step));
-        intent.putExtras(bundle);
-        intent.setAction(BROADCAST_ACTION);
-        sendBroadcast(intent);
-    }
+//    public void sendStepBroadcast(int step){
+//        bundle.putString("step", String.valueOf(step));
+//        intent.putExtras(bundle);
+//        intent.setAction(BROADCAST_ACTION);
+//        sendBroadcast(intent);
+//    }
 
     @Override
     public void onCreate() {
@@ -116,7 +119,10 @@ public class StepService extends Service {
                         }
 
                     }
-                    sendStepBroadcast(mStep);
+                    Message msg = Message.obtain();
+                    msg.obj = mStep;
+                    IndoorLocationActivity.mHandler.sendMessage(msg);
+//                    sendStepBroadcast(mStep);
 //                    step.setText(builder);
                 }
             };
