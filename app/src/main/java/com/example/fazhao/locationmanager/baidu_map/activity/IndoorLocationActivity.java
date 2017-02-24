@@ -58,6 +58,12 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.activity.HistoryMaps;
@@ -182,6 +188,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     public static Handler mHandler;
     private PowerManager powerManager;
     private PowerManager.WakeLock wakeLock;
+    public static String reverseAddress;
+    public static GeoCoder geoCoder;
 
     private  BDLocationListener mListener = new BDLocationListener(){
 
@@ -513,7 +521,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        tag = mTraceDao.maxTag();
+//                        tag = mTraceDao.maxTag();
                         mDatas = mTraceDao.searchDistinctDataStart();
                         mDatas1 = mTraceDao.searchDistinctDataDestination();
                         handler.sendEmptyMessage(0);
@@ -573,6 +581,47 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        tmpIntent1.setAction("com.fazhao.stepservice");
 //        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
 //        startService(serviceIt1);
+        geoCoder = GeoCoder.newInstance();
+        //
+        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
+            // 反地理编码查询结果回调函数
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+                if (result == null
+                        || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                    // 没有检测到结果
+                    Toast.makeText(IndoorLocationActivity.this, "抱歉，未能找到结果",
+                            Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(IndoorLocationActivity.this,
+                        "位置：" + result.getAddress(), Toast.LENGTH_LONG)
+                        .show();
+                reverseAddress = result.getAddress();
+            }
+
+            // 地理编码查询结果回调函数
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult result) {
+                if (result == null
+                        || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                    // 没有检测到结果
+                }
+            }
+        };
+        // 设置地理编码检索监听者
+        geoCoder.setOnGetGeoCodeResultListener(listener);
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(StepService.mReceiver, filter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(historyDialog != null) {
+            historyDialog.dismiss();
+            historyDialog = null;
+        }
     }
 
     private void initData() {
@@ -773,8 +822,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     @Override
     protected void onPause() {
 //        mMapView.onPause();
-        if(historyDialog!=null)
+        if(historyDialog!=null) {
             historyDialog.dismiss();
+            historyDialog = null;
+        }
         super.onPause();
     }
 
