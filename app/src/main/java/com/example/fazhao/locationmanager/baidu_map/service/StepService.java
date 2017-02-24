@@ -13,6 +13,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 
@@ -69,22 +70,74 @@ public class StepService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("stepservice","stepservice");
+//        if(mSensorManager == null) {
+//            mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+//            mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+//            mCountSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+//            if (mCountSensor != null) {
+//                stepSensor = 0;
+//                Log.v("xf", "countSensor");
+//                mSensorManager.registerListener(mSensorEventListener, mCountSensor, SensorManager.SENSOR_DELAY_NORMAL);
+//            } else if (mStepSensor != null) {
+//                stepSensor = 1;
+//                Log.v("xf", "detectorSensor");
+//                mSensorManager.registerListener(mSensorEventListener, mStepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+//            } else {
+//                Log.v("xf", "Count sensor not available!");
+////            addBasePedoListener();
+//            }
+//            /**
+//             * step
+//             * */
+//            mSensorEventListener = new SensorEventListener() {
+//                @Override
+//                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//                }
+//
+//                @Override
+//                public void onSensorChanged(SensorEvent event) {
+////                    mStep += (int) event.values[0];
+////                    StringBuilder builder = new StringBuilder("步数:");
+////                    builder.append(Integer.toString(mStep));
+//
+//                    if (stepSensor == 0) {
+//                        int tempStep = (int) event.values[0];
+//                        if (!hasRecord) {
+//                            hasRecord = true;
+//                            hasStepCount = tempStep;
+//                        } else {
+//                            int thisStepCount = tempStep - hasStepCount;
+//                            mStep+=(thisStepCount-prviousStepCount);
+//                            prviousStepCount = thisStepCount;
+////                StepDcretor.CURRENT_SETP++;
+//
+//                        }
+//                        Log.d("tempStep" , String.valueOf(tempStep));
+//                    } else if (stepSensor == 1) {
+//                        if (event.values[0] == 1.0) {
+//                            mStep++;
+//                        }
+//
+//                    }
+//                    Log.e("sensorchanged", String.valueOf(mStep));
+////                    Toast.makeText(,"SensorChanged"+mStep,Toast.LENGTH_SHORT).show();
+//                    Message msg = Message.obtain();
+//                    msg.obj = mStep;
+//                    IndoorLocationActivity.mHandler.sendMessage(msg);
+////                    sendStepBroadcast(mStep);
+////                    step.setText(builder);
+//                }
+//            };
+//            /**
+//             * 如果设置SENSOR_DELAY_FASTEST会浪费电的
+//             * */
+//            mSensorManager.registerListener(mSensorEventListener, mStepSensor,
+//                    SensorManager.SENSOR_DELAY_NORMAL);
+//        }
         if(mSensorManager == null) {
             mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
             mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-            mCountSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            if (mCountSensor != null) {
-                stepSensor = 0;
-                Log.v("xf", "countSensor");
-                mSensorManager.registerListener(mSensorEventListener, mCountSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            } else if (mStepSensor != null) {
-                stepSensor = 1;
-                Log.v("xf", "detectorSensor");
-                mSensorManager.registerListener(mSensorEventListener, mStepSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            } else {
-                Log.v("xf", "Count sensor not available!");
-//            addBasePedoListener();
-            }
             /**
              * step
              * */
@@ -96,34 +149,14 @@ public class StepService extends Service {
 
                 @Override
                 public void onSensorChanged(SensorEvent event) {
-//                    mStep += (int) event.values[0];
+                    mStep += (int) event.values[0];
 //                    StringBuilder builder = new StringBuilder("步数:");
 //                    builder.append(Integer.toString(mStep));
-
-                    if (stepSensor == 0) {
-                        int tempStep = (int) event.values[0];
-                        if (!hasRecord) {
-                            hasRecord = true;
-                            hasStepCount = tempStep;
-                        } else {
-                            int thisStepCount = tempStep - hasStepCount;
-                            mStep+=(thisStepCount-prviousStepCount);
-                            prviousStepCount = thisStepCount;
-//                StepDcretor.CURRENT_SETP++;
-
-                        }
-                        Log.d("tempStep" , String.valueOf(tempStep));
-                    } else if (stepSensor == 1) {
-                        if (event.values[0] == 1.0) {
-                            mStep++;
-                        }
-
-                    }
+                    Log.e("sensorchanged", String.valueOf(mStep));
+//                    Toast.makeText(,"SensorChanged"+mStep,Toast.LENGTH_SHORT).show();
                     Message msg = Message.obtain();
                     msg.obj = mStep;
                     IndoorLocationActivity.mHandler.sendMessage(msg);
-//                    sendStepBroadcast(mStep);
-//                    step.setText(builder);
                 }
             };
             /**

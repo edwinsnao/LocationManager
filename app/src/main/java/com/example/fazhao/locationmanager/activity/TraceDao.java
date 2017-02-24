@@ -44,8 +44,8 @@ public class TraceDao {
         db.beginTransaction();
         SQLiteStatement ss = db.compileStatement(sql);
         /**
-        * 不联网(只使用gps的模式下)是可以定位，但是没有地址名字
-        * */
+         * 不联网(只使用gps的模式下)是可以定位，但是没有地址名字
+         * */
         if(traceItem.getAddress() != null)
             ss.bindString(1, traceItem.getAddress());
         else

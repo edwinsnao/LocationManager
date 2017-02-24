@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -92,7 +93,7 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class IndoorLocationActivity extends Activity implements TransferListener {
 
-//    public MyLocationListenner myListener = new MyLocationListenner();
+    //    public MyLocationListenner myListener = new MyLocationListenner();
     private LocationMode mCurrentMode;
     BitmapDescriptor mCurrentMarker;
     /**
@@ -146,12 +147,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
      */
     private int FLostLoc=0;
     private int tmp;
-//    private BitmapDescriptor mBitmap;
+    //    private BitmapDescriptor mBitmap;
     private int locTime = 0;
     private TraceDao mTraceDao;
     private TraceItem mTraceItem;
     private  int tag;
-//    private AlertDialog historyDialog;
+    //    private AlertDialog historyDialog;
     private HistoryDialog historyDialog;
     private int mStep = 0;
     private List<Integer> history_step = new ArrayList<>();
@@ -165,20 +166,22 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private Sensor mStepSensor;
     private SensorManager mSensorManager;
     private TextView step,info,historyTitle;
-//    private LatLng latLng1;
+    //    private LatLng latLng1;
 //    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
 //    private List<TraceItem> traceItems;
     private BaiduReceiver mReceiver;
     private LocationClient mLocClient = BaseApplication.getmLocClient();
     private LocationClientOption mOption = BaseApplication.getOption();
-//    private LocationClientOption option = BaseApplication.getOption();
+    //    private LocationClientOption option = BaseApplication.getOption();
     private Handler handler;
-//    private StepReceiver mStepReceiver;
+    //    private StepReceiver mStepReceiver;
     private Intent mStepService;
 
     private Intent tmpIntent = new Intent();
     private Intent tmpIntent1 = new Intent();
     public static Handler mHandler;
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
 
     private  BDLocationListener mListener = new BDLocationListener(){
 
@@ -212,7 +215,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
             Log.e("address",String.valueOf(location.getAddress().address));
             if(location.getAddress().address != null)
-            Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
+                Log.e("addressBytes",String.valueOf(location.getAddress().address.getBytes()));
 //            Log.e("time",String.valueOf(location.getTime()));
             Log.e("time",time);
             Log.e("latitude",String.valueOf(location.getLatitude()));
@@ -345,8 +348,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
         });
         /**
-        * 缩放按钮
-        * */
+         * 缩放按钮
+         * */
         scaleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton button, boolean b) {
@@ -407,9 +410,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
         if(BaseApplication.isHasHistory()){
-                List<String> time = BaseApplication.getTime();
-                List<TraceItem> distance = BaseApplication.getDistance();
-                List<String> route = BaseApplication.getRoute();
+            List<String> time = BaseApplication.getTime();
+            List<TraceItem> distance = BaseApplication.getDistance();
+            List<String> route = BaseApplication.getRoute();
             try {
                 LatLng latLng = new LatLng(distance.get(0).getLatitude(), distance.get(0).getLongitude());
                 LatLng latLng1 = new LatLng(distance.get(1).getLatitude(), distance.get(1).getLongitude());
@@ -546,8 +549,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
         });
         /**
-        * 监听网络以及百度地图的key是否注册了
-        * */
+         * 监听网络以及百度地图的key是否注册了
+         * */
         IntentFilter iFilter = new IntentFilter();
         iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
         iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
@@ -565,6 +568,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 step.setText(mStepCount);
             }
         };
+        powerManager = (PowerManager)this.getSystemService(this.POWER_SERVICE);
+        wakeLock = this.powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 //        tmpIntent1.setAction("com.fazhao.stepservice");
 //        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
 //        startService(serviceIt1);
@@ -586,38 +591,38 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 tag = mTraceDao.maxTag() + 1;
 
             /**
-            * 插入数据到多表
-            * */
+             * 插入数据到多表
+             * */
             try {
                 int history_size = history.size()-1;
                 mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes())
                         ,crypto.armorEncrypt(history_time.get(history_size).getBytes()),tag);
                 if(history.get(0).getAddress().address != null
                         && history.get(history_size).getAddress().address != null)
-                mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
-                        ,crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()),tag);
+                    mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
+                            ,crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()),tag);
                 mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude()
                         ,history.get(0).getLongitude(),history.get(history_size).getLongitude(),tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if(history.get(i).getAddress().address != null)
                         mTraceItem.setAddress(crypto.armorEncrypt(history.get(i).getAddress().address.getBytes()));
-                        mTraceItem.setLatitude(history.get(i).getLatitude());
-                        mTraceItem.setLongitude(history.get(i).getLongitude());
-                        mTraceItem.setTag(tag);
-                        /**
-                         * 这里是导致一个tag的所有记录的时间都是相同的，所以时间差为0或很接近
-                         * 应该把这里放到onlocationchanged里（history里setDate）
-                         * 而这里就拿history的date
-                         * */
-                        mTraceItem.setDate(crypto.armorEncrypt(history_time.get(i).getBytes()));
-                        /**
-                         * 在最后一个插入步数
-                         * 如果是0也插入，证明不是走路（是交通工具）
-                         * */
-                        mTraceItem.setStep(history_step.get(i));
+                    mTraceItem.setLatitude(history.get(i).getLatitude());
+                    mTraceItem.setLongitude(history.get(i).getLongitude());
+                    mTraceItem.setTag(tag);
+                    /**
+                     * 这里是导致一个tag的所有记录的时间都是相同的，所以时间差为0或很接近
+                     * 应该把这里放到onlocationchanged里（history里setDate）
+                     * 而这里就拿history的date
+                     * */
+                    mTraceItem.setDate(crypto.armorEncrypt(history_time.get(i).getBytes()));
+                    /**
+                     * 在最后一个插入步数
+                     * 如果是0也插入，证明不是走路（是交通工具）
+                     * */
+                    mTraceItem.setStep(history_step.get(i));
 //                        }
-                        mTraceDao.add(mTraceItem);
+                    mTraceDao.add(mTraceItem);
                 }
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
@@ -654,12 +659,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         else {
             latLng = new LatLng(latitude, longitude);
             /**
-            * 因为drawRealTime里面已经有一个pointList.add
+             * 因为drawRealTime里面已经有一个pointList.add
              * 所以下面会导致重复的
-            * */
+             * */
 //            pointList.add(latLng);
-                // 绘制实时点
-                drawRealtimePoint(latLng);
+            // 绘制实时点
+            drawRealtimePoint(latLng);
 //            }
         }
 
@@ -710,8 +715,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private void drawRealtimePoint(LatLng point) {
 
         /**
-        * 这一句会导致没有东西
-        * */
+         * 这一句会导致没有东西
+         * */
 //        mBaiduMap.clear();
         polyline=null;
         MapStatus mMapStatus = new MapStatus.Builder().target(point)
@@ -726,8 +731,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     .color(Color.RED).points(pointList);
         }
         /**
-        * 不要忘记加入pointList
-        * */
+         * 不要忘记加入pointList
+         * */
         pointList.add(point);
         mBaiduMap.animateMapStatus(msUpdate);
         addMarker();
@@ -803,6 +808,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                    SensorManager.SENSOR_DELAY_NORMAL);
 //        }
         super.onResume();
+        wakeLock.acquire();
     }
 
     @Override
@@ -822,11 +828,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        Intent serviceIt1 = new Intent(createExplicitFromImplicitIntent(this,tmpIntent1));
 //        stopService(serviceIt1);
         /**
-        * 在这里关闭db
-        * */
+         * 在这里关闭db
+         * */
         BaseApplication.getDbHelper().close();
 //        unRegisterStepReceiver();
         stopStepService();
+        wakeLock.release();
         super.onDestroy();
     }
 //    public class StepReceiver extends BroadcastReceiver{
@@ -843,5 +850,81 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //            }
 //        }
 //    }
+//public class MySearchListener implements MKSearchListener {
+//    /**
+//     * 根据经纬度搜索地址信息结果
+//     *
+//     * @param result 搜索结果
+//     * @param iError 错误号（0表示正确返回）
+//     */
+//    @Override
+//    public void onGetAddrResult(MKAddrInfo result, int iError) {
+//        if (result == null) {
+//            return;
+//        }
+//        StringBuffer sb = new StringBuffer();
+//        // 经纬度所对应的位置
+//        sb.append(result.strAddr).append("/n");
+//
+//        // 判断该地址附近是否有POI（Point of Interest,即兴趣点）
+//        if (null != result.poiList) {
+//            // 遍历所有的兴趣点信息
+//            for (MKPoiInfo poiInfo : result.poiList) {
+//                sb.append("----------------------------------------").append("/n");
+//                sb.append("名称：").append(poiInfo.name).append("/n");
+//                sb.append("地址：").append(poiInfo.address).append("/n");
+//                sb.append("经度：").append(poiInfo.pt.getLongitudeE6() / 1000000.0f).append("/n");
+//                sb.append("纬度：").append(poiInfo.pt.getLatitudeE6() / 1000000.0f).append("/n");
+//                sb.append("电话：").append(poiInfo.phoneNum).append("/n");
+//                sb.append("邮编：").append(poiInfo.postCode).append("/n");
+//                // poi类型，0：普通点，1：公交站，2：公交线路，3：地铁站，4：地铁线路
+//                sb.append("类型：").append(poiInfo.ePoiType).append("/n");
+//            }
+//        }
+//        // 将地址信息、兴趣点信息显示在TextView上
+//        addressTextView.setText(sb.toString());
+//    }
+//
+//    /**
+//     * 驾车路线搜索结果
+//     *
+//     * @param result 搜索结果
+//     * @param iError 错误号（0表示正确返回）
+//     */
+//    @Override
+//    public void onGetDrivingRouteResult(MKDrivingRouteResult result, int iError) {
+//    }
+//
+//    /**
+//     * POI搜索结果（范围检索、城市POI检索、周边检索）
+//     *
+//     * @param result 搜索结果
+//     * @param type 返回结果类型（11,12,21:poi列表 7:城市列表）
+//     * @param iError 错误号（0表示正确返回）
+//     */
+//    @Override
+//    public void onGetPoiResult(MKPoiResult result, int type, int iError) {
+//    }
+//
+//    /**
+//     * 公交换乘路线搜索结果
+//     *
+//     * @param result 搜索结果
+//     * @param iError 错误号（0表示正确返回）
+//     */
+//    @Override
+//    public void onGetTransitRouteResult(MKTransitRouteResult result, int iError) {
+//    }
+//
+//    /**
+//     * 步行路线搜索结果
+//     *
+//     * @param result 搜索结果
+//     * @param iError 错误号（0表示正确返回）
+//     */
+//    @Override
+//    public void onGetWalkingRouteResult(MKWalkingRouteResult result, int iError) {
+//    }
+//}
 }
 
