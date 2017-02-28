@@ -28,7 +28,8 @@ import static com.example.fazhao.locationmanager.R.id.step;
 
 public class StepService extends Service {
     private static SensorManager mSensorManager;
-    private Sensor mStepSensor,mCountSensor;
+    private Sensor mCountSensor;
+    private static Sensor mStepSensor;
     private Sensor mStepCounter;
     private static SensorEventListener mSensorEventListener;
     private int mStep = 0;
@@ -65,12 +66,12 @@ public class StepService extends Service {
         mSensorManager.unregisterListener(mSensorEventListener);
     }
 
-//    public void sendStepBroadcast(int step){
-//        bundle.putString("step", String.valueOf(step));
-//        intent.putExtras(bundle);
-//        intent.setAction(BROADCAST_ACTION);
-//        sendBroadcast(intent);
-//    }
+    public void sendStepBroadcast(int step){
+        bundle.putString("step", String.valueOf(step));
+        intent.putExtras(bundle);
+        intent.setAction(BROADCAST_ACTION);
+        sendBroadcast(intent);
+    }
 
     public static BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -85,9 +86,14 @@ public class StepService extends Service {
                 mSensorManager
                         .registerListener(
                                 mSensorEventListener,
-                                mSensorManager
-                                        .getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                                mStepSensor,
                                 SensorManager.SENSOR_DELAY_NORMAL);
+//                mSensorManager
+//                        .registerListener(
+//                                mSensorEventListener,
+//                                mSensorManager
+//                                        .getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+//                                SensorManager.SENSOR_DELAY_NORMAL);
             }
 
 

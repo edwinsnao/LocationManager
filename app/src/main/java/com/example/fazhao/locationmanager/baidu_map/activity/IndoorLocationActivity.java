@@ -2,6 +2,7 @@ package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -81,6 +82,7 @@ import com.example.fazhao.locationmanager.baidu_map.interfaces.TransferListener;
 import com.example.fazhao.locationmanager.baidu_map.util.BaiduUtils;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
+import com.example.fazhao.locationmanager.interfaces.LoadInterface;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -190,6 +192,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private PowerManager.WakeLock wakeLock;
     public static String reverseAddress;
     public static GeoCoder geoCoder;
+//    private static ProgressDialog loadingDialog;
 
     private  BDLocationListener mListener = new BDLocationListener(){
 
@@ -522,6 +525,13 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     @Override
                     public void run() {
 //                        tag = mTraceDao.maxTag();
+//                        if(loadingDialog == null){
+//                            loadingDialog = new ProgressDialog(IndoorLocationActivity.this);
+//                            loadingDialog.setMessage("同步中...");
+//                            loadingDialog.setCancelable(false);
+//                            loadingDialog.setCanceledOnTouchOutside(false);
+//                        }
+//                        loadingDialog.show();
                         mDatas = mTraceDao.searchDistinctDataStart();
                         mDatas1 = mTraceDao.searchDistinctDataDestination();
                         handler.sendEmptyMessage(0);
@@ -610,19 +620,32 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         };
         // 设置地理编码检索监听者
         geoCoder.setOnGetGeoCodeResultListener(listener);
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(StepService.mReceiver, filter);
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        registerReceiver(StepService.mReceiver, filter);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         if(historyDialog != null) {
-            historyDialog.dismiss();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    historyDialog.dismiss();
+                }
+            });
             historyDialog = null;
         }
     }
+
+//    public static void loadComplete(){
+//        if(loadingDialog != null) {
+//            Log.e("dismiss","dismiss");
+//            loadingDialog.dismiss();
+//            loadingDialog = null;
+//        }
+//    }
 
     private void initData() {
         km = new KeyManager(IndoorLocationActivity.this);
@@ -702,9 +725,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         }
-//        else if(DistanceUtil.getDistance(pointList.get(pointList.size() - 1),ll)>50){
+        else if(DistanceUtil.getDistance(pointList.get(pointList.size() - 1),ll)>100){
 //            5秒走50米是不可能的，所以该定位点舍弃
-//        }
+            Log.e("discard","discard");
+            Toast.makeText(IndoorLocationActivity.this,"discard",Toast.LENGTH_SHORT).show();
+        }
         else {
             latLng = new LatLng(latitude, longitude);
             /**

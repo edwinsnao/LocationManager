@@ -361,26 +361,48 @@ public class TraceDao {
                     latLng = new LatLng(latitude,longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    Log.e("reverseAddress",IndoorLocationActivity.reverseAddress);
-                    String sql1 = "update trace_item set address = ? where tag = ?";
-                    db.execSQL(sql1,new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()),tag});
-                    /**
-                     * 不可以执行下面的那句
-                     * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
-                     * end只需要更新就好了，不需要再插入一条新的数据
-                     * */
+                    Log.e("reverseAddressDes",IndoorLocationActivity.reverseAddress);
+                    if(IndoorLocationActivity.reverseAddress == null){
+                        String sql1 = "update trace_item set address = ? where tag = ?";
+                        db.execSQL(sql1, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes()), tag});
+                        /**
+                         * 不可以执行下面的那句
+                         * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
+                         * end只需要更新就好了，不需要再插入一条新的数据
+                         * */
 //                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
-                    String sql2 = "update route_item  set address_end = ? where tag = ?";
-                    db.execSQL(sql2,new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()),tag});
-                    int tag1 = c.getInt(4);
-                    int step = c.getInt(5);
-                    traceItem.setAddress(IndoorLocationActivity.reverseAddress);
-                    traceItem.setDate(date);
-                    traceItem.setLatitude(latitude);
-                    traceItem.setLongitude(longitude);
-                    traceItem.setTag(tag1);
-                    traceItem.setStep(step);
-                    traceItems.add(traceItem);
+                        String sql2 = "update route_item  set address_end = ? where tag = ?";
+                        db.execSQL(sql2, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes()), tag});
+                        int tag1 = c.getInt(4);
+                        int step = c.getInt(5);
+                        traceItem.setAddress("没有联网下定位导致无法获取地址名称");
+                        traceItem.setDate(date);
+                        traceItem.setLatitude(latitude);
+                        traceItem.setLongitude(longitude);
+                        traceItem.setTag(tag1);
+                        traceItem.setStep(step);
+                        traceItems.add(traceItem);
+                    }else {
+                        String sql1 = "update trace_item set address = ? where tag = ?";
+                        db.execSQL(sql1, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                        /**
+                         * 不可以执行下面的那句
+                         * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
+                         * end只需要更新就好了，不需要再插入一条新的数据
+                         * */
+//                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
+                        String sql2 = "update route_item  set address_end = ? where tag = ?";
+                        db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                        int tag1 = c.getInt(4);
+                        int step = c.getInt(5);
+                        traceItem.setAddress(IndoorLocationActivity.reverseAddress);
+                        traceItem.setDate(date);
+                        traceItem.setLatitude(latitude);
+                        traceItem.setLongitude(longitude);
+                        traceItem.setTag(tag1);
+                        traceItem.setStep(step);
+                        traceItems.add(traceItem);
+                    }
                 }else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -401,6 +423,7 @@ public class TraceDao {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+//        IndoorLocationActivity.loadComplete();
         return traceItems;
 
     }
@@ -437,7 +460,7 @@ public class TraceDao {
                     latLng = new LatLng(latitude,longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    Log.e("reverseAddress",IndoorLocationActivity.reverseAddress);
+                    Log.e("reverseAddressStart",IndoorLocationActivity.reverseAddress);
                     String sql1 = "update trace_item set address = ? where tag = ?";
                     db.execSQL(sql1,new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()),tag});
                     String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
