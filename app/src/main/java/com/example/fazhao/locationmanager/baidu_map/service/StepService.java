@@ -32,7 +32,7 @@ public class StepService extends Service {
     private static Sensor mStepSensor;
     private Sensor mStepCounter;
     private static SensorEventListener mSensorEventListener;
-    private int mStep = 0;
+    public  static int mStep = 0;
     private PowerManager.WakeLock m_wklk;
     private Intent intent = new Intent();
     private Bundle bundle = new Bundle();

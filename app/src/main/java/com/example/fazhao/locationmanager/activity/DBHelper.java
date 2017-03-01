@@ -16,11 +16,11 @@ import java.io.InputStream;
 
 public class DBHelper extends SQLiteOpenHelper
 {
-    private static final String DB_NAME = "trace";
+    private static final String DB_NAME = "trace.db";
     private Context mContext;
     public static final String sdpath = "/data/data/com.example.fazhao.locationmanager/databases/";//sdpath用于存放保存的路径。
     //    public static final String sdpath = "/data/data/com.example.fazhao.locationmanager/files/";//sdpath用于存放保存的路径。
-    public static final String filename = "trace";//filename用于保存文件名。
+    public static final String filename = "trace.db";//filename用于保存文件名。
     private File filepath;
 
 

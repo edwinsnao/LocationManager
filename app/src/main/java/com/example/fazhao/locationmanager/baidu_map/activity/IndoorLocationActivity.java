@@ -26,6 +26,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,6 +95,8 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import static android.view.KeyEvent.KEYCODE_BACK;
 
 
 /**
@@ -217,7 +220,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
             history_time.add(time);
-            history_step.add(mStep);
+            history_step.add(StepService.mStep);
             if(history.size() >= 2) {
                 save.setClickable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -468,10 +471,41 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case 0:
-                                if(historyDialog == null)
+                                if(historyDialog == null) {
                                     historyDialog = new HistoryDialog(IndoorLocationActivity.this);
+                                    Log.e("newHistory","test");
+                                    Log.e("newHistory", String.valueOf(historyDialog));
+                                }
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, historyDialog.lv);
                                 historyDialog.lv.setAdapter(mAdapter);
+                                historyDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface anInterface) {
+                                        historyDialog.dismiss();
+                                        historyDialog = null;
+                                    }
+                                });
+//                                historyDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+//                                    @Override
+//                                    public boolean onKey(DialogInterface anInterface, int keyCode, KeyEvent event) {
+//                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                                            Log.e("dismisshistory", String.valueOf(historyDialog == null));
+//                                            if(historyDialog != null) {
+//                                                runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        historyDialog.dismiss();
+//                                                        Log.e("dismisshistory","test");
+//                                                        Log.e("dismisshistory", String.valueOf(historyDialog));
+//                                                    }
+//                                                });
+//                                                historyDialog = null;
+//                                            }
+//                                            return true;
+//                                        }
+//                                        return false;
+//                                    }
+//                                });
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -545,8 +579,16 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         compute.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                tmp = (int) DistanceUtil.getDistance(pointList.get(constant),ll);
-                Toast.makeText(IndoorLocationActivity.this,"pointList:"+pointList.get(constant)+"ll:"+ll+"距离:"+tmp,Toast.LENGTH_SHORT).show();
+                /**
+                * 不是取首尾的距离，是每次定位的距离之和
+                * */
+                if(pointList.size() >= 2) {
+                    for (int i = 1; i < pointList.size() - 1; i++) {
+                        tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
+                    }
+//                tmp = (int) DistanceUtil.getDistance(pointList.get(constant),ll);
+                    Toast.makeText(IndoorLocationActivity.this, "pointList:" + pointList.get(constant) + "ll:" + ll + "距离:" + tmp, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         mFloorListAdapter = new BaseStripAdapter(IndoorLocationActivity.this);
@@ -627,16 +669,19 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     @Override
     public void onBackPressed() {
+//        Log.e("dismisshistory", String.valueOf(historyDialog == null));
+//        if(historyDialog != null) {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    historyDialog.dismiss();
+//                    Log.e("dismisshistory","test");
+//                    Log.e("dismisshistory", String.valueOf(historyDialog));
+//                }
+//            });
+//            historyDialog = null;
+//        }
         super.onBackPressed();
-        if(historyDialog != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    historyDialog.dismiss();
-                }
-            });
-            historyDialog = null;
-        }
     }
 
 //    public static void loadComplete(){

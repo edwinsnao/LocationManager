@@ -364,7 +364,7 @@ public class TraceDao {
                     Log.e("reverseAddressDes",IndoorLocationActivity.reverseAddress);
                     if(IndoorLocationActivity.reverseAddress == null){
                         String sql1 = "update trace_item set address = ? where tag = ?";
-                        db.execSQL(sql1, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes()), tag});
+                        db.execSQL(sql1, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes(), tag});
                         /**
                          * 不可以执行下面的那句
                          * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
@@ -372,7 +372,7 @@ public class TraceDao {
                          * */
 //                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
                         String sql2 = "update route_item  set address_end = ? where tag = ?";
-                        db.execSQL(sql2, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes()), tag});
+                        db.execSQL(sql2, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes(), tag});
                         int tag1 = c.getInt(4);
                         int step = c.getInt(5);
                         traceItem.setAddress("没有联网下定位导致无法获取地址名称");
@@ -392,6 +392,8 @@ public class TraceDao {
                          * */
 //                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
                         String sql2 = "update route_item  set address_end = ? where tag = ?";
+                        Log.e("Dest","update route_item  set address_end = "+ crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes())
+                                +"where tag = "+tag);
                         db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
                         int tag1 = c.getInt(4);
                         int step = c.getInt(5);
