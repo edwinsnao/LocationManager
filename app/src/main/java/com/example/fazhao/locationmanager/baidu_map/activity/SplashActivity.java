@@ -103,7 +103,9 @@ public class SplashActivity extends Activity {
         time = mTraceDao.getLastTime();
         route = mTraceDao.getLastRoute();
         distance = mTraceDao.getLastDistance();
-        lastStep = mTraceDao.getLastStep().getStep();
+        TraceItem tmp = mTraceDao.getLastStep();
+        if(tmp != null)
+            lastStep = tmp.getStep();
 //        Log.e("hasHistory?",String.valueOf(BaseApplication.isHasHistory()));
 //        BaseApplication.setHistory(historyFromLoad);
 //        Log.e("traceItemSize?",String.valueOf(traceItems.size()));

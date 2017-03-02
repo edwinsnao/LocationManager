@@ -220,7 +220,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
             history_time.add(time);
-            history_step.add(StepService.mStep);
+            history_step.add(mStep);
             if(history.size() >= 2) {
                 save.setClickable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -625,6 +625,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 super.handleMessage(msg);
                 StringBuilder mStepCount = new StringBuilder("步数:");
                 mStepCount.append(msg.obj);
+                mStep = (int) msg.obj;
                 step.setText(mStepCount);
             }
         };
@@ -715,15 +716,22 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes())
                         ,crypto.armorEncrypt(history_time.get(history_size).getBytes()),tag);
                 if(history.get(0).getAddress().address != null
-                        && history.get(history_size).getAddress().address != null)
+                        && history.get(history_size).getAddress().address != null) {
                     mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
-                            ,crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()),tag);
+                            , crypto.armorEncrypt(history.get(history_size).getAddress().address.getBytes()), tag);
+                }else{
+                    mTraceDao.addRoute(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes())
+                            , crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()), tag);
+                }
                 mTraceDao.addDistance(history.get(0).getLatitude(),history.get(history_size).getLatitude()
                         ,history.get(0).getLongitude(),history.get(history_size).getLongitude(),tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
-                    if(history.get(i).getAddress().address != null)
+                    if(history.get(i).getAddress().address != null) {
                         mTraceItem.setAddress(crypto.armorEncrypt(history.get(i).getAddress().address.getBytes()));
+                    }else{
+                        mTraceItem.setAddress(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()));
+                    }
                     mTraceItem.setLatitude(history.get(i).getLatitude());
                     mTraceItem.setLongitude(history.get(i).getLongitude());
                     mTraceItem.setTag(tag);

@@ -33,32 +33,35 @@ public class DBHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        mContext.deleteDatabase(DB_NAME);
-        getmDb();
+//        mContext.deleteDatabase(DB_NAME);
+//        getmDb();
         /**
          * id,title,link,date,imgLink,content,newstype,currentpage
          * 把title作为主键防止出现重复
          */
 //        String trace = "create table trace_item( _id integer primary key autoincrement , "
 //                + " name text , address text , date text , latitude real , longitude real ,tag integer ,step integer );";
-//        String trace = "create table trace_item( _id integer primary key autoincrement , "
-//                + " address text , date text , latitude real , longitude real ,tag integer ,step integer );";
-//        String time = "create table time_item( _id integer primary key autoincrement , "
-//                + " date_start text , date_end text,tag integer);";
-//        String distance = "create table distance_item( _id integer primary key autoincrement , "
-//                + " latitude_start real , latitude_end real ,longitude_start real " +
-//                ",longitude_end real,tag integer);";
-//        String route = "create table route_item( _id integer primary key autoincrement , "
-//                + " address_start text , address_end text,tag integer);";
-////        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
-////                + " title text , link text , date text , imgLink text , content text , newstype integer ,currentpage integer );";
-////        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
-////                + " title text , link text , date text , imgLink text , content text , newstype integer  );";
-////        db.execSQL(sql);
-//        db.execSQL(trace);
-//        db.execSQL(time);
-//        db.execSQL(distance);
-//        db.execSQL(route);
+        /**
+        * 不使用上面那条，上面多了一个name的字段
+        * */
+        String trace = "create table trace_item( _id integer primary key autoincrement , "
+                + " address text , date text , latitude real , longitude real ,tag integer ,step integer );";
+        String time = "create table time_item( _id integer primary key autoincrement , "
+                + " date_start text , date_end text,tag integer);";
+        String distance = "create table distance_item( _id integer primary key autoincrement , "
+                + " latitude_start real , latitude_end real ,longitude_start real " +
+                ",longitude_end real,tag integer);";
+        String route = "create table route_item( _id integer primary key autoincrement , "
+                + " address_start text , address_end text,tag integer);";
+//        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
+//                + " title text , link text , date text , imgLink text , content text , newstype integer ,currentpage integer );";
+//        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
+//                + " title text , link text , date text , imgLink text , content text , newstype integer  );";
+//        db.execSQL(sql);
+        db.execSQL(trace);
+        db.execSQL(time);
+        db.execSQL(distance);
+        db.execSQL(route);
 
     }
 

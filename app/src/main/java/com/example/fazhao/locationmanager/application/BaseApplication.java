@@ -181,9 +181,9 @@ public class BaseApplication extends Application {
 //        KeyManager.init(this);
         mLocClient.setLocOption(option);
         dbHelper = new DBHelper(this);
-        String databasefilename = sdpath+"/"+filename;//其值等于database的路径
-        filepath = new File(databasefilename);
-        db = SQLiteDatabase.openDatabase(filepath.getPath(),null,SQLiteDatabase.OPEN_READWRITE);//利用openDatabase方法打开数据库。
+//        String databasefilename = sdpath+"/"+filename;//其值等于database的路径
+//        filepath = new File(databasefilename);
+//        db = SQLiteDatabase.openDatabase(filepath.getPath(),null,SQLiteDatabase.OPEN_READWRITE);//利用openDatabase方法打开数据库。
         mTaceDao = new TraceDao();
 
     }
