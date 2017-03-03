@@ -959,7 +959,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         /**
          * 在这里关闭db
          * */
-        BaseApplication.getDbHelper().close();
+//        BaseApplication.getDbHelper().close();
 //        unRegisterStepReceiver();
         stopStepService();
         wakeLock.release();

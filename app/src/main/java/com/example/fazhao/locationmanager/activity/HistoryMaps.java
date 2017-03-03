@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -147,6 +148,8 @@ public class HistoryMaps extends Activity{
 		mTraceDao = BaseApplication.getmTaceDao();
 		//TODO 线程
 		traceItems = mTraceDao.searchData(choice);
+		Log.e("choice", String.valueOf(choice));
+		Log.e("choice1", String.valueOf(traceItems.size()));
 		latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
 		for (int i = 0; i < traceItems.size(); i++) {
 			LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,8 @@ public class HistoryAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private List<TraceItem> mDatas;
 	private List<TraceItem> mDatas1;
-	private SwipeDeleteListView1 listView;
+//	private SwipeDeleteListView1 listView;
+	private ListView listView;
 	private Crypto crypto;
 	private KeyManager km;
 	private TraceDao mTraceDao = BaseApplication.getmTaceDao();
@@ -65,7 +67,7 @@ public class HistoryAdapter extends BaseAdapter {
 		mContext = context;
 	}
 
-	public HistoryAdapter(Context context, List<TraceItem> datas, SwipeDeleteListView1 lv) {
+	public HistoryAdapter(Context context, List<TraceItem> datas, ListView lv) {
 		this.mDatas = datas;
 		mInflater = LayoutInflater.from(context);
 		listView = lv;
@@ -176,6 +178,9 @@ public class HistoryAdapter extends BaseAdapter {
 			builder3.append(traceItem.getAddress());
 //			holder.address_start.setText("出发地：" + crypto.armorDecrypt(traceItem.getName()));
 			holder.address_start.setText(builder3);
+		Log.e("Detail", String.valueOf(traceItem.getTag()));
+		Log.e("Detail", String.valueOf(traceItem.getStep()));
+		Log.e("Detail", String.valueOf(traceItem.getAddress()));
 //		} catch (InvalidKeyException e) {
 //			e.printStackTrace();
 //		} catch (NoSuchAlgorithmException e) {

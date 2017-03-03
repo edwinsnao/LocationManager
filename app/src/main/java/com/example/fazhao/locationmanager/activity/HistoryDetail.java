@@ -56,9 +56,9 @@ public class HistoryDetail extends Activity {
 		tag = getIntent().getIntExtra("choice", 1);
 		mTraceDao = BaseApplication.getmTaceDao();
 
-		mAdapter = new HistoryAdapter(HistoryDetail.this, mDatas);
-		mFooterView = LayoutInflater.from(HistoryDetail.this).inflate(R.layout.maps_list_footer, null);
 		lv = (ListView) findViewById(R.id.detail_lv);
+		mAdapter = new HistoryAdapter(HistoryDetail.this, mDatas,lv);
+		mFooterView = LayoutInflater.from(HistoryDetail.this).inflate(R.layout.maps_list_footer, null);
 		lv.setAdapter(mAdapter);
 		lv.addFooterView(mFooterView);
 
@@ -76,7 +76,8 @@ public class HistoryDetail extends Activity {
 				switch (msg.what) {
 					case 0:
 						mAdapter.notifyDataSetChanged();
-//						Log.e("eadapter", String.valueOf(mAdapter));
+						Log.e("eadapter", String.valueOf(mAdapter.getCount()
+						));
 //						Log.e("edatas", String.valueOf(mDatas));
 						break;
 				}

@@ -266,7 +266,7 @@ public class TraceDao {
             final Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
 
             TraceItem traceItem = null;
-
+            Log.e("searchData","test");
             while (c.moveToNext()) {
                 traceItem = new TraceItem();
                 String address = crypto.armorDecrypt(c.getString(0));
@@ -275,6 +275,10 @@ public class TraceDao {
                 double longitude = c.getDouble(3);
                 int step = c.getInt(4);
 
+                Log.e("searchDataA",address);
+                Log.e("searchDataA",date);
+                Log.e("searchDataA", String.valueOf(latitude));
+                Log.e("searchDataA", String.valueOf(longitude));
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
