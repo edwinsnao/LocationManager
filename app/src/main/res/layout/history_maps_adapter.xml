@@ -16,12 +16,12 @@
         android:text="删除"
         android:textColor="@android:color/white" />
 
-    <com.example.fazhao.locationmanager.activity.ScrollLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:baselineAligned="true"
-                  android:orientation="vertical"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/scroll">
+    <com.example.fazhao.locationmanager.baidu_map.widget.ScrollLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                                            android:layout_width="match_parent"
+                                                                            android:baselineAligned="true"
+                                                                            android:orientation="vertical"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:id="@+id/scroll">
 
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_marginLeft="10dp"
             />
 
-    </com.example.fazhao.locationmanager.activity.ScrollLinearLayout>
+    </com.example.fazhao.locationmanager.baidu_map.widget.ScrollLinearLayout>
 
 
 </FrameLayout>

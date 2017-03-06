@@ -20,11 +20,9 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 public class Crypto {
     private static final String engine = "AES";
     private static final String crypto = "AES/CBC/PKCS5Padding";
-    private  Context ctx;
-//    private static Crypto sInstance;
+    private Context ctx;
 
     public Crypto(Context cntx) {
-//        ctx = cntx.getApplicationContext();
         ctx = cntx;
     }
 
@@ -35,18 +33,8 @@ public class Crypto {
         KeyManager km = new KeyManager(ctx);
         String key = "12345678909876543212345678909876";
         String iv1 = "1234567890987654";
-//        Log.e("iv1",""+iv1);
-//        Log.e("iv1",""+iv1.getBytes());
-//        Log.e("key",""+key);
-//        Log.e("key",""+key.getBytes());
         km.setIv(iv1.getBytes());
         km.setId(key.getBytes());
-//        Log.e("kmiv1",""+km.getIv());
-//        Log.e("kmkey",""+km.getId());
-//        Log.e("kmiv1Null?", String.valueOf(km.getIv() == null));
-//        Log.e("kmkeyNull?", String.valueOf(km.getId() == null));
-//        KeyManager km = KeyManager.getsInstace();
-//        KeyManager km = BaseApplication.getKm();
         SecretKeySpec sks = new SecretKeySpec(km.getId(), engine);
         IvParameterSpec iv = new IvParameterSpec(km.getIv());
         Cipher c = Cipher.getInstance(crypto);
@@ -81,13 +69,4 @@ public class Crypto {
             InvalidAlgorithmParameterException {
         return new String(decrypt(Base64.decode(data, Base64.DEFAULT)));
     }
-
-//    public static void init(Context context){
-//        sInstance = new Crypto(context.getApplicationContext());
-//    }
-//
-//    public static Crypto getsInstance(){
-//        return sInstance;
-//    }
-
 }

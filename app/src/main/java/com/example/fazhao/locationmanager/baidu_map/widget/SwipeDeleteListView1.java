@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,6 @@ import android.widget.ListView;
 import android.widget.Scroller;
 
 import com.example.fazhao.locationmanager.R;
-import com.example.fazhao.locationmanager.activity.ScrollLinearLayout;
-
-import static android.R.attr.scrollbarTrackVertical;
 
 /**
  * Created by fazhao on 2016/12/30.
@@ -46,11 +42,14 @@ public class SwipeDeleteListView1 extends ListView {
     private int mMaxYOverscrollDistance;
     private ViewGroup mParentView;
     private Scroller mScroller;
-    private enum STATUS{
+
+    private enum STATUS {
         DRAGGING,
         SHOW,
         IDLE
-    };
+    }
+
+    ;
 //    private long mLastHideTime = 0;
 
     public SwipeDeleteListView1(Context context) {
@@ -78,7 +77,7 @@ public class SwipeDeleteListView1 extends ListView {
     }
 
 
-    private void initBounceListView(Context mContext){
+    private void initBounceListView(Context mContext) {
         //get the density of the screen and do some maths with it on the max overscroll distance
         //variable so that you get similar behaviors no matter what the screen size
 
@@ -144,17 +143,17 @@ public class SwipeDeleteListView1 extends ListView {
      */
     private boolean judgeScrollDirection(float dx, float dy) {
         boolean canJudge = true;
-        if (Math.abs(dx) > 30){
-            if (Math.abs(dx) > 2 * Math.abs(dy)){
+        if (Math.abs(dx) > 30) {
+            if (Math.abs(dx) > 2 * Math.abs(dy)) {
                 mIsHorizontal = true;
-            } else{
+            } else {
                 mIsHorizontal = false;
             }
-        } else{
+        } else {
             canJudge = false;
         }
 
-        log(Log.DEBUG, TAG, "judgeScrollDirection, mIsHorizontal="+mIsHorizontal);
+        log(Log.DEBUG, TAG, "judgeScrollDirection, mIsHorizontal=" + mIsHorizontal);
         return canJudge;
     }
 
@@ -187,9 +186,9 @@ public class SwipeDeleteListView1 extends ListView {
 
                 if (motionPosition2 >= 0) {
                     View currentItemView = getChildAt(motionPosition2
-                           - getFirstVisiblePosition());
-                    if (mIsShown){
-                        if (currentItemView != mCurrentItemView){
+                            - getFirstVisiblePosition());
+                    if (mIsShown) {
+                        if (currentItemView != mCurrentItemView) {
                             mIsGiveupTouchEvent = true;
                             hiddenDeleteButton(false, true);
                             return true;
@@ -201,18 +200,18 @@ public class SwipeDeleteListView1 extends ListView {
                         mCurrentScrollView = (ScrollLinearLayout) currentItemView.findViewById(R.id.scroll);
                         mDeleteView = currentItemView.findViewById(R.id.delete);
                     }
-                } else{
-                    if (mIsShown){
+                } else {
+                    if (mIsShown) {
                         hiddenDeleteButton(false, false);
                     }
                 }
 
                 mIsGiveupTouchEvent = false;
-                log(Log.DEBUG, TAG, "onTouchEvent, ACTION_DOWN" );
+                log(Log.DEBUG, TAG, "onTouchEvent, ACTION_DOWN");
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if (mIsGiveupTouchEvent){
+                if (mIsGiveupTouchEvent) {
                     return true;
                 }
                 if (mCurrentItemView == null) {
@@ -224,10 +223,10 @@ public class SwipeDeleteListView1 extends ListView {
                 //如果没有方向，必须获取方向
                 if (mIsHorizontal == null) {
                     if (!judgeScrollDirection(dx, dy)) {
-                        if (mIsShown){
+                        if (mIsShown) {
                             log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE but break, mIsHorizontal=" + mIsHorizontal + " return true");
                             return true;
-                        } else{
+                        } else {
                             log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE but break, mIsHorizontal=" + mIsHorizontal + " return false");
                             break;
                         }
@@ -240,23 +239,23 @@ public class SwipeDeleteListView1 extends ListView {
                     setLongClickable(false);
 
                     setPressed(false);
-                    if(mCurrentItemView != null)
-                    mCurrentItemView.setPressed(false);
+                    if (mCurrentItemView != null)
+                        mCurrentItemView.setPressed(false);
 
                     //如果是横向移动的话，做下列处理
-                    if (dx <= 0 && mIsStatusMarked){
+                    if (dx <= 0 && mIsStatusMarked) {
                         mIsStatusMarked = false;
                     }
 
                     if (dx < 0 || mIsShown) {
                         //这里是处理左滑动删除的事情
                         log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE, dx=" + dx);
-                        if (mIsShown){
+                        if (mIsShown) {
                             dx = dx - mDeleteButtonWidth;
                             log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE, dx=" + dx);
                         }
 
-                        if (dx < 0){
+                        if (dx < 0) {
 //                      mReadStatusView.setVisibility(View.INVISIBLE);
                             mDeleteView.setVisibility(View.VISIBLE);
 
@@ -266,22 +265,22 @@ public class SwipeDeleteListView1 extends ListView {
 //                      mReadStatusView.setVisibility(View.VISIBLE);
                             mDeleteView.setVisibility(View.INVISIBLE);
 
-                            if (mSupportQuickMark){
+                            if (mSupportQuickMark) {
                                 //这里item会处于选中状态，需要重置这个状态
                                 mCurrentScrollView.scrollTo((int) (-dx), 0);
                                 mStatus = STATUS.DRAGGING;
-                            } else{
+                            } else {
                                 hiddenDeleteButton(false, false);
                             }
                         }
 
                         log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE");
-                    } else if (dx > 0 && mSupportQuickMark){
+                    } else if (dx > 0 && mSupportQuickMark) {
                         //这里是处理右滑动标记的问题
                         log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE, dx=" + dx);
                         mDeleteView.setVisibility(View.INVISIBLE);
 //                  mReadStatusView.setVisibility(View.VISIBLE);
-                        if (dx > mDeleteButtonWidth && !mIsStatusMarked){
+                        if (dx > mDeleteButtonWidth && !mIsStatusMarked) {
 //                      mIsReadStatusChanged = true;
 //                      log(Log.DEBUG, TAG, "onTouchEvent, ACTION_MOVE, mIsReadStatusChanged");
 
@@ -343,8 +342,8 @@ public class SwipeDeleteListView1 extends ListView {
                 break;
 
             case MotionEvent.ACTION_UP:
-                log(Log.DEBUG, TAG, "onTouchEvent, ACTION_UP, mIsHorizontal="+mIsHorizontal);
-                if (mIsGiveupTouchEvent){
+                log(Log.DEBUG, TAG, "onTouchEvent, ACTION_UP, mIsHorizontal=" + mIsHorizontal);
+                if (mIsGiveupTouchEvent) {
                     MotionEvent cancelEvent = MotionEvent.obtain(ev);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
                     super.onTouchEvent(cancelEvent);
@@ -352,7 +351,7 @@ public class SwipeDeleteListView1 extends ListView {
                     return true;
                 }
 
-                if(mCurrentItemView == null)
+                if (mCurrentItemView == null)
                     break;
 
                 if (mIsHorizontal != null && mIsHorizontal) {
@@ -364,7 +363,7 @@ public class SwipeDeleteListView1 extends ListView {
 //              }
 
                     float moveDistance = mFirstX - lastX;
-                    if (mIsShown){
+                    if (mIsShown) {
                         moveDistance += mDeleteButtonWidth;
                     }
                     if (moveDistance > mDeleteButtonWidth / 2) {
@@ -405,7 +404,7 @@ public class SwipeDeleteListView1 extends ListView {
         log(Log.DEBUG, TAG, "showDeleteButton viewl");
     }
 
-    public void clearState(){
+    public void clearState() {
         mCurrentItemView = null;
     }
 
@@ -462,27 +461,27 @@ public class SwipeDeleteListView1 extends ListView {
     }
     /* End add for RCS */
 
-    public enum READ_STATUS{
+    public enum READ_STATUS {
         UNREAD,
         READ
     }
 
-    public enum DRAG_STATUS{
+    public enum DRAG_STATUS {
         MOVING,
         FINISH
     }
 
-    public interface OnStatusChangeListener{
+    public interface OnStatusChangeListener {
         public void onStatusChange(View view, int position, READ_STATUS read_status, DRAG_STATUS drag_status);
     }
 
-    public void setOnStatusChangeListener(OnStatusChangeListener listener){
+    public void setOnStatusChangeListener(OnStatusChangeListener listener) {
         mStatusListener = listener;
     }
 
-    private void log(int type, String tag, String event){
-        if (DBG){
-            switch (type){
+    private void log(int type, String tag, String event) {
+        if (DBG) {
+            switch (type) {
                 case Log.INFO:
                     Log.i(tag, event);
                     break;

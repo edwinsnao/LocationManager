@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
  */
-package com.example.fazhao.locationmanager.baidu_map;
+package com.example.fazhao.locationmanager.baidu_map.model;
 
 import android.content.Context;
 import android.graphics.Color;

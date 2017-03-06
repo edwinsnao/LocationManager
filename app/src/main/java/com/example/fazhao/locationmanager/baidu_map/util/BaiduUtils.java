@@ -2,9 +2,6 @@ package com.example.fazhao.locationmanager.baidu_map.util;
 
 import android.content.Context;
 
-import com.example.fazhao.locationmanager.activity.HistoryMaps;
-import com.example.fazhao.locationmanager.activity.ToastUtil;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 

@@ -1,21 +1,19 @@
-package com.example.fazhao.locationmanager.activity;
+package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
-import android.app.IntentService;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 
 import com.example.fazhao.locationmanager.R;
-import com.example.fazhao.locationmanager.adapter.HistoryAdapter;
+import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
+import com.example.fazhao.locationmanager.baidu_map.adapter.HistoryAdapter;
 import com.example.fazhao.locationmanager.application.BaseApplication;
+import com.example.fazhao.locationmanager.baidu_map.model.TraceDao;
 import com.example.fazhao.locationmanager.baidu_map.widget.SlideLayout;
 
 import java.util.ArrayList;
@@ -66,9 +64,6 @@ public class HistoryDetail extends Activity {
 		* wrong
 		 * Only the original thread that created a view hierarchy can touch its views.
 		* */
-//		HandlerThread thread = new HandlerThread("MyThread");
-//		thread.start();
-//		final Handler handler = new Handler(thread.getLooper()) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -76,9 +71,6 @@ public class HistoryDetail extends Activity {
 				switch (msg.what) {
 					case 0:
 						mAdapter.notifyDataSetChanged();
-						Log.e("eadapter", String.valueOf(mAdapter.getCount()
-						));
-//						Log.e("edatas", String.valueOf(mDatas));
 						break;
 				}
 			}
@@ -104,18 +96,4 @@ public class HistoryDetail extends Activity {
 		lv.addFooterView(mFooterView);
 
 	}
-
-//	class MyIntentService extends IntentService {
-//
-//		public MyIntentService(String name) {
-//			super(name);
-//		}
-//
-//		@Override
-//		protected void onHandleIntent(Intent intent) {
-//			mDatas = mTraceDao.searchData(tag);
-//			mAdapter.notifyDataSetChanged();
-//		}
-//	}
-
 }

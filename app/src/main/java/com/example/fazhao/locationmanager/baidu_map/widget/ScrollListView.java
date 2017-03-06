@@ -30,7 +30,6 @@ public class ScrollListView extends ListView {
         final float density = metrics.density;
         setVerticalFadingEdgeEnabled(true);
         setFadingEdgeLength(50);
-//        mScroller = new Scroller(mContext);
         mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
     }
 

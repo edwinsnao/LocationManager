@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.fazhao.locationmanager.baidu_map.StripItem;
+import com.example.fazhao.locationmanager.baidu_map.model.StripItem;
 
 import java.util.ArrayList;
 import java.util.List;

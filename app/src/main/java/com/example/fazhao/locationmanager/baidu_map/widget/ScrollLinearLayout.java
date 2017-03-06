@@ -1,4 +1,4 @@
-package com.example.fazhao.locationmanager.activity;
+package com.example.fazhao.locationmanager.baidu_map.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -37,7 +37,7 @@ public class ScrollLinearLayout extends LinearLayout {
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             if (SwipeDeleteListView1.DBG) {
-                Log.d(TAG, "computeScroll scrollX = " + mScroller.getCurrX());
+//                Log.d(TAG, "computeScroll scrollX = " + mScroller.getCurrX());
             }
             scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidate();

@@ -7,20 +7,20 @@ package com.example.fazhao.locationmanager.baidu_map.widget;
 import android.widget.RelativeLayout;
 
 
-        import android.content.Context;
-        import android.util.AttributeSet;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.View.OnTouchListener;
-        import android.view.ViewConfiguration;
-        import android.view.ViewGroup;
-        import android.widget.AbsListView;
-        import android.widget.RelativeLayout;
-        import android.widget.ScrollView;
-        import android.widget.Scroller;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 
 /**
- *自定义滑动删除布局
+ * 自定义滑动删除布局
  */
 public class SlideLayout extends RelativeLayout implements
         OnTouchListener {
@@ -37,11 +37,11 @@ public class SlideLayout extends RelativeLayout implements
      */
     private int mTouchSlop;
     /**
-     *  按下点的X坐标
+     * 按下点的X坐标
      */
     private int downX;
     /**
-     *  按下点的Y坐标
+     * 按下点的Y坐标
      */
     private int downY;
     /**
@@ -53,7 +53,7 @@ public class SlideLayout extends RelativeLayout implements
      */
     private Scroller mScroller;
     /**
-     *SildingFinishLayout的宽度
+     * SildingFinishLayout的宽度
      */
     private int viewWidth;
     /**
@@ -106,7 +106,7 @@ public class SlideLayout extends RelativeLayout implements
     }
 
     /**
-     *滚动出界面
+     * 滚动出界面
      */
     private void scrollRight() {
         final int delta = (viewWidth + mParentView.getScrollX());
@@ -117,7 +117,7 @@ public class SlideLayout extends RelativeLayout implements
     }
 
     /**
-     *滚动到起始位置
+     * 滚动到起始位置
      */
     private void scrollOrigin() {
         int delta = mParentView.getScrollX();
@@ -134,7 +134,7 @@ public class SlideLayout extends RelativeLayout implements
     }
 
     /**
-     *  touch的view是否是ScrollView或者其子类
+     * touch的view是否是ScrollView或者其子类
      */
     private boolean isTouchOnScrollView() {
         return touchView instanceof ScrollView ? true : false;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
  */
-package com.example.fazhao.locationmanager.baidu_map;
+package com.example.fazhao.locationmanager.baidu_map.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.example.fazhao.locationmanager.baidu_map.model.StripItem;
 
 /**
  * 楼层条View

@@ -1,4 +1,4 @@
-package com.example.fazhao.locationmanager.activity;
+package com.example.fazhao.locationmanager.baidu_map.model;
 
 /**
  * Created by Kings on 2016/2/12.
@@ -25,10 +25,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import static android.R.attr.tag;
-import static com.example.fazhao.locationmanager.R.id.step;
-import static com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity.geoCoder;
-
 /**
  * this is for baidu_map
  */
@@ -40,7 +36,6 @@ public class TraceDao {
     public TraceDao() {
         dbHelper = BaseApplication.getDbHelper();
         crypto = BaseApplication.getmCrypto();
-//        db = BaseApplication.getDb();
         db = dbHelper.getWritableDatabase();
     }
 
@@ -84,9 +79,9 @@ public class TraceDao {
 
     public void addTime(String start, String end, int tag) {
         String sql = "insert into time_item (date_start,date_end,tag) values(?,?,?) ;";
-        /*
-        * 开启事务
-        * */
+        /**
+         * 开启事务
+         * */
         SQLiteStatement ss = db.compileStatement(sql);
         ss.bindString(1, start);
         ss.bindString(2, end);
@@ -120,14 +115,20 @@ public class TraceDao {
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         TraceItem traceItem = null;
 
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             traceItem = new TraceItem();
             double latitude = c.getDouble(0);
             double longitude = c.getDouble(1);
             traceItem.setLatitude(latitude);
             traceItem.setLongitude(longitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-        c.close();
         return traceItem;
     }
 
@@ -142,7 +143,8 @@ public class TraceDao {
         TraceItem traceItem = null;
         TraceItem traceItem1 = null;
 
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             traceItem = new TraceItem();
             double latitude_start = c.getDouble(0);
             double longitude_start = c.getDouble(2);
@@ -153,10 +155,15 @@ public class TraceDao {
             double longitude_end = c.getDouble(3);
             traceItem1.setLatitude(latitude_end);
             traceItem1.setLongitude(longitude_end);
+            list.add(traceItem);
+            list.add(traceItem1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-        list.add(traceItem);
-        list.add(traceItem1);
-        c.close();
         return list;
     }
 
@@ -169,7 +176,8 @@ public class TraceDao {
         String sql = "select address_start,address_end from route_item where tag = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
 
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             String address_start = null;
             String address_end = null;
 
@@ -191,8 +199,13 @@ public class TraceDao {
             }
             list.add(address_start);
             list.add(address_end);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-        c.close();
         return list;
     }
 
@@ -205,7 +218,8 @@ public class TraceDao {
         String sql = "select date_start,date_end from time_item where tag = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
 
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             String date_end = null;
             String date_start = null;
             try {
@@ -226,8 +240,13 @@ public class TraceDao {
             }
             list.add(date_start);
             list.add(date_end);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-        c.close();
         return list;
     }
 
@@ -237,12 +256,16 @@ public class TraceDao {
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         TraceItem traceItem = null;
 
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             traceItem = new TraceItem();
             int step = c.getInt(0);
             traceItem.setStep(step);
+        } catch (Exception e) {
+            if (c != null) {
+                c.close();
+            }
         }
-        c.close();
         return traceItem;
     }
 
@@ -258,16 +281,15 @@ public class TraceDao {
      */
     public List<TraceItem> searchData(int tag) {
         final List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        try {
-            /**
-             * 在这里加入step会更加好性能，不用在historyAdapter里面的getView进行getLastStep耗时操作
-             * */
-            String sql = "select address,date,latitude,longitude,step from trace_item where tag = ?";
-            final Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
+        /**
+         * 在这里加入step会更加好性能，不用在historyAdapter里面的getView进行getLastStep耗时操作
+         * */
+        String sql = "select address,date,latitude,longitude,step from trace_item where tag = ?";
+        final Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
 
+        try {
             TraceItem traceItem = null;
-            Log.e("searchData","test");
-            while (c.moveToNext()) {
+            while(c.moveToNext()) {
                 traceItem = new TraceItem();
                 String address = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
@@ -275,10 +297,6 @@ public class TraceDao {
                 double longitude = c.getDouble(3);
                 int step = c.getInt(4);
 
-                Log.e("searchDataA",address);
-                Log.e("searchDataA",date);
-                Log.e("searchDataA", String.valueOf(latitude));
-                Log.e("searchDataA", String.valueOf(longitude));
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
@@ -286,13 +304,14 @@ public class TraceDao {
                 traceItem.setStep(step);
                 traceItems.add(traceItem);
             }
-            c.close();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
         return traceItems;
-
     }
 
     /**
@@ -302,10 +321,9 @@ public class TraceDao {
      */
     public List<TraceItem> searchAllData() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
+        String sql = "select name,address,latitude,longitude,date,step from trace_item  order by date desc ";
+        Cursor c = db.rawQuery(sql, null);
         try {
-            String sql = "select name,address,latitude,longitude,date,step from trace_item  order by date desc ";
-            Cursor c = db.rawQuery(sql, null);
-
             TraceItem traceItem = null;
 
             while (c.moveToNext()) {
@@ -326,10 +344,13 @@ public class TraceDao {
                 traceItem.setStep(step);
                 traceItems.add(traceItem);
             }
-            c.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
         return traceItems;
 
@@ -337,90 +358,12 @@ public class TraceDao {
 
     public List<TraceItem> searchDistinctDataDestination() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-//        String address;
-//        LatLng latLng;
-//        int tag = 0;
+        String sql = "select address,date,latitude,longitude,tag from trace_item group by tag ";
+        Cursor c = db.rawQuery(sql, null);
+        TraceItem traceItem = null;
         try {
-            String sql = "select address,date,latitude,longitude,tag from trace_item group by tag ";
-            Cursor c = db.rawQuery(sql, null);
-            TraceItem traceItem = null;
-
             while (c.moveToNext()) {
-//                tag++;
                 traceItem = new TraceItem();
-//                address = c.getString(0);
-                /**
-                * 上面start已经同步了，所以这里的判断多余
-                * */
-//                if (address.equals("null") || address == null ||
-//                        address.equals("没有联网下定位导致无法获取地址名称")
-//                        || crypto.armorDecrypt(address).equals("没有联网下定位导致无法获取地址名称")) {
-//                    address = "没有联网下定位导致无法获取地址名称";
-////                    String sql1 = "update trace_item set address = ? where tag = ?";
-////                    db.execSQL(sql1,new Object[]{crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()),tag});
-//                } else {
-//                    address = crypto.armorDecrypt(address);
-//                }
-//                /**
-//                 * 同步功能：反地理位置
-//                 * */
-//                Log.e("addressDes", address);
-//                if(address.equals("没有联网下定位导致无法获取地址名称"))
-//                {
-//                    double latitude = c.getDouble(2);
-//                    double longitude = c.getDouble(3);
-//                    latLng = new LatLng(latitude,longitude);
-//                    IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-//                    String date = crypto.armorDecrypt(c.getString(1));
-//                    Log.e("reverseAddressDes",IndoorLocationActivity.reverseAddress);
-////                    if(IndoorLocationActivity.reverseAddress == null){
-////                        String sql1 = "update trace_item set address = ? where tag = ?";
-////                        db.execSQL(sql1, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes(), tag});
-////                        Log.e("sql1","testDesNull");
-////                        /**
-////                         * 不可以执行下面的那句
-////                         * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
-////                         * end只需要更新就好了，不需要再插入一条新的数据
-////                         * */
-//////                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
-////                        String sql2 = "update route_item  set address_end = ? where tag = ?";
-////                        db.execSQL(sql2, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes(), tag});
-////                        Log.e("sql2","testDesNull");
-////                        int tag1 = c.getInt(4);
-////                        int step = c.getInt(5);
-////                        traceItem.setAddress("没有联网下定位导致无法获取地址名称");
-////                        traceItem.setDate(date);
-////                        traceItem.setLatitude(latitude);
-////                        traceItem.setLongitude(longitude);
-////                        traceItem.setTag(tag1);
-////                        traceItem.setStep(step);
-////                        traceItems.add(traceItem);
-////                    }else {
-//                        String sql1 = "update trace_item set address = ? where tag = ?";
-//                        db.execSQL(sql1, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
-//                        /**
-//                         * 不可以执行下面的那句
-//                         * 因为start那里已经插入了(因为我的代码是默认如果address为空的话不插入到route_item)
-//                         * end只需要更新就好了，不需要再插入一条新的数据
-//                         * */
-////                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
-//                        String sql2 = "update route_item  set address_end = ? where tag = ?";
-//                        Log.e("Dest","update route_item  set address_end = "+ crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes())
-//                                +"where tag = "+tag);
-//                        db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
-//                        Log.e("sql1","testDes");
-//                        Log.e("sql2","testDes");
-//                        int tag1 = c.getInt(4);
-//                        int step = c.getInt(5);
-//                        traceItem.setAddress(IndoorLocationActivity.reverseAddress);
-//                        traceItem.setDate(date);
-//                        traceItem.setLatitude(latitude);
-//                        traceItem.setLongitude(longitude);
-//                        traceItem.setTag(tag1);
-//                        traceItem.setStep(step);
-//                        traceItems.add(traceItem);
-////                    }
-//                }else {
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
@@ -433,14 +376,15 @@ public class TraceDao {
                 traceItem.setLongitude(longitude);
                 traceItem.setTag(tag1);
                 traceItems.add(traceItem);
-//                }
             }
-            c.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-//        IndoorLocationActivity.loadComplete();
         return traceItems;
 
     }
@@ -450,10 +394,9 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
+        String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
+        Cursor c = db.rawQuery(sql, null);
         try {
-            String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
-            Cursor c = db.rawQuery(sql, null);
-
             TraceItem traceItem = null;
 
             while (c.moveToNext()) {
@@ -471,44 +414,15 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-//                    if(IndoorLocationActivity.reverseAddress == null){
-//                        double latitude = c.getDouble(2);
-//                        double longitude = c.getDouble(3);
-//                        latLng = new LatLng(latitude, longitude);
-//                        IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-//                        String date = crypto.armorDecrypt(c.getString(1));
-//                        String sql1 = "update trace_item set address = ? where tag = ?";
-//                        db.execSQL(sql1, new Object[]{"没有联网下定位导致无法获取地址名称".getBytes(), tag});
-//                        Log.e("sql1","testStartNull");
-////                    String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
-//                        String sql2 = "insert into route_item (address_start,address_end,tag) values(?,?,?) ;";
-//                        SQLiteStatement ss = db.compileStatement(sql2);
-//                        ss.bindString(1, crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()));
-//                        ss.bindString(3, String.valueOf(tag));
-//                        ss.executeInsert();
-//                        Log.e("sql2","testStartNull");
-//                        int tag1 = c.getInt(4);
-//                        int step = c.getInt(5);
-//                        traceItem.setAddress("没有联网下定位导致无法获取地址名称");
-//                        traceItem.setDate(date);
-//                        traceItem.setLatitude(latitude);
-//                        traceItem.setLongitude(longitude);
-//                        traceItem.setTag(tag1);
-//                        traceItem.setStep(step);
-//                        traceItems.add(traceItem);
-//                    }else {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    Log.e("reverseAddressStart", IndoorLocationActivity.reverseAddress);
                     String sql1 = "update trace_item set address = ? where tag = ?";
                     db.execSQL(sql1, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
                     String sql2 = "update route_item set address_start = ? where tag = ?";
                     db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
-                    Log.e("sql1", "testStart");
-                    Log.e("sql2", "testStart");
 
                     /**
                      * 同步Des的地址名字
@@ -516,22 +430,26 @@ public class TraceDao {
                     String sql_des = "select address,date,latitude,longitude,tag from trace_item group by tag ";
                     Cursor c_des = db.rawQuery(sql_des, null);
 
-                    for (int i = 0; i < tag; i++) {
-                        c_des.moveToNext();
-                    }
+                    try {
+                        for (int i = 0; i < tag; i++) {
+                            c_des.moveToNext();
+                        }
 
-                    double latitude_des = c_des.getDouble(2);
-                    double longitude_des = c_des.getDouble(3);
-                    latLng = new LatLng(latitude_des, longitude_des);
-                    IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-                    Log.e("reverseAddressDes", IndoorLocationActivity.reverseAddress);
-                    String sql1_des = "update trace_item set address = ? where tag = ?";
-                    db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
-                    String sql2_des = "update route_item  set address_end = ? where tag = ?";
-                    Log.e("Dest", "update route_item  set address_end = " + crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes())
-                            + "where tag = " + tag);
-                    db.execSQL(sql2_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
-                    c_des.close();
+                        double latitude_des = c_des.getDouble(2);
+                        double longitude_des = c_des.getDouble(3);
+                        latLng = new LatLng(latitude_des, longitude_des);
+                        IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                        String sql1_des = "update trace_item set address = ? where tag = ?";
+                        db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                        String sql2_des = "update route_item  set address_end = ? where tag = ?";
+                        db.execSQL(sql2_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_des != null) {
+                            c_des.close();
+                        }
+                    }
 
 
                     /**
@@ -540,22 +458,29 @@ public class TraceDao {
                     String sql_other = "select _id,address,latitude,longitude from trace_item where tag = ?";
                     final Cursor c_other = db.rawQuery(sql_other, new String[]{String.valueOf(tag)});
 
-                    while (c_other.moveToNext()) {
-                        int id = c_other.getInt(0);
-                        String address_other = crypto.armorDecrypt(c_other.getString(1));
-                        if (address_other.equals("null") || address_other == null ||
-                                address_other.equals("没有联网下定位导致无法获取地址名称")
-                                || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                            double latitude_other = c_other.getDouble(2);
-                            double longitude_other = c_other.getDouble(3);
-                            latLng = new LatLng(latitude_other, longitude_other);
-                            IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-                            address = IndoorLocationActivity.reverseAddress;
-                            String sql1_other = "update trace_item set address = ? where _id = ?";
-                            db.execSQL(sql1_other, new Object[]{crypto.armorEncrypt(address.getBytes()), id});
+                    try {
+                        while (c_other.moveToNext()) {
+                            int id = c_other.getInt(0);
+                            String address_other = crypto.armorDecrypt(c_other.getString(1));
+                            if (address_other.equals("null") || address_other == null ||
+                                    address_other.equals("没有联网下定位导致无法获取地址名称")
+                                    || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
+                                double latitude_other = c_other.getDouble(2);
+                                double longitude_other = c_other.getDouble(3);
+                                latLng = new LatLng(latitude_other, longitude_other);
+                                IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                                address = IndoorLocationActivity.reverseAddress;
+                                String sql1_other = "update trace_item set address = ? where _id = ?";
+                                db.execSQL(sql1_other, new Object[]{crypto.armorEncrypt(address.getBytes()), id});
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_other != null) {
+                            c_other.close();
                         }
                     }
-                    c_other.close();
 
                     int tag1 = c.getInt(4);
                     int step = c.getInt(5);
@@ -566,7 +491,6 @@ public class TraceDao {
                     traceItem.setTag(tag1);
                     traceItem.setStep(step);
                     traceItems.add(traceItem);
-//                    }
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -583,10 +507,13 @@ public class TraceDao {
                     traceItems.add(traceItem);
                 }
             }
-            c.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
         return traceItems;
 
@@ -601,10 +528,16 @@ public class TraceDao {
         if (db == null || !db.isOpen())
             db = dbHelper.getWritableDatabase();
         Cursor c = db.rawQuery(sql, null);
-        while (c.moveToNext()) {
+        try {
+            c.moveToNext();
             tag = c.getInt(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
         }
-        c.close();
         return tag;
     }
 

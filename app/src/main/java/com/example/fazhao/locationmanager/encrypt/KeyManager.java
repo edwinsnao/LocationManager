@@ -10,11 +10,9 @@ import android.content.Context;
 
 
 public class KeyManager {
-    private static final String TAG = "KeyManager";
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
-//    private static KeyManager sInstace;
-    private  Context ctx;
+    private Context ctx;
 
     public KeyManager(Context cntx) {
         ctx = cntx;
@@ -49,18 +47,10 @@ public class KeyManager {
             data = bos.toByteArray();
             fis.close();
             bos.close();
-        }  catch (IOException e) {
+        } catch (IOException e) {
         }
         return data;
     }
-
-//    public static void init(Context context){
-//        sInstace = new KeyManager(context.getApplicationContext());
-//    }
-//
-//    public static KeyManager getsInstace(){
-//        return sInstace;
-//    }
 
     public void writer(byte[] data, String file) {
         try {
@@ -69,8 +59,7 @@ public class KeyManager {
             fos.write(data);
             fos.flush();
             fos.close();
-        }  catch (IOException e) {
+        } catch (IOException e) {
         }
     }
-
 }
