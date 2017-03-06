@@ -123,7 +123,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private int tmp;
     private TraceDao mTraceDao;
     private TraceItem mTraceItem;
-    private int tag;
+    private int tag,maxTag;
     private HistoryDialog historyDialog;
     private int mStep = 0;
     private List<Integer> history_step = new ArrayList<>();
@@ -188,7 +188,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private Runnable updateTitle = new Runnable() {
         @Override
         public void run() {
-            historyTitle.setText("历史记录有" + (tag - 1) + "数据");
+            historyTitle.setText("历史记录有" + (maxTag) + "数据");
         }
     };
 
@@ -366,6 +366,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case 0:
+                                maxTag = mTraceDao.maxTag();
                                 if (historyDialog == null) {
                                     historyDialog = new HistoryDialog(IndoorLocationActivity.this);
                                 }
@@ -415,7 +416,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                  * */
                                 historyDialog.show();
                                 historyTitle = ((TextView) (historyDialog.findViewById(R.id.history_num)));
-                                historyTitle.setText("历史记录有" + tag + "数据");
+                                historyTitle.setText("历史记录有" + maxTag + "数据");
                                 break;
                         }
                     }
@@ -530,9 +531,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     final Runnable saveHistory = new Runnable() {
         @Override
         public void run() {
-            if (mTraceDao.searchAllData() != null)
+            if (mTraceDao.searchAllData() != null) {
                 tag = mTraceDao.maxTag() + 1;
-
+                maxTag = tag - 1;
+            }
             /**
              * 插入数据到多表
              * */

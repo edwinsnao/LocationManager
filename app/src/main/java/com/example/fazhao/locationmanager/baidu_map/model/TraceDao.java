@@ -321,7 +321,7 @@ public class TraceDao {
      */
     public List<TraceItem> searchAllData() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select name,address,latitude,longitude,date,step from trace_item  order by date desc ";
+        String sql = "select address,latitude,longitude,date,step from trace_item  order by date desc ";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -329,14 +329,12 @@ public class TraceDao {
             while (c.moveToNext()) {
                 traceItem = new TraceItem();
 
-                String name = c.getString(0);
-                String address = c.getString(1);
-                String date = c.getString(4);
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
-                int step = c.getInt(5);
+                String address = c.getString(0);
+                String date = c.getString(3);
+                double latitude = c.getDouble(1);
+                double longitude = c.getDouble(2);
+                int step = c.getInt(4);
 
-                traceItem.setName(name);
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
