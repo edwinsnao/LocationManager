@@ -34,15 +34,6 @@ public class BaseApplication extends Application {
     private static List<String> time;
     private static List<TraceItem> distance;
     private static List<String> route;
-    private static int lastStep;
-
-    public static int getLastStep() {
-        return lastStep;
-    }
-
-    public static void setLastStep(int lastStep) {
-        BaseApplication.lastStep = lastStep;
-    }
 
     public static LocationClient getmLocClient() {
         return mLocClient;

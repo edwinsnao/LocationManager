@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
          * 不使用上面那条，上面多了一个name的字段
          * */
         String trace = "create table trace_item( _id integer primary key autoincrement , "
-                + " address text , date text , latitude real , longitude real ,tag integer ,step integer );";
+                + " address text , date text , latitude real , longitude real ,tag integer);";
         String time = "create table time_item( _id integer primary key autoincrement , "
                 + " date_start text , date_end text,tag integer);";
         String distance = "create table distance_item( _id integer primary key autoincrement , "

@@ -71,14 +71,6 @@
                 <action android:name="com.fazhao.locationservice"/>
             </intent-filter>
         </service>
-        <service
-            android:name=".baidu_map.service.StepService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.fazhao.stepservice"/>
-            </intent-filter>
-        </service>
 
         <activity android:name=".baidu_map.activity.HistoryMaps"/>
         <activity

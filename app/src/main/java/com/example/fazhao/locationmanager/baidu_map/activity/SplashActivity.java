@@ -27,7 +27,6 @@ public class SplashActivity extends Activity {
     private List<String> time;
     private List<TraceItem> distance;
     private List<String> route;
-    private int lastStep;
 
     //    private LatLng latLng1;
 //    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
@@ -77,7 +76,6 @@ public class SplashActivity extends Activity {
         BaseApplication.setRoute(route);
         BaseApplication.setDistance(distance);
         BaseApplication.setTime(time);
-        BaseApplication.setLastStep(lastStep);
     }
 
 
@@ -100,9 +98,6 @@ public class SplashActivity extends Activity {
         time = mTraceDao.getLastTime();
         route = mTraceDao.getLastRoute();
         distance = mTraceDao.getLastDistance();
-        TraceItem tmp = mTraceDao.getLastStep();
-        if (tmp != null)
-            lastStep = tmp.getStep();
 //        BaseApplication.setHistory(historyFromLoad);
     }
 

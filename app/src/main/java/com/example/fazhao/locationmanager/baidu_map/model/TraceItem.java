@@ -6,18 +6,11 @@ package com.example.fazhao.locationmanager.baidu_map.model;
 
 import android.os.Bundle;
 
+import static com.example.fazhao.locationmanager.R.id.step;
+
 public class TraceItem {
     private int id;
     private int tag;
-    private int step;
-
-    public int getStep() {
-        return step;
-    }
-
-    public void setStep(int step) {
-        this.step = step;
-    }
 
     public int getTag() {
         return tag;

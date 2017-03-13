@@ -25,6 +25,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static com.example.fazhao.locationmanager.R.id.step;
+
 /**
  * this is for baidu_map
  */
@@ -40,7 +42,7 @@ public class TraceDao {
     }
 
     public void add(TraceItem traceItem) {
-        String sql = "insert into trace_item (address,latitude,longitude,date,tag,step) values(?,?,?,?,?,?) ;";
+        String sql = "insert into trace_item (address,latitude,longitude,date,tag) values(?,?,?,?,?) ;";
         /**
          * 开启事务
          * */
@@ -71,7 +73,6 @@ public class TraceDao {
         ss.bindDouble(3, traceItem.getLongitude());
         ss.bindString(4, traceItem.getDate());
         ss.bindString(5, String.valueOf(traceItem.getTag()));
-        ss.bindString(6, String.valueOf(traceItem.getStep()));
         ss.executeInsert();
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -250,26 +251,6 @@ public class TraceDao {
         return list;
     }
 
-    public TraceItem getLastStep() {
-        int tag = maxTag();
-        String sql = "select step from trace_item where tag = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
-        TraceItem traceItem = null;
-
-        try {
-            c.moveToNext();
-            traceItem = new TraceItem();
-            int step = c.getInt(0);
-            traceItem.setStep(step);
-        } catch (Exception e) {
-            if (c != null) {
-                c.close();
-            }
-        }
-        return traceItem;
-    }
-
-
     /**
      * 从数据库中查询用户包含的关键字数据
      * 根据tag来区别是用户哪一次的走的图，因为不可以用时间来区别
@@ -284,7 +265,7 @@ public class TraceDao {
         /**
          * 在这里加入step会更加好性能，不用在historyAdapter里面的getView进行getLastStep耗时操作
          * */
-        String sql = "select address,date,latitude,longitude,step from trace_item where tag = ?";
+        String sql = "select address,date,latitude,longitude from trace_item where tag = ?";
         final Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
 
         try {
@@ -295,13 +276,11 @@ public class TraceDao {
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
-                int step = c.getInt(4);
 
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
                 traceItem.setLongitude(longitude);
-                traceItem.setStep(step);
                 traceItems.add(traceItem);
             }
         } catch (Exception e) {
@@ -321,7 +300,7 @@ public class TraceDao {
      */
     public List<TraceItem> searchAllData() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,latitude,longitude,date,step from trace_item  order by date desc ";
+        String sql = "select address,latitude,longitude,date from trace_item  order by date desc ";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -333,13 +312,11 @@ public class TraceDao {
                 String date = c.getString(3);
                 double latitude = c.getDouble(1);
                 double longitude = c.getDouble(2);
-                int step = c.getInt(4);
 
                 traceItem.setAddress(address);
                 traceItem.setDate(date);
                 traceItem.setLatitude(latitude);
                 traceItem.setLongitude(longitude);
-                traceItem.setStep(step);
                 traceItems.add(traceItem);
             }
         } catch (Exception e) {
@@ -392,7 +369,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
+        String sql = "select address,min(date),latitude,longitude,tag from trace_item group by tag";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -481,13 +458,11 @@ public class TraceDao {
                     }
 
                     int tag1 = c.getInt(4);
-                    int step = c.getInt(5);
                     traceItem.setAddress(IndoorLocationActivity.reverseAddress);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(step);
                     traceItems.add(traceItem);
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
@@ -495,13 +470,11 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    int step = c.getInt(5);
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(step);
                     traceItems.add(traceItem);
                 }
             }

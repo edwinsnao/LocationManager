@@ -138,18 +138,6 @@
                 android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp" />-->
-            <TextView
-                android:background="@drawable/button_style"
-                android:id="@+id/steps"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:layout_weight="1"
-                android:text="步数:0"
-                android:layout_marginRight="10dp"
-                android:layout_width="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_height="50dp"/>
             <Button
                 android:id="@+id/btn_compute"
                 android:text="@string/compute"

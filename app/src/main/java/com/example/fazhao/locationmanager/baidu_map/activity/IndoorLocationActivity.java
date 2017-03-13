@@ -82,6 +82,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static com.example.fazhao.locationmanager.R.id.step;
 
 
 /**
@@ -125,22 +126,18 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private TraceItem mTraceItem;
     private int tag,maxTag;
     private HistoryDialog historyDialog;
-    private int mStep = 0;
-    private List<Integer> history_step = new ArrayList<>();
     private Bundle bundle = new Bundle();
     private HistoryAdapter mAdapter;
     private Crypto crypto;
     private KeyManager km;
     private List<TraceItem> mDatas, mDatas1;
-    private TextView step, info, historyTitle;
+    private TextView  info, historyTitle;
     private BaiduReceiver mReceiver;
     private LocationClient mLocClient = BaseApplication.getmLocClient();
     private LocationClientOption mOption = BaseApplication.getOption();
     private Handler handler;
-    private Intent mStepService;
     private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo;
     private Intent tmpIntent = new Intent();
-    public static Handler mHandler;
     private PowerManager powerManager;
     private PowerManager.WakeLock wakeLock;
     public static String reverseAddress;
@@ -169,7 +166,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             String time = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DAY_OF_MONTH)
                     + "-" + now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
             history_time.add(time);
-            history_step.add(mStep);
             if (history.size() >= 2) {
                 save.setClickable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -217,22 +213,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         super.onStart();
     }
 
-    public void startStepService() {
-        mStepService = new Intent(IndoorLocationActivity.this, StepService.class);
-        startService(mStepService);
-    }
-
-    public void stopStepService() {
-        stopService(mStepService);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        startStepService();
         RelativeLayout layout = new RelativeLayout(this);
         mLocClient.setLocOption(mOption);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -321,7 +307,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         stripListView = new StripListView(this);
         layout.addView(stripListView);
         setContentView(layout);
-        step = (TextView) findViewById(R.id.steps);
         mTraceDao = BaseApplication.getmTaceDao();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
@@ -333,7 +318,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 LatLng latLng = new LatLng(distance.get(0).getLatitude(), distance.get(0).getLongitude());
                 LatLng latLng1 = new LatLng(distance.get(1).getLatitude(), distance.get(1).getLongitude());
                 info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" + String.valueOf(DistanceUtil.getDistance(latLng, latLng1)) + ",时长：" + BaiduUtils.dateDiff(this, time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
-                        + "分钟" + ",步数:" + BaseApplication.getLastStep());
+                        + "分钟");
             } catch (Exception e) {
 
             }
@@ -476,16 +461,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         tmpIntent.setAction("com.fazhao.locationservice");
         Intent serviceIt = new Intent(createExplicitFromImplicitIntent(this, tmpIntent));
         startService(serviceIt);
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                StringBuilder mStepCount = new StringBuilder("步数:");
-                mStepCount.append(msg.obj);
-                mStep = (int) msg.obj;
-                step.setText(mStepCount);
-            }
-        };
         powerManager = (PowerManager) this.getSystemService(this.POWER_SERVICE);
         wakeLock = this.powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
         geoCoder = GeoCoder.newInstance();
@@ -572,7 +547,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                      * 在最后一个插入步数
                      * 如果是0也插入，证明不是走路（是交通工具）
                      * */
-                    mTraceItem.setStep(history_step.get(i));
 //                        }
                     mTraceDao.add(mTraceItem);
                 }
@@ -751,7 +725,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
          * 在这里关闭db
          * */
 //        BaseApplication.getDbHelper().close();
-        stopStepService();
         wakeLock.release();
         super.onDestroy();
     }

@@ -113,7 +113,6 @@ public class HistoryAdapter extends BaseAdapter {
             holder.address_destination = (TextView) convertView.findViewById(R.id.address_history_destination);
             holder.tag = (TextView) convertView.findViewById(R.id.number_history);
             holder.delete = (TextView) convertView.findViewById(R.id.delete);
-            holder.step = (TextView) convertView.findViewById(R.id.step);
 
 
             convertView.setTag(holder);
@@ -143,9 +142,6 @@ public class HistoryAdapter extends BaseAdapter {
         StringBuilder builder3 = new StringBuilder("出发地：");
         builder3.append(traceItem.getAddress());
         holder.address_start.setText(builder3);
-        StringBuilder builder4 = new StringBuilder("步数:");
-        builder4.append(traceItem.getStep());
-        holder.step.setText(builder4);
         final ViewHolder finalHolder = holder;
         final ListView finalMListView = mListView;
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -209,6 +205,5 @@ public class HistoryAdapter extends BaseAdapter {
         TextView address_start;
         TextView address_destination;
         TextView delete;
-        TextView step;
     }
 }

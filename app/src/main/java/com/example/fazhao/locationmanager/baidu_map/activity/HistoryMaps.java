@@ -127,7 +127,7 @@ public class HistoryMaps extends Activity {
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         mBaiduMap.animateMapStatus(msUpdate);
         showTime.setText("时间相差：" + BaiduUtils.dateDiff(this, traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
-                + "分钟" + "上次步数:" + mTraceDao.getLastStep().getStep());
+                + "分钟");
     }
 
     private void initData(int choice) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {

@@ -112,7 +112,7 @@ public class StepService extends Service {
                     mStep += (int) event.values[0];
                     Message msg = Message.obtain();
                     msg.obj = mStep;
-                    IndoorLocationActivity.mHandler.sendMessage(msg);
+//                    IndoorLocationActivity.mHandler.sendMessage(msg);
                 }
             };
             /**
