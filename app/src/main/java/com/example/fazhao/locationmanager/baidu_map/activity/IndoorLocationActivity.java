@@ -149,6 +149,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private PowerManager.WakeLock wakeLock;
     public static String reverseAddress;
     public static GeoCoder geoCoder;
+    private Timer mTimer;
 
     private BDLocationListener mListener = new BDLocationListener() {
 
@@ -563,8 +564,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     }
             }
         };
-        Timer timer = new Timer();
-        timer.schedule(task, 1000, 30000);
+        mTimer = new Timer();
+        mTimer.schedule(task, 1000, 30000);
     }
 
     public boolean isConnected() {
@@ -812,6 +813,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        BaseApplication.getDbHelper().close();
         stopStepService();
         wakeLock.release();
+        mTimer.cancel();
         super.onDestroy();
     }
 }
