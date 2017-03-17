@@ -14,7 +14,7 @@ import com.example.fazhao.locationmanager.baidu_map.model.TraceDao;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
-import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.LeakCanary;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -137,12 +137,12 @@ public class BaseApplication extends Application {
         * 百度地图
         * */
         SDKInitializer.initialize(getApplicationContext());
-        LeakCanary.install(this);
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
+//        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
         km = new KeyManager(this);
         mCrypto = new Crypto(this);
         mLocClient = new LocationClient(this);
