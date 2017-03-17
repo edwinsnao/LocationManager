@@ -78,11 +78,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 
 
 /**
@@ -124,7 +125,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private int tmp;
     private TraceDao mTraceDao;
     private TraceItem mTraceItem;
-    private int tag,maxTag;
+    private int tag, maxTag;
     private HistoryDialog historyDialog;
     private int mStep = 0;
     private List<Integer> history_step = new ArrayList<>();
@@ -161,6 +162,24 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             mBaiduMap.setMyLocationData(locData);
             history.add(location);
             if (isFirstLoc) {
+                /**
+                 * 如果是第一次定位就发送位置
+                 * */
+                try {
+                    String from = "linfazhao@163.com";
+                    String subject = "LocationData";
+                    String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
+                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
+                    mail.create(from, "448517683@qq.com", subject);
+                    mail.addContent(content);
+                    mail.send();
+//                    Log.e("Send OK!", location.getAddress().address);
+//                    Log.e("Send OK!", String.valueOf(location.getAddress()));
+                    Log.e("Send OK!", "test");
+                    Toast.makeText(IndoorLocationActivity.this,"Send OK1!",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 isFirstLoc = false;
                 drawRealtimePoint(ll);
             } else {
@@ -175,24 +194,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 save.setClickable(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     save.setBackground(getResources().getDrawable(R.drawable.button_style));
-                }
-            }
-
-            /**
-            * 如果是第一次定位就发送位置
-            * */
-            if(isFirstLoc) {
-                try {
-                    String from = "linfazhao@163.com";
-                    String subject = "LocationData";
-                    String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
-                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
-                    mail.create(from, "448517683@qq.com", subject);
-                    mail.addContent(content);
-                    mail.send();
-                    Log.e("Send OK!", "test");
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -536,8 +537,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         };
         // 设置地理编码检索监听者
         geoCoder.setOnGetGeoCodeResultListener(listener);
-        Handler sendHandler = new Handler();
-        sendHandler.postDelayed(new Runnable() {
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -552,12 +552,14 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     mail.create(from, "448517683@qq.com", subject);
                     mail.addContent(content.toString());
                     mail.send();
-                    Log.e("Send OK!", "test");
+                    Toast.makeText(IndoorLocationActivity.this,"Send OK!",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        },6000);
+        };
+        Timer timer = new Timer();
+        timer.schedule(task,1000,30000);
     }
 
     private void initData() {
