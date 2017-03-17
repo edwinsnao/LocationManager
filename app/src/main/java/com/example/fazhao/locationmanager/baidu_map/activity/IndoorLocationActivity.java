@@ -12,6 +12,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -165,20 +167,22 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 /**
                  * 如果是第一次定位就发送位置
                  * */
-                try {
-                    String from = "linfazhao@163.com";
-                    String subject = "LocationData";
-                    String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
-                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
-                    mail.create(from, "448517683@qq.com", subject);
-                    mail.addContent(content);
-                    mail.send();
+                if (isConnected()) {
+                    try {
+                        String from = "linfazhao@163.com";
+                        String subject = "LocationData";
+                        String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
+                        Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
+                        mail.create(from, "448517683@qq.com", subject);
+                        mail.addContent(content);
+                        mail.send();
 //                    Log.e("Send OK!", location.getAddress().address);
 //                    Log.e("Send OK!", String.valueOf(location.getAddress()));
-                    Log.e("Send OK!", "test");
-                    Toast.makeText(IndoorLocationActivity.this,"Send OK1!",Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        Log.e("Send OK!", "test");
+                        Toast.makeText(IndoorLocationActivity.this, "Send OK1!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 isFirstLoc = false;
                 drawRealtimePoint(ll);
@@ -540,26 +544,38 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                try {
-                    String from = "linfazhao@163.com";
-                    String subject = "LocationData";
-                    StringBuilder content = new StringBuilder("");
-                    for (int i = 0; i < history.size(); i++) {
-                        content.append("位置:" + history.get(i).getAddress().address);
-                        content.append(" 时间:" + history.get(i).getTime() + "\n");
+                if (isConnected())
+                    try {
+                        String from = "linfazhao@163.com";
+                        String subject = "LocationData";
+                        StringBuilder content = new StringBuilder("");
+                        for (int i = 0; i < history.size(); i++) {
+                            content.append("位置:" + history.get(i).getAddress().address);
+                            content.append(" 时间:" + history_time.get(i) + "\n");
+                        }
+                        Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
+                        mail.create(from, "448517683@qq.com", subject);
+                        mail.addContent(content.toString());
+                        mail.send();
+                        Toast.makeText(IndoorLocationActivity.this, "Send OK!", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
-                    mail.create(from, "448517683@qq.com", subject);
-                    mail.addContent(content.toString());
-                    mail.send();
-                    Toast.makeText(IndoorLocationActivity.this,"Send OK!",Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task,1000,30000);
+        timer.schedule(task, 1000, 30000);
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null) {
+            return networkInfo.isAvailable();
+        }
+        return false;
     }
 
     private void initData() {
