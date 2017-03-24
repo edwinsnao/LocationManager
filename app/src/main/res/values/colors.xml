@@ -164,4 +164,6 @@
     <color name="text_tip">#FFA0A0A0</color>
     <color name="text_button">#FF3F3F3F</color>
 
+    <color name="timestamp_color">#bf000000</color>
+    <color name="widget_subject_text_color_read">#777777</color>
 </resources>

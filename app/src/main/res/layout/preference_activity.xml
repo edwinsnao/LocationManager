@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:textColor="@color/white"
+        android:text="偏好设置"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/locRl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/loc_gap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/loc_gap"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/loc_gap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loc_gap"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="5秒"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+    <RelativeLayout
+        android:id="@+id/from_Rl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/from_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/from_email"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/from_email_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/from_email"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="448517683@qq.com"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+    <RelativeLayout
+        android:id="@+id/toRl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/to_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/to_email"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/to_email_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/to_email"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="linfazhao@163.com"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+    <RelativeLayout
+        android:id="@+id/subjectRl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/subject"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/subject_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/subject"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="LocationData"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+    <RelativeLayout
+        android:id="@+id/serverRl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/server"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/server"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/server_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/server"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="smtp.163.com"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+    <RelativeLayout
+        android:id="@+id/pwdRl"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        >
+
+        <TextView
+            android:id="@+id/pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/pwd"
+            android:textColor="@color/timestamp_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/pwd_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pwd"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:text="Edwinsnao01"
+            android:textColor="@color/widget_subject_text_color_read"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#d6d6d6"
+        />
+
+</LinearLayout>

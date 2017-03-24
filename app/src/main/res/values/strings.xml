@@ -9,4 +9,10 @@
     <string name="search_location">查找</string>
     <string name="et_searchlocation">请输入您想查找</string>
     <string name="detail_button">详情</string>
+    <string name="loc_gap">定位间隔</string>
+    <string name="from_email">您的邮箱</string>
+    <string name="to_email">您想发的邮箱</string>
+    <string name="server">邮箱服务器</string>
+    <string name="pwd">邮箱密码</string>
+    <string name="subject">邮件主题</string>
 </resources>

@@ -81,6 +81,7 @@
         </service>
 
         <activity android:name=".baidu_map.activity.HistoryMaps"/>
+        <activity android:name=".baidu_map.activity.CustomPreferenceActivity"/>
         <activity
             android:name=".baidu_map.activity.HistoryDetail"
             android:theme="@style/translucent"/>

@@ -34,7 +34,67 @@ public class BaseApplication extends Application {
     private static List<String> time;
     private static List<TraceItem> distance;
     private static List<String> route;
+
+    public static String getTo() {
+        return mTo;
+    }
+
+    public static void setTo(String to) {
+        mTo = to;
+    }
+
+    public static int getLocGap() {
+        return mLocGap;
+    }
+
+    public static void setLocGap(int locGap) {
+        mLocGap = locGap;
+    }
+
+    public static String getFrom() {
+        return mFrom;
+    }
+
+    public static void setFrom(String from) {
+        mFrom = from;
+    }
+
     private static int lastStep;
+
+    public static String getmSubject() {
+        return mSubject;
+    }
+
+    public static void setmSubject(String mSubject) {
+        BaseApplication.mSubject = mSubject;
+    }
+
+    public static String getmServer() {
+        return mServer;
+    }
+
+    public static void setmServer(String mServer) {
+        BaseApplication.mServer = mServer;
+    }
+
+    public static String getmPwd() {
+        return mPwd;
+    }
+
+    public static void setmPwd(String mPwd) {
+        BaseApplication.mPwd = mPwd;
+    }
+
+    /**
+     * 默认配置
+    * 默认5秒
+    * */
+    private static int mLocGap = 5000;
+    private static String mFrom = "linfazhao@163.com";
+    private static String mTo = "448517683@qq.com";
+    private static String mSubject = "LocationData";
+    private static String mServer = "smtp.163.com";
+    private static String mPwd = "Edwinsnao01";
 
     public static int getLastStep() {
         return lastStep;
@@ -150,7 +210,7 @@ public class BaseApplication extends Application {
         option.setOpenGps(true); // 打开gps
         option.setProdName("LocationManager");
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(5000);
+        option.setScanSpan(mLocGap);
         option.setLocationNotify(true);
         option.disableCache(false);
         option.setAddrType("all");

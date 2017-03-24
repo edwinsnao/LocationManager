@@ -150,12 +150,18 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     public static String reverseAddress;
     public static GeoCoder geoCoder;
     private Timer mTimer;
+    private String from = BaseApplication.getFrom();
+    private String to = BaseApplication.getTo();
+    private String server = BaseApplication.getmServer();
+    private String subject = BaseApplication.getmSubject();
+    private String pwd = BaseApplication.getmPwd();
 
     private BDLocationListener mListener = new BDLocationListener() {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
             // TODO Auto-generated method stub
+            Log.e("loc","test");
             ll = new LatLng(location.getLatitude(),
                     location.getLongitude());
             MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
@@ -170,16 +176,13 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                  * */
                 if (isConnected()) {
                     try {
-                        String from = "linfazhao@163.com";
-                        String subject = "LocationData";
                         String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
-                        Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
-                        mail.create(from, "448517683@qq.com", subject);
+                        Mail mail = new Mail(server, from, pwd);
+                        mail.create(from, to, subject);
                         mail.addContent(content);
                         mail.send();
-//                    Log.e("Send OK!", location.getAddress().address);
+                    Log.e("Send OK!", location.getAddress().address);
 //                    Log.e("Send OK!", String.valueOf(location.getAddress()));
-                        Log.e("Send OK!", "test");
                         Toast.makeText(IndoorLocationActivity.this, "Send OK1!", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -547,15 +550,13 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             public void run() {
                 if (isConnected())
                     try {
-                        String from = "linfazhao@163.com";
-                        String subject = "LocationData";
                         StringBuilder content = new StringBuilder("");
                         for (int i = 0; i < history.size(); i++) {
                             content.append("位置:" + history.get(i).getAddress().address);
                             content.append(" 时间:" + history_time.get(i) + "\n");
                         }
-                        Mail mail = new Mail("smtp.163.com", "linfazhao@163.com", "Edwinsnao01");
-                        mail.create(from, "448517683@qq.com", subject);
+                        Mail mail = new Mail(server, from, pwd);
+                        mail.create(from, to, subject);
                         mail.addContent(content.toString());
                         mail.send();
                         Toast.makeText(IndoorLocationActivity.this, "Send OK!", Toast.LENGTH_SHORT).show();

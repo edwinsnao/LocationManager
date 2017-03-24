@@ -60,7 +60,7 @@ public class SplashActivity extends Activity {
 
     private void switchActivity() {
         Intent it = new Intent();
-        it.setClass(SplashActivity.this, IndoorLocationActivity.class);
+        it.setClass(SplashActivity.this, CustomPreferenceActivity.class);
         startActivity(it);
         finish();
     }
