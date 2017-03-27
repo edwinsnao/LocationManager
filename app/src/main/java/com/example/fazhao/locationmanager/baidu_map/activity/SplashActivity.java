@@ -2,12 +2,14 @@ package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
@@ -28,6 +30,7 @@ public class SplashActivity extends Activity {
     private List<TraceItem> distance;
     private List<String> route;
     private int lastStep;
+    private boolean user_first;
 
     //    private LatLng latLng1;
 //    private List<LatLng> historyFromLoad = BaseApplication.getHistory();
@@ -50,17 +53,21 @@ public class SplashActivity extends Activity {
         initData();
         loadData();
         setData();
+        /**
+         * 判断是否首次进入app
+         * */
+        SharedPreferences setting = getSharedPreferences("location_first_in", 0);
+        user_first = setting.getBoolean("FIRST", true);
         Handler handler = new Handler();
         /**
          * 需要延时才可以看到，否则太快看不到
          * */
         handler.postDelayed(switchRunnable, 500);
-
     }
 
-    private void switchActivity() {
+    private void switchActivity(Class<?> cls) {
         Intent it = new Intent();
-        it.setClass(SplashActivity.this, CustomPreferenceActivity.class);
+        it.setClass(SplashActivity.this, cls);
         startActivity(it);
         finish();
     }
@@ -68,7 +75,11 @@ public class SplashActivity extends Activity {
     private Runnable switchRunnable = new Runnable() {
         @Override
         public void run() {
-            switchActivity();
+            if (user_first)
+                switchActivity(CustomPreferenceActivity.class);
+            else
+                switchActivity(IndoorLocationActivity.class);
+
         }
     };
 

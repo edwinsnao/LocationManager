@@ -229,4 +229,15 @@
         android:background="#d6d6d6"
         />
 
+    <Button
+        android:id="@+id/preference_finish"
+        android:textColor="@color/white"
+        android:background="@color/colorAccent"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:text="确定"
+        android:layout_marginBottom="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

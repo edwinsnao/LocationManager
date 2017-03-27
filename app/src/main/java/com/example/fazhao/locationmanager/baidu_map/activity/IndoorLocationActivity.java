@@ -23,6 +23,8 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -252,6 +254,23 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     public void stopStepService() {
         stopService(mStepService);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.file:
+                Intent intent = new Intent();
+                intent.setClass(IndoorLocationActivity.this,CustomPreferenceActivity.class);
+                startActivity(intent);
+        }
+        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override

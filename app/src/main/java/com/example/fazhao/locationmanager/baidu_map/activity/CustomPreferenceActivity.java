@@ -2,10 +2,13 @@ package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.application.BaseApplication;
@@ -19,6 +22,7 @@ public class CustomPreferenceActivity extends Activity {
 
     private TextView mLocGap,mFrom,mTo,mServer,mSubject,mPwd;
     private RelativeLayout mLocRl,mFromRl,mToRl,mServerRl,mSubjectRl,mPwdRl;
+    private Button mFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +166,12 @@ public class CustomPreferenceActivity extends Activity {
                 mDialog.show();
             }
         });
+        mFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void initView() {
@@ -178,6 +188,7 @@ public class CustomPreferenceActivity extends Activity {
         mServerRl = (RelativeLayout) findViewById(R.id.serverRl);
         mSubjectRl = (RelativeLayout) findViewById(R.id.subjectRl);
         mPwdRl = (RelativeLayout) findViewById(R.id.pwdRl);
+        mFinish = (Button) findViewById(R.id.preference_finish);
     }
 
     @Override
