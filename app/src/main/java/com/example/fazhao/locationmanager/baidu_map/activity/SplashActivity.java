@@ -1,6 +1,7 @@
 package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -18,6 +19,8 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 
 import java.io.InputStream;
 import java.util.List;
+
+import static com.baidu.location.h.j.C;
 
 /**
  * Created by fazhao on 2016/12/15.
@@ -56,8 +59,13 @@ public class SplashActivity extends Activity {
         /**
          * 判断是否首次进入app
          * */
-        SharedPreferences setting = getSharedPreferences("location_first_in", 0);
+        SharedPreferences setting = getSharedPreferences("location_first_in", Context.MODE_PRIVATE);
         user_first = setting.getBoolean("FIRST", true);
+        if (user_first != false) {
+            SharedPreferences.Editor editor = setting.edit();//获取编辑器
+            editor.putBoolean("FIRST", false);
+            editor.commit();
+        }
         Handler handler = new Handler();
         /**
          * 需要延时才可以看到，否则太快看不到

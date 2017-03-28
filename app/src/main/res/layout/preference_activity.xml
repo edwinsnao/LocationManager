@@ -230,6 +230,8 @@
         />
 
     <Button
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:id="@+id/preference_finish"
         android:textColor="@color/white"
         android:background="@color/colorAccent"

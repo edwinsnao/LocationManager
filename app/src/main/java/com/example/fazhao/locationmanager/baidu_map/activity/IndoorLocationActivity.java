@@ -263,6 +263,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     }
 
     @Override
+    public void openOptionsMenu() {
+        super.openOptionsMenu();
+    }
+
+    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.file:
