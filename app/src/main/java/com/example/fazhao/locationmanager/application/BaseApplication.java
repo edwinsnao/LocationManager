@@ -92,9 +92,19 @@ public class BaseApplication extends Application {
     private static int mLocGap = 5000;
     private static String mFrom = "linfazhao@163.com";
     private static String mTo = "448517683@qq.com";
+
+    public static boolean ismHasLaunch() {
+        return mHasLaunch;
+    }
+
+    public static void setmHasLaunch(boolean mHasLaunch) {
+        BaseApplication.mHasLaunch = mHasLaunch;
+    }
+
     private static String mSubject = "LocationData";
     private static String mServer = "smtp.163.com";
     private static String mPwd = "Edwinsnao01";
+    private static boolean mHasLaunch = false;
 
     public static int getLastStep() {
         return lastStep;

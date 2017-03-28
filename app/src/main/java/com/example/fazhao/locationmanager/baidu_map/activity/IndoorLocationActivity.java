@@ -21,7 +21,10 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -263,6 +266,17 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+//            super.openOptionsMenu();
+            Intent intent = new Intent();
+            intent.setClass(IndoorLocationActivity.this,CustomPreferenceActivity.class);
+            startActivity(intent);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void openOptionsMenu() {
         super.openOptionsMenu();
     }
@@ -281,6 +295,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BaseApplication.setmHasLaunch(true);
         this.overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -821,6 +836,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     @Override
     protected void onDestroy() {
+        BaseApplication.setmHasLaunch(false);
         mLocClient.unRegisterLocationListener(mListener);
         // 退出时销毁定位
         mLocClient.stop();

@@ -194,9 +194,11 @@ public class CustomPreferenceActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent  = new Intent();
-        intent.setClass(CustomPreferenceActivity.this,IndoorLocationActivity.class);
-        startActivity(intent);
+        if (!BaseApplication.ismHasLaunch()) {
+            Intent intent = new Intent();
+            intent.setClass(CustomPreferenceActivity.this, IndoorLocationActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 }
