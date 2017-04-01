@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -16,11 +17,21 @@ import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceDao;
 import com.example.fazhao.locationmanager.application.BaseApplication;
+import com.example.fazhao.locationmanager.encrypt.Crypto;
 
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import static com.baidu.location.h.j.C;
+import static com.baidu.location.h.j.m;
+import static java.lang.reflect.Array.getInt;
 
 /**
  * Created by fazhao on 2016/12/15.
@@ -122,6 +133,58 @@ public class SplashActivity extends Activity {
         TraceItem tmp = mTraceDao.getLastStep();
         if (tmp != null)
             lastStep = tmp.getStep();
+
+        SharedPreferences setting = getSharedPreferences("location_first_in", Context.MODE_PRIVATE);
+        Crypto mCrypto = BaseApplication.getmCrypto();
+        String mSubject = setting.getString("Subject", null);
+        String mPwd = setting.getString("Pwd", null);
+        String mServer = setting.getString("Server", null);
+        int mLoc = setting.getInt("Loc", 0);
+        String mFrom = setting.getString("From", null);
+        String mTo = setting.getString("To", null);
+
+        try {
+            if (mSubject != null) {
+                BaseApplication.setmSubject(mCrypto.armorDecrypt(mSubject));
+            }
+            if (mServer != null) {
+                BaseApplication.setmServer(mCrypto.armorDecrypt(mServer));
+            }
+            if (mPwd != null) {
+                BaseApplication.setmPwd(mCrypto.armorDecrypt(mPwd));
+            }
+            if (mFrom != null) {
+                BaseApplication.setFrom(mCrypto.armorDecrypt(mFrom));
+            }
+            if (mTo != null) {
+                BaseApplication.setTo(mCrypto.armorDecrypt(mTo));
+            }
+            if (mLoc != 0) {
+                BaseApplication.setLocGap(mLoc);
+            }
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+
+//        if(mSubject != null && mServer != null  && mFrom != null
+//                && mPwd != null  && mTo != null  && mLoc != 0) {
+//            Log.e("watch ", mSubject);
+//            Log.e("watch ", mServer);
+//            Log.e("watch ", String.valueOf(mLoc));
+//            Log.e("watch ", mFrom);
+//            Log.e("watch ", mTo);
+//            Log.e("watch ", mPwd);
+//        }
 //        BaseApplication.setHistory(historyFromLoad);
     }
 

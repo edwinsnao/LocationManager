@@ -1,6 +1,7 @@
 package com.example.fazhao.locationmanager.baidu_map.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,15 @@ import android.widget.Toast;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.baidu_map.widget.PreferenceDialog;
+import com.example.fazhao.locationmanager.encrypt.Crypto;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by fazhao on 2017/3/24.
@@ -20,8 +30,8 @@ import com.example.fazhao.locationmanager.baidu_map.widget.PreferenceDialog;
 
 public class CustomPreferenceActivity extends Activity {
 
-    private TextView mLocGap,mFrom,mTo,mServer,mSubject,mPwd;
-    private RelativeLayout mLocRl,mFromRl,mToRl,mServerRl,mSubjectRl,mPwdRl;
+    private TextView mLocGap, mFrom, mTo, mServer, mSubject, mPwd;
+    private RelativeLayout mLocRl, mFromRl, mToRl, mServerRl, mSubjectRl, mPwdRl;
     private Button mFinish;
 
     @Override
@@ -169,6 +179,30 @@ public class CustomPreferenceActivity extends Activity {
         mFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Crypto mCrypto = BaseApplication.getmCrypto();
+                SharedPreferences setting = getSharedPreferences("location_first_in", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = setting.edit();
+                try {
+                    editor.putString("Subject", mCrypto.armorEncrypt(mSubject.getText().toString().getBytes()));
+                    editor.putString("Pwd", mCrypto.armorEncrypt(mPwd.getText().toString().getBytes()));
+                    editor.putString("Server", mCrypto.armorEncrypt(mServer.getText().toString().getBytes()));
+                    editor.putInt("Loc", Integer.parseInt(mLocGap.getText().toString()));
+                    editor.putString("From", mCrypto.armorEncrypt(mFrom.getText().toString().getBytes()));
+                    editor.putString("To", mCrypto.armorEncrypt(mTo.getText().toString().getBytes()));
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (InvalidAlgorithmParameterException e) {
+                    e.printStackTrace();
+                }
+                editor.commit();
                 finish();
             }
         });
@@ -189,6 +223,13 @@ public class CustomPreferenceActivity extends Activity {
         mSubjectRl = (RelativeLayout) findViewById(R.id.subjectRl);
         mPwdRl = (RelativeLayout) findViewById(R.id.pwdRl);
         mFinish = (Button) findViewById(R.id.preference_finish);
+
+        mLocGap.setText(BaseApplication.getLocGap() + " ms");
+        mFrom.setText(BaseApplication.getFrom());
+        mTo.setText(BaseApplication.getTo());
+        mServer.setText(BaseApplication.getmServer());
+        mSubject.setText(BaseApplication.getmSubject());
+        mPwd.setText(BaseApplication.getmPwd());
     }
 
     @Override
