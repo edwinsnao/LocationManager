@@ -28,7 +28,10 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
+import com.baidu.navisdk.adapter.BNCommonSettingParam;
+import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.example.fazhao.locationmanager.R;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
@@ -39,6 +42,7 @@ import com.example.fazhao.locationmanager.baidu_map.util.ToastUtil;
 import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 
+import java.io.File;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -48,6 +52,8 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import static com.baidu.navisdk.adapter.PackageUtil.getSdcardDir;
 
 
 /**
@@ -87,6 +93,9 @@ public class HistoryMaps extends Activity {
     private boolean hasRequestComAuth = false;
     private BNRoutePlanNode.CoordinateType mCoordinateType = null;
     private double mLongitude,mLatitude;
+    private String mSDCardPath = null;
+    private static final String APP_FOLDER_NAME = "LocationManager";
+    private String authinfo = null;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -170,6 +179,35 @@ public class HistoryMaps extends Activity {
         ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))));
     }
 
+    private boolean initDirs() {
+        mSDCardPath = getSdcardDir();
+        if (mSDCardPath == null) {
+            return false;
+        }
+        File f = new File(mSDCardPath, APP_FOLDER_NAME);
+        if (!f.exists()) {
+            try {
+                f.mkdir();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasBasePhoneAuth() {
+        // TODO Auto-generated method stub
+
+        PackageManager pm = this.getPackageManager();
+        for (String auth : authBaseArr) {
+            if (pm.checkPermission(auth, this.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean hasCompletePhoneAuth() {
         // TODO Auto-generated method stub
 
@@ -180,6 +218,107 @@ public class HistoryMaps extends Activity {
             }
         }
         return true;
+    }
+
+    private void initNavi() {
+
+        BNOuterTTSPlayerCallback ttsCallback = null;
+
+        // 申请权限
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+
+            if (!hasBasePhoneAuth()) {
+
+                this.requestPermissions(authBaseArr, authBaseRequestCode);
+                return;
+
+            }
+        }
+
+        BaiduNaviManager.getInstance().init(this, mSDCardPath, APP_FOLDER_NAME, new BaiduNaviManager.NaviInitListener() {
+            @Override
+            public void onAuthResult(int status, String msg) {
+                if (0 == status) {
+                    authinfo = "key校验成功!";
+                } else {
+                    authinfo = "key校验失败, " + msg;
+                }
+                HistoryMaps.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(HistoryMaps.this, authinfo, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            public void initSuccess() {
+                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
+                hasInitSuccess = true;
+                initSetting();
+            }
+
+            public void initStart() {
+                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
+            }
+
+            public void initFailed() {
+                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }, null, ttsHandler, ttsPlayStateListener);
+
+    }
+
+    /**
+     * 内部TTS播报状态回传handler
+     */
+    private Handler ttsHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            int type = msg.what;
+            switch (type) {
+                case BaiduNaviManager.TTSPlayMsgType.PLAY_START_MSG: {
+                    // showToastMsg("Handler : TTS play start");
+                    break;
+                }
+                case BaiduNaviManager.TTSPlayMsgType.PLAY_END_MSG: {
+                    // showToastMsg("Handler : TTS play end");
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 内部TTS播报状态回调接口
+     */
+    private BaiduNaviManager.TTSPlayStateListener ttsPlayStateListener = new BaiduNaviManager.TTSPlayStateListener() {
+
+        @Override
+        public void playEnd() {
+            // showToastMsg("TTSPlayStateListener : TTS play end");
+        }
+
+        @Override
+        public void playStart() {
+            // showToastMsg("TTSPlayStateListener : TTS play start");
+        }
+    };
+
+    private void initSetting() {
+        // BNaviSettingManager.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
+        Log.e("init","setting");
+        BNaviSettingManager
+                .setShowTotalRoadConditionBar(BNaviSettingManager.PreViewRoadCondition.ROAD_CONDITION_BAR_SHOW_ON);
+        BNaviSettingManager.setVoiceMode(BNaviSettingManager.VoiceMode.Veteran);
+        // BNaviSettingManager.setPowerSaveMode(BNaviSettingManager.PowerSaveMode.DISABLE_MODE);
+        BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
+        Bundle bundle = new Bundle();
+        // 必须设置APPID，否则会静音
+        bundle.putString(BNCommonSettingParam.TTS_APP_ID, "9354030");
+        BNaviSettingManager.setNaviSdkParam(bundle);
     }
 
     private void routeplanToNavi(BNRoutePlanNode.CoordinateType coType) {
@@ -313,6 +452,10 @@ public class HistoryMaps extends Activity {
         mNaviButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (initDirs()) {
+                    initNavi();
+                }
+                Log.e("isinited", String.valueOf(BaiduNaviManager.isNaviInited()));
                 if (BaiduNaviManager.isNaviInited()) {
                     routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
                 }
