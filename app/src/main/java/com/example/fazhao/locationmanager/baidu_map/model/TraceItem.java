@@ -9,7 +9,26 @@ import android.os.Bundle;
 public class TraceItem {
     private int id;
     private int tag;
-    private int step;
+    private int step = -1;
+
+    public int getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(int uptime) {
+        this.uptime = uptime;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    private int uptime = -1;
+    private int distance = -1;
 
     public int getStep() {
         return step;

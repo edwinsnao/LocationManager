@@ -394,12 +394,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         info = (TextView) findViewById(R.id.et_streetView);
         if (BaseApplication.isHasHistory()) {
             List<String> time = BaseApplication.getTime();
-            List<TraceItem> distance = BaseApplication.getDistance();
+            TraceItem distance = BaseApplication.getDistance();
             List<String> route = BaseApplication.getRoute();
             try {
-                LatLng latLng = new LatLng(distance.get(0).getLatitude(), distance.get(0).getLongitude());
-                LatLng latLng1 = new LatLng(distance.get(1).getLatitude(), distance.get(1).getLongitude());
-                info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" + String.valueOf(DistanceUtil.getDistance(latLng, latLng1)) + ",时长：" + BaiduUtils.dateDiff(this, time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
+                info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" + String.valueOf(distance) +" 米" + ",时长：" + BaiduUtils.dateDiff(this, time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
                         + "分钟" + ",步数:" + BaseApplication.getLastStep());
             } catch (Exception e) {
 
@@ -438,6 +436,69 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                     historyDialog = new HistoryDialog(IndoorLocationActivity.this);
                                 }
                                 mAdapter = new HistoryAdapter(IndoorLocationActivity.this, mDatas, mDatas1, historyDialog.lv);
+                                historyDialog.getSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> view, View view1, int pos, long l) {
+                                        switch (pos) {
+                                            case 0:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas = mTraceDao.searchDistinctDataStart();
+                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 1:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
+                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 2:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
+                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 3:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            default:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas = mTraceDao.searchDistinctDataStart();
+                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> view) {
+
+                                    }
+
+                        });
                                 historyDialog.lv.setAdapter(mAdapter);
                                 historyDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                     @Override
@@ -642,8 +703,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
              * */
             try {
                 int history_size = history.size() - 1;
-                mTraceDao.addTime(crypto.armorEncrypt(history_time.get(0).getBytes())
-                        , crypto.armorEncrypt(history_time.get(history_size).getBytes()), tag);
+                mTraceDao.addTime(String.valueOf(BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
+                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss")), tag);
                 if (history.get(0).getAddress().address != null
                         && history.get(history_size).getAddress().address != null) {
                     mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
@@ -652,8 +713,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     mTraceDao.addRoute(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes())
                             , crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()), tag);
                 }
-                mTraceDao.addDistance(history.get(0).getLatitude(), history.get(history_size).getLatitude()
-                        , history.get(0).getLongitude(), history.get(history_size).getLongitude(), tag);
+                mTraceDao.addDistance(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1)), tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {

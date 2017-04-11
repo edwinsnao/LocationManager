@@ -48,4 +48,21 @@ public class BaiduUtils {
             return min;
         }
     }
+
+    public static Long dateDiffForSecond(Context context,String startTime, String endTime, String format) {
+        // 按照传入的格式生成一个simpledateformate对象
+        SimpleDateFormat sd = new SimpleDateFormat(format);
+        long ns = 1000;// 一秒钟的毫秒数
+        long diff;
+        long sec = 0;
+        // 获得两个时间的毫秒时间差异
+        try {
+            diff = sd.parse(endTime).getTime() - sd.parse(startTime).getTime();
+            sec = diff / ns;// 计算差多少秒
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sec;
+    }
 }

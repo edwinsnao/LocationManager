@@ -26,6 +26,12 @@
             android:background="@color/green"
             />
 
+        <Spinner
+            android:entries="@array/spinner"
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></Spinner>
+
         <!--<EditText
             android:id="@+id/et_searchData"
             android:hint="@string/sear_data"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.fazhao.locationmanager.R;
@@ -20,6 +21,11 @@ public class HistoryDialog extends Dialog {
     private Button negativeButton, deleteAll;
     public TextView title;
     private Context mContext;
+    private Spinner mSpinner;
+
+    public Spinner getSpinner() {
+        return mSpinner;
+    }
 
     public HistoryDialog(Context context) {
         super(context, R.style.customeDialog);
@@ -38,6 +44,7 @@ public class HistoryDialog extends Dialog {
         lv.setHeaderDividersEnabled(true);
         negativeButton = (Button) mView.findViewById(R.id.cancel);
         deleteAll = (Button) mView.findViewById(R.id.delete_all);
+        mSpinner = (Spinner) mView.findViewById(R.id.spinner);
         super.setContentView(mView);
     }
 

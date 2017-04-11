@@ -224,7 +224,7 @@ public class CustomPreferenceActivity extends Activity {
         mPwdRl = (RelativeLayout) findViewById(R.id.pwdRl);
         mFinish = (Button) findViewById(R.id.preference_finish);
 
-        mLocGap.setText(BaseApplication.getLocGap() + " ms");
+        mLocGap.setText(String.valueOf(BaseApplication.getLocGap()));
         mFrom.setText(BaseApplication.getFrom());
         mTo.setText(BaseApplication.getTo());
         mServer.setText(BaseApplication.getmServer());

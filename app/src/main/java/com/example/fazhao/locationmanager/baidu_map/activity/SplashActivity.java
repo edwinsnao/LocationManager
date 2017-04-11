@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
     private TraceDao mTraceDao;
     private List<TraceItem> traceItems;
     private List<String> time;
-    private List<TraceItem> distance;
+    private TraceItem distance;
     private List<String> route;
     private int lastStep;
     private boolean user_first;
@@ -104,10 +104,13 @@ public class SplashActivity extends Activity {
 
     private void setData() {
 //        BaseApplication.setHistory(historyFromLoad);
-        BaseApplication.setRoute(route);
-        BaseApplication.setDistance(distance);
-        BaseApplication.setTime(time);
+        if (distance != null)
+            BaseApplication.setDistance(distance);
+        if (time.size() != 0)
+            BaseApplication.setTime(time);
         BaseApplication.setLastStep(lastStep);
+        if (route.size() != 0)
+            BaseApplication.setRoute(route);
     }
 
 

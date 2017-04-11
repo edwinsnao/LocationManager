@@ -15,4 +15,11 @@
     <string name="server">邮箱服务器</string>
     <string name="pwd">邮箱密码</string>
     <string name="subject">邮件主题</string>
+
+    <string-array name="spinner">
+        <item>按定位时间排序</item>
+        <item>按时长排序</item>
+        <item>按距离排序</item>
+        <item>按步数排序</item>
+    </string-array>
 </resources>
