@@ -25,7 +25,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import static com.example.fazhao.locationmanager.R.id.step;
 
 /**
  * this is for baidu_map
