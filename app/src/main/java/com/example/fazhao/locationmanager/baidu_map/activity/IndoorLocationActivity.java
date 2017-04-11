@@ -453,6 +453,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                          * listview是从0开始，但是我的tag是从1开始，所以position+1
                                          * */
                                         bundle.putInt("choice", position + 1);
+                                        bundle.putDouble("latitude", pointList.get(pointList.size() - 1).latitude);
+                                        bundle.putDouble("longitude", pointList.get(pointList.size() - 1).longitude);
                                         Intent it = new Intent();
                                         it.setClass(IndoorLocationActivity.this, HistoryMaps.class);
                                         it.putExtras(bundle);

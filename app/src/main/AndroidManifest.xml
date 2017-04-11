@@ -80,6 +80,7 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".baidu_map.activity.GuideActivity"/>
         <activity android:name=".baidu_map.activity.HistoryMaps"/>
         <activity android:name=".baidu_map.activity.CustomPreferenceActivity"/>
         <activity
