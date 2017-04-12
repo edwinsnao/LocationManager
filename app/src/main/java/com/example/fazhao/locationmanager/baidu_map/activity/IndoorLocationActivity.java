@@ -654,6 +654,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                  * */
                 if (pointList.size() >= 2) {
                     for (int i = 1; i < pointList.size() - 1; i++) {
+                        tmp = 0;
                         tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
                     }
                     Toast.makeText(IndoorLocationActivity.this, "pointList:" + pointList.get(constant) + "ll:" + ll + "距离:" + tmp, Toast.LENGTH_SHORT).show();
@@ -796,7 +797,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                             , crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()), tag);
                 }
                 Log.e("distance",String.valueOf(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1))));
-                mTraceDao.addDistance(String.valueOf(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1))), tag);
+                for (int i = 1; i < pointList.size() - 1; i++) {
+                    tmp = 0;
+                    tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
+                }
+                mTraceDao.addDistance(String.valueOf(tmp), tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {
