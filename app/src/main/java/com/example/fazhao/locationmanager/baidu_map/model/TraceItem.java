@@ -19,16 +19,16 @@ public class TraceItem {
         this.uptime = uptime;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
     private int uptime = -1;
-    private int distance = -1;
+    private double distance = -1;
 
     public int getStep() {
         return step;

@@ -89,12 +89,14 @@ public class TraceDao {
         ss.executeInsert();
     }
 
-    public void addDistance(double distance, int tag) {
+    public void addDistance(String distance, int tag) {
+        Log.e("distance","success?");
         String sql = "insert into distance_item (distance,tag) values(?,?) ;";
         SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindDouble(1, distance);
+        ss.bindString(1, distance);
         ss.bindString(2, String.valueOf(tag));
         ss.executeInsert();
+        Log.e("distance","success?1");
     }
 
     public void addRoute(String start, String end, int tag) {
@@ -141,7 +143,7 @@ public class TraceDao {
         try {
             c.moveToNext();
             traceItem = new TraceItem();
-            int distance = Integer.parseInt(c.getString(0));
+            double distance = Double.parseDouble(c.getString(0));
             traceItem.setDistance(distance);
         } catch (Exception e) {
             e.printStackTrace();
@@ -387,7 +389,10 @@ public class TraceDao {
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
-                int distance = Integer.parseInt(c.getString(4));
+                double distance = Double.parseDouble(c.getString(4));
+                Log.e("distance?",c.getString(4));
+                Log.e("distance?","test");
+                Log.e("distance?1", String.valueOf(distance));
                 int tag1 = c.getInt(5);
 
                 traceItem.setAddress(address1);
@@ -830,13 +835,16 @@ public class TraceDao {
                     }
 
                     int tag1 = c.getInt(4);
-                    int distance = Integer.parseInt(c.getString(5));
+                    double distance = Math.ceil(Double.parseDouble(c.getString(5)));
+                    Log.e("distance?2",c.getString(5));
+                    Log.e("distance?2","test");
+                    Log.e("distance?21", String.valueOf(distance));
                     traceItem.setAddress(IndoorLocationActivity.reverseAddress);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(distance);
+                    traceItem.setDistance(distance);
                     traceItems.add(traceItem);
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
@@ -844,13 +852,16 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    int distance = Integer.parseInt(c.getString(5));
+                    double distance = Double.parseDouble(c.getString(5));
+                    Log.e("distance?22",c.getString(5));
+                    Log.e("distance?22","test");
+                    Log.e("distance?221", String.valueOf(distance));
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(distance);
+                    traceItem.setDistance(distance);
                     traceItems.add(traceItem);
                 }
             }
@@ -862,6 +873,7 @@ public class TraceDao {
                 c.close();
             }
         }
+        Log.e("traceSize", String.valueOf(traceItems.size()));
         return traceItems;
 
     }
@@ -965,7 +977,7 @@ public class TraceDao {
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(time);
+                    traceItem.setUptime(time);
                     traceItems.add(traceItem);
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
@@ -973,13 +985,13 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    int distance = Integer.parseInt(c.getString(5));
+                    int time = Integer.parseInt(c.getString(5));
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
                     traceItem.setLongitude(longitude);
                     traceItem.setTag(tag1);
-                    traceItem.setStep(distance);
+                    traceItem.setUptime(time);
                     traceItems.add(traceItem);
                 }
             }

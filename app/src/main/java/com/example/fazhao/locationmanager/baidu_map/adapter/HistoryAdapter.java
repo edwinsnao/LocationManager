@@ -143,12 +143,8 @@ public class HistoryAdapter extends BaseAdapter {
         StringBuilder builder3 = new StringBuilder("出发地：");
         builder3.append(traceItem.getAddress());
         holder.address_start.setText(builder3);
-        if (traceItem.getStep() != -1) {
-            StringBuilder builder4 = new StringBuilder("步数:");
-            builder4.append(traceItem.getStep());
-            holder.step.setText(builder4);
-        }
-        else if (traceItem.getUptime() != -1) {
+
+        if (traceItem.getUptime() != -1) {
             StringBuilder builder4 = new StringBuilder("时长:");
             builder4.append(traceItem.getUptime());
             holder.step.setText(builder4);
@@ -156,6 +152,11 @@ public class HistoryAdapter extends BaseAdapter {
         else if (traceItem.getDistance() != -1) {
             StringBuilder builder4 = new StringBuilder("距离:");
             builder4.append(traceItem.getDistance());
+            holder.step.setText(builder4);
+        }
+        else if (traceItem.getStep() != -1) {
+            StringBuilder builder4 = new StringBuilder("步数:");
+            builder4.append(traceItem.getStep());
             holder.step.setText(builder4);
         }
         final ViewHolder finalHolder = holder;

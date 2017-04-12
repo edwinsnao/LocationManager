@@ -441,55 +441,137 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                     public void onItemSelected(AdapterView<?> view, View view1, int pos, long l) {
                                         switch (pos) {
                                             case 0:
+                                                Log.e("click","0");
+                                                historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        mDatas = mTraceDao.searchDistinctDataStart();
-                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStart());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestination());
+//                                                        mDatas = mTraceDao.searchDistinctDataStart();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
+
+                                                        for (int i = 0; i < mDatas.size(); i++) {
+                                                            if(mDatas.get(i).getDistance() != -1)
+                                                            Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
+                                                            if(mDatas.get(i).getUptime() != -1)
+                                                            Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
+                                                            if(mDatas.get(i).getStep() != -1)
+                                                            Log.e("step", String.valueOf(mDatas.get(i).getStep()));
+                                                        }
+                                                        for (int i = 0; i < mDatas1.size(); i++) {
+                                                            if(mDatas1.get(i).getDistance() != -1)
+                                                            Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
+                                                            if(mDatas1.get(i).getUptime() != -1)
+                                                            Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
+                                                            if(mDatas1.get(i).getStep() != -1)
+                                                            Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
+                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 1:
+                                                Log.e("click","1");
+                                                historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
-                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForTime());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForTime());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
+                                                        for (int i = 0; i < mDatas.size(); i++) {
+                                                            if(mDatas.get(i).getDistance() != -1)
+                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
+                                                            if(mDatas.get(i).getUptime() != -1)
+                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
+                                                            if(mDatas.get(i).getStep() != -1)
+                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
+                                                        }
+                                                        for (int i = 0; i < mDatas1.size(); i++) {
+                                                            if(mDatas1.get(i).getDistance() != -1)
+                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
+                                                            if(mDatas1.get(i).getUptime() != -1)
+                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
+                                                            if(mDatas1.get(i).getStep() != -1)
+                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
+                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 2:
+                                                Log.e("click","2");
+                                                historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
-                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForDistance());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForDistance());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
+                                                        for (int i = 0; i < mDatas.size(); i++) {
+//                                                            if(mDatas.get(i).getDistance() != -1)
+                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
+                                                            if(mDatas.get(i).getUptime() != -1)
+                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
+                                                            if(mDatas.get(i).getStep() != -1)
+                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
+                                                        }
+                                                        for (int i = 0; i < mDatas1.size(); i++) {
+//                                                            if(mDatas1.get(i).getDistance() != -1)
+                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
+                                                            if(mDatas1.get(i).getUptime() != -1)
+                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
+                                                            if(mDatas1.get(i).getStep() != -1)
+                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
+                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 3:
+                                                Log.e("click","3");
+                                                historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
-                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForStep());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForStep());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        for (int i = 0; i < mDatas.size(); i++) {
+                                                            if(mDatas.get(i).getDistance() != -1)
+                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
+                                                            if(mDatas.get(i).getUptime() != -1)
+                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
+                                                            if(mDatas.get(i).getStep() != -1)
+                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
+                                                        }
+                                                        for (int i = 0; i < mDatas1.size(); i++) {
+                                                            if(mDatas1.get(i).getDistance() != -1)
+                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
+                                                            if(mDatas1.get(i).getUptime() != -1)
+                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
+                                                            if(mDatas1.get(i).getStep() != -1)
+                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
+                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             default:
-                                                new Handler().post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        mDatas = mTraceDao.searchDistinctDataStart();
-                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
-                                                        mAdapter.notifyDataSetChanged();
-                                                    }
-                                                });
-                                                break;
+                                                Log.e("click","default");
+                                                ;
                                         }
                                     }
 
@@ -713,7 +795,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     mTraceDao.addRoute(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes())
                             , crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()), tag);
                 }
-                mTraceDao.addDistance(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1)), tag);
+                Log.e("distance",String.valueOf(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1))));
+                mTraceDao.addDistance(String.valueOf(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1))), tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {
