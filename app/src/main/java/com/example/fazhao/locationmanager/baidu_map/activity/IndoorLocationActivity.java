@@ -79,6 +79,13 @@ import com.example.fazhao.locationmanager.baidu_map.util.BaiduUtils;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 import com.example.fazhao.locationmanager.encrypt.KeyManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -166,7 +173,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         @Override
         public void onReceiveLocation(BDLocation location) {
             // TODO Auto-generated method stub
-            Log.e("loc","test");
             ll = new LatLng(location.getLatitude(),
                     location.getLongitude());
             MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
@@ -292,6 +298,37 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         return super.onMenuItemSelected(featureId, item);
     }
 
+    private final static String FROMPATH = "/data/data/com.example.fazhao.locationmanager/databases/trace.db";
+    private final static String TOPATH = "/storage/sdcard0/trace.db";
+
+    public static boolean copyFile(String source, String dest) {
+        try {
+            File f1 = new File(source);
+            File f2 = new File(dest);
+            InputStream in = new FileInputStream(f1);
+
+            OutputStream out = new FileOutputStream(f2);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0)
+                out.write(buf, 0, len);
+
+            in.close();
+            out.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,6 +337,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         startStepService();
+//        copyFile(FROMPATH,TOPATH);
         RelativeLayout layout = new RelativeLayout(this);
         mLocClient.setLocOption(mOption);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -441,8 +479,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                     public void onItemSelected(AdapterView<?> view, View view1, int pos, long l) {
                                         switch (pos) {
                                             case 0:
-                                                Log.e("click","0");
-                                                historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -453,28 +489,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                                        mDatas = mTraceDao.searchDistinctDataStart();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
 
-                                                        for (int i = 0; i < mDatas.size(); i++) {
-                                                            if(mDatas.get(i).getDistance() != -1)
-                                                            Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
-                                                            if(mDatas.get(i).getUptime() != -1)
-                                                            Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
-                                                            if(mDatas.get(i).getStep() != -1)
-                                                            Log.e("step", String.valueOf(mDatas.get(i).getStep()));
-                                                        }
-                                                        for (int i = 0; i < mDatas1.size(); i++) {
-                                                            if(mDatas1.get(i).getDistance() != -1)
-                                                            Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
-                                                            if(mDatas1.get(i).getUptime() != -1)
-                                                            Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
-                                                            if(mDatas1.get(i).getStep() != -1)
-                                                            Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
-                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 1:
-                                                Log.e("click","1");
                                                 historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
@@ -485,28 +504,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                         mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForTime());
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
-                                                        for (int i = 0; i < mDatas.size(); i++) {
-                                                            if(mDatas.get(i).getDistance() != -1)
-                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
-                                                            if(mDatas.get(i).getUptime() != -1)
-                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
-                                                            if(mDatas.get(i).getStep() != -1)
-                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
-                                                        }
-                                                        for (int i = 0; i < mDatas1.size(); i++) {
-                                                            if(mDatas1.get(i).getDistance() != -1)
-                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
-                                                            if(mDatas1.get(i).getUptime() != -1)
-                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
-                                                            if(mDatas1.get(i).getStep() != -1)
-                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
-                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 2:
-                                                Log.e("click","2");
                                                 historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
@@ -517,28 +519,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                         mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForDistance());
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
-                                                        for (int i = 0; i < mDatas.size(); i++) {
-//                                                            if(mDatas.get(i).getDistance() != -1)
-                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
-                                                            if(mDatas.get(i).getUptime() != -1)
-                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
-                                                            if(mDatas.get(i).getStep() != -1)
-                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
-                                                        }
-                                                        for (int i = 0; i < mDatas1.size(); i++) {
-//                                                            if(mDatas1.get(i).getDistance() != -1)
-                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
-                                                            if(mDatas1.get(i).getUptime() != -1)
-                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
-                                                            if(mDatas1.get(i).getStep() != -1)
-                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
-                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             case 3:
-                                                Log.e("click","3");
                                                 historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
@@ -549,28 +534,11 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                         mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForStep());
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
-                                                        for (int i = 0; i < mDatas.size(); i++) {
-                                                            if(mDatas.get(i).getDistance() != -1)
-                                                                Log.e("distance", String.valueOf(mDatas.get(i).getDistance()));
-                                                            if(mDatas.get(i).getUptime() != -1)
-                                                                Log.e("uptime", String.valueOf(mDatas.get(i).getUptime()));
-                                                            if(mDatas.get(i).getStep() != -1)
-                                                                Log.e("step", String.valueOf(mDatas.get(i).getStep()));
-                                                        }
-                                                        for (int i = 0; i < mDatas1.size(); i++) {
-                                                            if(mDatas1.get(i).getDistance() != -1)
-                                                                Log.e("distance1", String.valueOf(mDatas1.get(i).getDistance()));
-                                                            if(mDatas1.get(i).getUptime() != -1)
-                                                                Log.e("uptime1", String.valueOf(mDatas1.get(i).getUptime()));
-                                                            if(mDatas1.get(i).getStep() != -1)
-                                                                Log.e("step1", String.valueOf(mDatas1.get(i).getStep()));
-                                                        }
                                                         mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                                 break;
                                             default:
-                                                Log.e("click","default");
                                                 ;
                                         }
                                     }
@@ -654,7 +622,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                  * */
                 if (pointList.size() >= 2) {
                     for (int i = 1; i < pointList.size() - 1; i++) {
-                        tmp = 0;
                         tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
                     }
                     Toast.makeText(IndoorLocationActivity.this, "pointList:" + pointList.get(constant) + "ll:" + ll + "距离:" + tmp, Toast.LENGTH_SHORT).show();
@@ -786,8 +753,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
              * */
             try {
                 int history_size = history.size() - 1;
-                mTraceDao.addTime(String.valueOf(BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
-                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss")), tag);
+                mTraceDao.addTime(BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
+                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss"), tag);
                 if (history.get(0).getAddress().address != null
                         && history.get(history_size).getAddress().address != null) {
                     mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
@@ -796,12 +763,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     mTraceDao.addRoute(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes())
                             , crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()), tag);
                 }
-                Log.e("distance",String.valueOf(DistanceUtil.getDistance(pointList.get(0),pointList.get(pointList.size() - 1))));
                 for (int i = 1; i < pointList.size() - 1; i++) {
-                    tmp = 0;
                     tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
                 }
-                mTraceDao.addDistance(String.valueOf(tmp), tag);
+                mTraceDao.addDistance(tmp, tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {
@@ -854,7 +819,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else if (DistanceUtil.getDistance(pointList.get(pointList.size() - 1), ll) > 100) {
 //            5秒走50米是不可能的，所以该定位点舍弃
-            Log.e("discard", "discard");
             Toast.makeText(IndoorLocationActivity.this, "discard", Toast.LENGTH_SHORT).show();
         } else {
             latLng = new LatLng(latitude, longitude);

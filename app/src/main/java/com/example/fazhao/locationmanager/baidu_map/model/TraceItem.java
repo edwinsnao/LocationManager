@@ -11,11 +11,11 @@ public class TraceItem {
     private int tag;
     private int step = -1;
 
-    public int getUptime() {
+    public long getUptime() {
         return uptime;
     }
 
-    public void setUptime(int uptime) {
+    public void setUptime(long uptime) {
         this.uptime = uptime;
     }
 
@@ -27,7 +27,7 @@ public class TraceItem {
         this.distance = distance;
     }
 
-    private int uptime = -1;
+    private long uptime = -1;
     private double distance = -1;
 
     public int getStep() {

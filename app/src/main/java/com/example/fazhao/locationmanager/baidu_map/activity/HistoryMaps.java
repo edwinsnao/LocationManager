@@ -309,7 +309,6 @@ public class HistoryMaps extends Activity {
 
     private void initSetting() {
         // BNaviSettingManager.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
-        Log.e("init","setting");
         BNaviSettingManager
                 .setShowTotalRoadConditionBar(BNaviSettingManager.PreViewRoadCondition.ROAD_CONDITION_BAR_SHOW_ON);
         BNaviSettingManager.setVoiceMode(BNaviSettingManager.VoiceMode.Veteran);

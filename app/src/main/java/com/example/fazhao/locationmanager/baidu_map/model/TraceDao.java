@@ -78,25 +78,23 @@ public class TraceDao {
         db.endTransaction();
     }
 
-    public void addTime(String uptime, int tag) {
+    public void addTime(long uptime, int tag) {
         String sql = "insert into time_item (uptime,tag) values(?,?) ;";
         /**
          * 开启事务
          * */
         SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindString(1, uptime);
+        ss.bindLong(1, uptime);
         ss.bindString(2, String.valueOf(tag));
         ss.executeInsert();
     }
 
-    public void addDistance(String distance, int tag) {
-        Log.e("distance","success?");
+    public void addDistance(double distance, int tag) {
         String sql = "insert into distance_item (distance,tag) values(?,?) ;";
         SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindString(1, distance);
+        ss.bindDouble(1, distance);
         ss.bindString(2, String.valueOf(tag));
         ss.executeInsert();
-        Log.e("distance","success?1");
     }
 
     public void addRoute(String start, String end, int tag) {
@@ -143,7 +141,7 @@ public class TraceDao {
         try {
             c.moveToNext();
             traceItem = new TraceItem();
-            double distance = Double.parseDouble(c.getString(0));
+            double distance = c.getDouble(0);
             traceItem.setDistance(distance);
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,8 +210,8 @@ public class TraceDao {
             String date_end = null;
             String date_start = null;
             try {
-                date_start = crypto.armorDecrypt(c.getString(0));
-                date_end = crypto.armorDecrypt(c.getString(1));
+                date_start = crypto.armorDecrypt(String.valueOf(c.getLong(0)));
+                date_end = crypto.armorDecrypt(String.valueOf(c.getLong(1)));
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
@@ -389,10 +387,7 @@ public class TraceDao {
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
-                double distance = Double.parseDouble(c.getString(4));
-                Log.e("distance?",c.getString(4));
-                Log.e("distance?","test");
-                Log.e("distance?1", String.valueOf(distance));
+                double distance = c.getDouble(4);
                 int tag1 = c.getInt(5);
 
                 traceItem.setAddress(address1);
@@ -411,9 +406,6 @@ public class TraceDao {
                 c.close();
             }
         }
-        for (int i = 0; i < traceItems.size(); i++) {
-            Log.e("distaceDefault", String.valueOf(traceItems.get(i).getDistance()));
-        }
         return traceItems;
 
     }
@@ -429,7 +421,7 @@ public class TraceDao {
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
-                int uptime = Integer.parseInt(c.getString(4));
+                long uptime = c.getLong(4);
                 int tag1 = c.getInt(5);
 
                 traceItem.setAddress(address1);
@@ -747,9 +739,6 @@ public class TraceDao {
                 c.close();
             }
         }
-        for (int i = 0; i < traceItems.size(); i++) {
-            Log.e("stepForStep", String.valueOf(traceItems.get(i).getStep()));
-        }
         return traceItems;
 
     }
@@ -847,10 +836,7 @@ public class TraceDao {
                     }
 
                     int tag1 = c.getInt(4);
-                    double distance = Math.ceil(Double.parseDouble(c.getString(5)));
-                    Log.e("distance?2",c.getString(5));
-                    Log.e("distance?2","test");
-                    Log.e("distance?21", String.valueOf(distance));
+                    double distance = c.getDouble(5);
                     traceItem.setAddress(IndoorLocationActivity.reverseAddress);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
@@ -864,10 +850,7 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    double distance = Double.parseDouble(c.getString(5));
-                    Log.e("distance?22",c.getString(5));
-                    Log.e("distance?22","test");
-                    Log.e("distance?221", String.valueOf(distance));
+                    double distance = c.getDouble(5);
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
@@ -885,7 +868,6 @@ public class TraceDao {
                 c.close();
             }
         }
-        Log.e("traceSize", String.valueOf(traceItems.size()));
         return traceItems;
 
     }
@@ -983,7 +965,7 @@ public class TraceDao {
                     }
 
                     int tag1 = c.getInt(4);
-                    int time = Integer.parseInt(c.getString(5));
+                    long time = c.getLong(5);
                     traceItem.setAddress(IndoorLocationActivity.reverseAddress);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
@@ -997,7 +979,7 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    int time = Integer.parseInt(c.getString(5));
+                    long time = c.getLong(5);
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);
