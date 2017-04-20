@@ -32,7 +32,7 @@ public class BaseApplication extends Application {
     private static LocationClient mLocClient;
     private static LocationClientOption option;
     private static List<String> time;
-    private static TraceItem distance;
+    private static double distance;
     private static List<String> route;
 
     public static String getTo() {
@@ -134,11 +134,11 @@ public class BaseApplication extends Application {
         time = t;
     }
 
-    public static TraceItem getDistance() {
+    public static double getDistance() {
         return distance;
     }
 
-    public static void setDistance(TraceItem d) {
+    public static void setDistance(double d) {
         distance = d;
     }
 

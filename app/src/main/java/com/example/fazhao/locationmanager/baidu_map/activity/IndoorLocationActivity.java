@@ -430,15 +430,19 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         mTraceDao = BaseApplication.getmTaceDao();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
+        maxTag = mTraceDao.maxTag();
         if (BaseApplication.isHasHistory()) {
-            List<String> time = BaseApplication.getTime();
-            TraceItem distance = BaseApplication.getDistance();
+//            List<String> time = BaseApplication.getTime();
+//            double distance = BaseApplication.getDistance();
+            double distance = mTraceDao.getDistance(maxTag);
+            long time = mTraceDao.getTime(maxTag);
             List<String> route = BaseApplication.getRoute();
             try {
-                info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" + String.valueOf(distance) +" 米" + ",时长：" + BaiduUtils.dateDiff(this, time.get(0), time.get(1), "yyyy-MM-dd-HH:mm:ss", "m")
-                        + "分钟" + ",步数:" + BaseApplication.getLastStep());
+                info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" +
+                        String.valueOf(distance) +" 米" + ",时长：" + String.valueOf(time)
+                        + "秒" + ",步数:" + BaseApplication.getLastStep());
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
         save = (Button) findViewById(R.id.btn_save);
@@ -804,7 +808,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             } catch (InvalidAlgorithmParameterException e) {
                 e.printStackTrace();
             }
-            BaseApplication.setHasHistory(true);
         }
     };
 

@@ -78,6 +78,40 @@ public class TraceDao {
         db.endTransaction();
     }
 
+    public double getDistance(int tag){
+        String sql = "select distance from distance_item where tag = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
+        double distance = 0;
+        try {
+            c.moveToNext();
+            distance = c.getDouble(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return distance;
+    }
+
+    public long getTime(int tag){
+        String sql = "select uptime from time_item where tag = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
+        long uptime = 0;
+        try {
+            c.moveToNext();
+            uptime = c.getLong(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return uptime;
+    }
+
     public void addTime(long uptime, int tag) {
         String sql = "insert into time_item (uptime,tag) values(?,?) ;";
         /**
@@ -210,8 +244,8 @@ public class TraceDao {
             String date_end = null;
             String date_start = null;
             try {
-                date_start = crypto.armorDecrypt(String.valueOf(c.getLong(0)));
-                date_end = crypto.armorDecrypt(String.valueOf(c.getLong(1)));
+                date_start = crypto.armorDecrypt(c.getString(0));
+                date_end = crypto.armorDecrypt(c.getString(1));
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
@@ -239,7 +273,10 @@ public class TraceDao {
 
     public TraceItem getLastStep() {
         int tag = maxTag();
-        String sql = "select step from trace_item where tag = ?";
+        /**
+        * 防止出现很多个step数据需要加上group by tag
+        * */
+        String sql = "select step from trace_item where tag = ? group by tag";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         TraceItem traceItem = null;
 
@@ -605,9 +642,6 @@ public class TraceDao {
             if (c != null) {
                 c.close();
             }
-        }
-        for (int i = 0; i < traceItems.size(); i++) {
-            Log.e("stepDefault", String.valueOf(traceItems.get(i).getStep()));
         }
         return traceItems;
 

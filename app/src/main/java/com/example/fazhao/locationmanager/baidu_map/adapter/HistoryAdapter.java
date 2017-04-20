@@ -146,12 +146,12 @@ public class HistoryAdapter extends BaseAdapter {
 
         if (traceItem.getUptime() != -1) {
             StringBuilder builder4 = new StringBuilder("时长:");
-            builder4.append(traceItem.getUptime());
+            builder4.append(traceItem.getUptime() + "秒");
             holder.step.setText(builder4);
         }
         else if (traceItem.getDistance() != -1) {
             StringBuilder builder4 = new StringBuilder("距离:");
-            builder4.append(traceItem.getDistance());
+            builder4.append(traceItem.getDistance() + "米");
             holder.step.setText(builder4);
         }
         else if (traceItem.getStep() != -1) {

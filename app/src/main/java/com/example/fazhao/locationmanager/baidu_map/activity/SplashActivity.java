@@ -40,8 +40,8 @@ import static java.lang.reflect.Array.getInt;
 public class SplashActivity extends Activity {
     private TraceDao mTraceDao;
     private List<TraceItem> traceItems;
-    private List<String> time;
-    private TraceItem distance;
+//    private List<String> time;
+//    private TraceItem distance;
     private List<String> route;
     private int lastStep;
     private boolean user_first;
@@ -104,10 +104,10 @@ public class SplashActivity extends Activity {
 
     private void setData() {
 //        BaseApplication.setHistory(historyFromLoad);
-        if (distance != null)
-            BaseApplication.setDistance(distance);
-        if (time.size() != 0)
-            BaseApplication.setTime(time);
+//        if (distance != null)
+//            BaseApplication.setDistance(distance.getDistance());
+//        if (time.size() != 0)
+//            BaseApplication.setTime(time);
         BaseApplication.setLastStep(lastStep);
         if (route.size() != 0)
             BaseApplication.setRoute(route);
@@ -128,11 +128,12 @@ public class SplashActivity extends Activity {
              * 有history数据
              * */
             BaseApplication.setHasHistory(true);
-        } else
+        } else {
             BaseApplication.setHasHistory(false);
-        time = mTraceDao.getLastTime();
+        }
+//        time = mTraceDao.getLastTime();
         route = mTraceDao.getLastRoute();
-        distance = mTraceDao.getLastDistance();
+//        distance = mTraceDao.getLastDistance();
         TraceItem tmp = mTraceDao.getLastStep();
         if (tmp != null)
             lastStep = tmp.getStep();
@@ -179,15 +180,6 @@ public class SplashActivity extends Activity {
             e.printStackTrace();
         }
 
-//        if(mSubject != null && mServer != null  && mFrom != null
-//                && mPwd != null  && mTo != null  && mLoc != 0) {
-//            Log.e("watch ", mSubject);
-//            Log.e("watch ", mServer);
-//            Log.e("watch ", String.valueOf(mLoc));
-//            Log.e("watch ", mFrom);
-//            Log.e("watch ", mTo);
-//            Log.e("watch ", mPwd);
-//        }
 //        BaseApplication.setHistory(historyFromLoad);
     }
 

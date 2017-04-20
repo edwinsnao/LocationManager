@@ -160,8 +160,6 @@ public class HistoryMaps extends Activity {
 
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         mBaiduMap.animateMapStatus(msUpdate);
-        showTime.setText("时间相差：" + BaiduUtils.dateDiff(this, traceItems.get(0).getDate(), traceItems.get(traceItems.size() - 1).getDate(), "yyyy-MM-dd-HH:mm:ss", "m")
-                + "分钟" + "上次步数:" + mTraceDao.getLastStep().getStep());
     }
 
     private void initData(int choice) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -176,7 +174,14 @@ public class HistoryMaps extends Activity {
             historyFromLoad.add(latLng);
         }
         drawSolidLine1();
-        ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(DistanceUtil.getDistance(historyFromLoad.get(0), historyFromLoad.get(historyFromLoad.size() - 1))));
+        int tmp = 0;
+        for (int i = 1; i < historyFromLoad.size() -1; i++) {
+            tmp += DistanceUtil.getDistance(historyFromLoad.get(i),historyFromLoad.get(i - 1));
+        }
+        ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(tmp));
+        showTime.setText("时长：" + mTraceDao.getTime(choice) + "秒"
+                + ", 步数:" + traceItems.get(traceItems.size() - 1).getStep()
+                + ", 距离:" + mTraceDao.getDistance(choice) + "米");
     }
 
     private boolean initDirs() {
@@ -454,7 +459,6 @@ public class HistoryMaps extends Activity {
                 if (initDirs()) {
                     initNavi();
                 }
-                Log.e("isinited", String.valueOf(BaiduNaviManager.isNaviInited()));
                 if (BaiduNaviManager.isNaviInited()) {
                     routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
                 }
@@ -475,8 +479,7 @@ public class HistoryMaps extends Activity {
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case 0:
-                                if (historyDialog == null)
-                                    historyDialog = new HistoryDialog(HistoryMaps.this);
+                                historyDialog = new HistoryDialog(HistoryMaps.this);
                                 mAdapter = new HistoryAdapter(HistoryMaps.this, mDatas, mDatas1, historyDialog.lv);
                                 historyDialog.lv.setAdapter(mAdapter);
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
