@@ -27,8 +27,10 @@
             />
 
         <Spinner
-            android:entries="@array/spinner"
+            android:background="@drawable/spinner_style"
+            android:spinnerMode="dropdown"
             android:id="@+id/spinner"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></Spinner>
 

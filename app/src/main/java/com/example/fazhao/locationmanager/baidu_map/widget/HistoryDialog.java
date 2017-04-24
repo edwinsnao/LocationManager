@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ public class HistoryDialog extends Dialog {
     public TextView title;
     private Context mContext;
     private Spinner mSpinner;
+    private ArrayAdapter mAdapter;
+    public static final String[] name = {"按定位时间排序","按时长排序","按距离排序","按步数排序"};
 
     public Spinner getSpinner() {
         return mSpinner;
@@ -45,6 +48,9 @@ public class HistoryDialog extends Dialog {
         negativeButton = (Button) mView.findViewById(R.id.cancel);
         deleteAll = (Button) mView.findViewById(R.id.delete_all);
         mSpinner = (Spinner) mView.findViewById(R.id.spinner);
+        mAdapter = ArrayAdapter.createFromResource(mContext,R.array.spinner,android.R.layout.simple_spinner_item);
+        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(mAdapter);
         super.setContentView(mView);
     }
 
