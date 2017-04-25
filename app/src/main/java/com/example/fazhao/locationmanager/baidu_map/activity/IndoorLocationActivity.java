@@ -217,10 +217,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
         }
 
-        @Override
-        public void onConnectHotSpotMessage(String s, int i) {
-
-        }
     };
 
 

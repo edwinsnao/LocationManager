@@ -29,8 +29,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import static com.baidu.location.h.j.C;
-import static com.baidu.location.h.j.m;
 import static java.lang.reflect.Array.getInt;
 
 /**

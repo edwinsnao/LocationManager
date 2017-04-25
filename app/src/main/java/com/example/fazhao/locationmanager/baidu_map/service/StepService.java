@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 
 import static android.drm.DrmStore.Playback.STOP;
-import static com.baidu.location.h.j.S;
 import static com.example.fazhao.locationmanager.R.id.step;
 
 /**
