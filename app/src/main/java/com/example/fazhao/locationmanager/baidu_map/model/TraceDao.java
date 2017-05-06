@@ -113,7 +113,7 @@ public class TraceDao {
     }
 
     public void addTime(long uptime,String time_start,String time_end, int tag) {
-        String sql = "insert into time_item (uptime,time_start，time_end，tag) values(?,?,?,?) ;";
+        String sql = "insert into time_item (uptime,date_start，date_end，tag) values(?,?,?,?) ;";
         /**
          * 开启事务
          * */
