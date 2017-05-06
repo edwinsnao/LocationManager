@@ -112,14 +112,16 @@ public class TraceDao {
         return uptime;
     }
 
-    public void addTime(long uptime, int tag) {
-        String sql = "insert into time_item (uptime,tag) values(?,?) ;";
+    public void addTime(long uptime,String time_start,String time_end, int tag) {
+        String sql = "insert into time_item (uptime,time_start，time_end，tag) values(?,?,?,?) ;";
         /**
          * 开启事务
          * */
         SQLiteStatement ss = db.compileStatement(sql);
         ss.bindLong(1, uptime);
-        ss.bindString(2, String.valueOf(tag));
+        ss.bindString(2, time_start);
+        ss.bindString(3, time_end);
+        ss.bindString(4, String.valueOf(tag));
         ss.executeInsert();
     }
 
@@ -380,7 +382,7 @@ public class TraceDao {
 
     public List<TraceItem> searchDistinctDataDestinationForStep() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date,latitude,longitude,step,tag from trace_item group by tag order by step DESC ";
+        String sql = "select address,date_end,latitude,longitude,step,trace_item.tag from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by step DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -414,7 +416,7 @@ public class TraceDao {
     }
     public List<TraceItem> searchDistinctDataDestinationForDistance() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date,latitude,longitude,distance,trace_item.tag from trace_item,distance_item group by trace_item.tag order by distance DESC ";
+        String sql = "select address,date_end,latitude,longitude,distance,trace_item.tag from trace_item,distance_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = distance_item.tag group by trace_item.tag order by distance DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -448,7 +450,7 @@ public class TraceDao {
     }
     public List<TraceItem> searchDistinctDataDestinationForTime() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date,latitude,longitude,uptime,trace_item.tag from trace_item,time_item group by trace_item.tag order by uptime DESC ";
+        String sql = "select address,date_end,latitude,longitude,uptime,trace_item.tag from trace_item,time_item where time_item.tag = trace_item.tag group by trace_item.tag order by uptime DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -483,7 +485,7 @@ public class TraceDao {
 
     public List<TraceItem> searchDistinctDataDestination() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date,latitude,longitude,tag,step from trace_item group by tag ";
+        String sql = "select address,date_end,latitude,longitude,trace_item.tag,step from trace_item,time_item where time_item.tag = trace_item.tag group by trace_item.tag ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -521,7 +523,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date,latitude,longitude,tag,step from trace_item group by tag order by tag ASC";
+        String sql = "select address,date_start,latitude,longitude,trace_item.tag,step from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by trace_item.tag ASC";
 //        String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
         Cursor c = db.rawQuery(sql, null);
         try {
@@ -652,7 +654,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date,latitude,longitude,tag,step from trace_item group by tag order by step DESC";
+        String sql = "select address,date_start,latitude,longitude,trace_item.tag,step from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by step DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -781,7 +783,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date,latitude,longitude,trace_item.tag,distance from trace_item,distance_item where trace_item.tag = distance_item.tag group by trace_item.tag order by distance DESC";
+        String sql = "select address,date_start,latitude,longitude,trace_item.tag,distance from trace_item,distance_item,time_item where trace_item.tag = distance_item.tag and trace_item.tag = time_item.tag group by trace_item.tag order by distance DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -910,7 +912,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date,latitude,longitude,trace_item.tag,uptime from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by uptime DESC";
+        String sql = "select address,date_start,latitude,longitude,trace_item.tag,uptime from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by uptime DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;

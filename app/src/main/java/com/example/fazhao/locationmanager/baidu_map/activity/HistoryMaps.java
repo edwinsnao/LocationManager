@@ -481,6 +481,81 @@ public class HistoryMaps extends Activity {
                             case 0:
                                 historyDialog = new HistoryDialog(HistoryMaps.this);
                                 mAdapter = new HistoryAdapter(HistoryMaps.this, mDatas, mDatas1, historyDialog.lv);
+                                historyDialog.getSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> view, View view1, int pos, long l) {
+                                        switch (pos) {
+                                            case 0:
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStart());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestination());
+//                                                        mDatas = mTraceDao.searchDistinctDataStart();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
+
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 1:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForTime());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForTime());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 2:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForDistance());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForDistance());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            case 3:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForStep());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForStep());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                                break;
+                                            default:
+                                                ;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> view) {
+
+                                    }
+
+                                });
                                 historyDialog.lv.setAdapter(mAdapter);
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override

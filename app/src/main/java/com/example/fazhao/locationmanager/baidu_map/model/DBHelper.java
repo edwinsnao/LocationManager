@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String trace = "create table trace_item( _id integer primary key autoincrement , "
                 + " address text , date text , latitude real , longitude real ,tag integer ,step integer );";
         String time = "create table time_item( _id integer primary key autoincrement , "
-                + " uptime long,tag integer);";
+                + " uptime long ,date_start text, date_end text,tag integer);";
         String distance = "create table distance_item( _id integer primary key autoincrement , "
                 + " distance real, tag integer);";
         String route = "create table route_item( _id integer primary key autoincrement , "

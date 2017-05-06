@@ -754,7 +754,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             try {
                 int history_size = history.size() - 1;
                 mTraceDao.addTime(BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
-                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss"), tag);
+                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss")
+                        , crypto.armorEncrypt(history_time.get(0).getBytes())
+                        , crypto.armorEncrypt(history_time.get(history_size).getBytes()), tag);
                 if (history.get(0).getAddress().address != null
                         && history.get(history_size).getAddress().address != null) {
                     mTraceDao.addRoute(crypto.armorEncrypt(history.get(0).getAddress().address.getBytes())
