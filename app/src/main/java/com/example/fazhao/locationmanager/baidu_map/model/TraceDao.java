@@ -40,6 +40,43 @@ public class TraceDao {
         db = dbHelper.getWritableDatabase();
     }
 
+    public void update(){
+        String sql = "insert into time_item (uptime,date_start,date_end,tag) values(?,?,?,?) ;";
+        db.beginTransaction();
+        SQLiteStatement ss = db.compileStatement(sql);
+        ss.bindLong(1,74);
+        ss.bindString(2,"KPF2xCW/WpIs5uo9nBjUI4joL5lvBUmj4OM4sP2zUzI=");
+        ss.bindString(3,"dzpkuFneNA4OzePc+CDmECb/KjsjL6APJyj9eVlZFn4=");
+        ss.bindString(4, String.valueOf(1));
+        ss.executeInsert();
+        SQLiteStatement ss1 = db.compileStatement(sql);
+        ss1.bindLong(1,129);
+        ss1.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+        ss1.bindString(3,"P6cuQwuOLFunM0QDoupsEzBfEjeLYZxDDaBKlG+YEBY=");
+        ss1.bindString(4, String.valueOf(2));
+        ss1.executeInsert();
+        SQLiteStatement ss2 = db.compileStatement(sql);
+        ss2.bindLong(1,149);
+        ss2.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+        ss2.bindString(3,"DG+nPyEitp4dqjQEmX21WvLgMVEtcL2huG70xlHgs0c=");
+        ss2.bindString(4, String.valueOf(3));
+        ss2.executeInsert();
+        SQLiteStatement ss3 = db.compileStatement(sql);
+        ss3.bindLong(1,260);
+        ss3.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+        ss3.bindString(3,"OyQ6iWK9ZAZrLg/JGeX0XL7RWDZD+9t+apk59IOW5qY=");
+        ss3.bindString(4, String.valueOf(4));
+        ss3.executeInsert();
+        SQLiteStatement ss4 = db.compileStatement(sql);
+        ss4.bindLong(1,302);
+        ss4.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+        ss4.bindString(3,"VFLYdUeTy/okuTenGgBIRiXJjVKWUcXTHX2lkz/TpS8=");
+        ss4.bindString(4, String.valueOf(5));
+        ss4.executeInsert();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
     public void add(TraceItem traceItem) {
         String sql = "insert into trace_item (address,latitude,longitude,date,tag,step) values(?,?,?,?,?,?) ;";
         /**
@@ -112,15 +149,15 @@ public class TraceDao {
         return uptime;
     }
 
-    public void addTime(long uptime,String time_start,String time_end, int tag) {
-        String sql = "insert into time_item (uptime,date_start，date_end，tag) values(?,?,?,?) ;";
+    public void addTime(long uptime,String date_start,String date_end, int tag) {
+        String sql = "insert into time_item (uptime,date_start,date_end,tag) values(?,?,?,?) ;";
         /**
          * 开启事务
          * */
         SQLiteStatement ss = db.compileStatement(sql);
         ss.bindLong(1, uptime);
-        ss.bindString(2, time_start);
-        ss.bindString(3, time_end);
+        ss.bindString(2, date_start);
+        ss.bindString(3, date_end);
         ss.bindString(4, String.valueOf(tag));
         ss.executeInsert();
     }
@@ -460,7 +497,7 @@ public class TraceDao {
                 String date = crypto.armorDecrypt(c.getString(1));
                 double latitude = c.getDouble(2);
                 double longitude = c.getDouble(3);
-                long uptime = c.getLong(4);
+                long uptime = c.getInt(4);
                 int tag1 = c.getInt(5);
 
                 traceItem.setAddress(address1);
@@ -1015,7 +1052,7 @@ public class TraceDao {
                     double latitude = c.getDouble(2);
                     double longitude = c.getDouble(3);
                     int tag1 = c.getInt(4);
-                    long time = c.getLong(5);
+                    long time = c.getInt(5);
                     traceItem.setAddress(address1);
                     traceItem.setDate(date);
                     traceItem.setLatitude(latitude);

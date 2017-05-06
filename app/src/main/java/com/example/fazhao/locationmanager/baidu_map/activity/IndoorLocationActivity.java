@@ -429,6 +429,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         setContentView(layout);
         step = (TextView) findViewById(R.id.steps);
         mTraceDao = BaseApplication.getmTaceDao();
+        mTraceDao.update();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
         maxTag = mTraceDao.maxTag();
