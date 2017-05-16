@@ -120,7 +120,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     private Button compute, save, load;
     private CheckBox traffice, satelite, scale, scaleBtn;
-    private ImageButton requestLocButton;
+//    private ImageButton requestLocButton;
     public boolean isFirstLoc = true; // 是否首次定位
 
     protected MapStatusUpdate msUpdate = null;
@@ -215,6 +215,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     save.setBackground(getResources().getDrawable(R.drawable.button_style));
                 }
             }
+            Log.e("BaiduMapResult","address:" + location.getAddress().address + " latitude:" + location.getLatitude() + "\n"
+            + " longitude:" + location.getLongitude() + " time:" + location.getTime());
         }
 
         @Override
@@ -345,7 +347,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         final View mainview = inflater.inflate(R.layout.activity_location_baidu, null);
         layout.addView(mainview);
         mFooterView = LayoutInflater.from(IndoorLocationActivity.this).inflate(R.layout.maps_list_footer, null);
-        requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
+//        requestLocButton = (ImageButton) mainview.findViewById(R.id.button1);
         traffice = (CheckBox) mainview.findViewById(R.id.cb_traffic);
         scale = (CheckBox) mainview.findViewById(R.id.cb_scale);
         satelite = (CheckBox) mainview.findViewById(R.id.cb_satelite);
@@ -417,7 +419,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 }
             }
         };
-        requestLocButton.setOnClickListener(btnClickListener);
+//        requestLocButton.setOnClickListener(btnClickListener);
 
         mMapView = (MapView) mainview.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -429,7 +431,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         setContentView(layout);
         step = (TextView) findViewById(R.id.steps);
         mTraceDao = BaseApplication.getmTaceDao();
-        mTraceDao.update();
+//        mTraceDao.update();
         initData();
         info = (TextView) findViewById(R.id.et_streetView);
         maxTag = mTraceDao.maxTag();
@@ -566,10 +568,12 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        /**
-                                         * listview是从0开始，但是我的tag是从1开始，所以position+1
-                                         * */
-                                        bundle.putInt("choice", position + 1);
+                                        TextView tagView = (TextView)view.findViewById(R.id.number_history);
+                                        String s = tagView.getText().toString();
+                                        int index1 = s.lastIndexOf("：");
+                                        s = s.substring(index1 + 1);//截取冒号往后的内容
+                                        int tag = Integer.parseInt(s);
+                                        bundle.putInt("choice", tag);
                                         bundle.putDouble("latitude", pointList.get(pointList.size() - 1).latitude);
                                         bundle.putDouble("longitude", pointList.get(pointList.size() - 1).longitude);
                                         Intent it = new Intent();

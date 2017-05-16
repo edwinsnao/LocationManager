@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        mContext.deleteDatabase(DB_NAME);
+//        mContext.deleteDatabase(DB_NAME);
 //        getmDb();
         /**
          * id,title,link,date,imgLink,content,newstype,currentpage

@@ -181,7 +181,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="25dp"
         android:layout_marginTop="10dip" />-->
-    <ImageButton
+   <!-- <ImageButton
         android:id="@+id/button1"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -191,6 +191,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
-        android:src="@drawable/loc" />
+        android:src="@drawable/loc" />-->
 
 </RelativeLayout>

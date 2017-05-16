@@ -181,7 +181,7 @@ public class HistoryMaps extends Activity {
         ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(tmp));
         showTime.setText("时长：" + mTraceDao.getTime(choice) + "秒"
                 + ", 步数:" + traceItems.get(traceItems.size() - 1).getStep()
-                + ", 距离:" + mTraceDao.getDistance(choice) + "米");
+                + ", 距离:" + tmp + "米");
     }
 
     private boolean initDirs() {
