@@ -631,7 +631,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                         int index1 = s.lastIndexOf("：");
                                         s = s.substring(index1 + 1);//截取冒号往后的内容
                                         int tag = Integer.parseInt(s);
-                                        Log.e("tag", String.valueOf(tag));
                                         bundle.putInt("choice", tag);
                                         bundle.putDouble("latitude", pointList.get(pointList.size() - 1).latitude);
                                         bundle.putDouble("longitude", pointList.get(pointList.size() - 1).longitude);
@@ -833,8 +832,13 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 }
             }
         });
-        Toast.makeText(IndoorLocationActivity.this, "正在截取屏幕图片...",
-                Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(IndoorLocationActivity.this, "正在截取屏幕图片...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

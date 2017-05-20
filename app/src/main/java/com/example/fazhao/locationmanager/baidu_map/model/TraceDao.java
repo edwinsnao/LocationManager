@@ -15,6 +15,7 @@ import com.example.fazhao.locationmanager.application.BaseApplication;
 import com.example.fazhao.locationmanager.baidu_map.activity.IndoorLocationActivity;
 import com.example.fazhao.locationmanager.encrypt.Crypto;
 
+import java.io.File;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +25,9 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import static android.R.attr.path;
+import static com.baidu.location.h.j.S;
 
 
 /**
@@ -1109,6 +1113,7 @@ public class TraceDao {
         db.execSQL(sql1, new Object[]{tag});
         db.execSQL(sql2, new Object[]{tag});
         db.execSQL(sql3, new Object[]{tag});
+        String path = "/data/data/com.example.fazhao.locationmanager/files/";
         /**
          * 更新删除后序列不连续的问题
          * */
@@ -1121,6 +1126,11 @@ public class TraceDao {
             db.execSQL(sql5, new Object[]{i, i + 1});
             db.execSQL(sql6, new Object[]{i, i + 1});
             db.execSQL(sql7, new Object[]{i, i + 1});
+            int tmp = i + 1;
+            Log.e("time", String.valueOf(i));
+            File oldfile=new File(path+ tmp + "record.png");
+            File newfile=new File(path+ i + "record.png");
+            oldfile.renameTo(newfile);
         }
     }
 

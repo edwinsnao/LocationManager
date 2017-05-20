@@ -88,7 +88,7 @@ public class PicAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.pic_adapter, parent, false);
             holder = new ViewHolder();
 
-            holder.tag = (TextView) convertView.findViewById(R.id.number_pic);
+            holder.tag = (TextView) convertView.findViewById(R.id.number_history);
             holder.image = (ImageView) convertView.findViewById(R.id.image_pic);
 
             convertView.setTag(holder);
