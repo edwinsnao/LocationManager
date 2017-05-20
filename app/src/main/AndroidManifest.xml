@@ -97,10 +97,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".baidu_map.activity.GuideActivity"/>
-        <activity android:name=".baidu_map.activity.HistoryMaps"/>
-        <activity android:name=".baidu_map.activity.CustomPreferenceActivity"/>
+        <activity android:name=".baidu_map.activity.GuideActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".baidu_map.activity.HistoryMaps"
+                  android:screenOrientation="portrait"/>
+        <activity android:screenOrientation="portrait"
+            android:name=".baidu_map.activity.CustomPreferenceActivity"/>
         <activity
+            android:screenOrientation="portrait"
             android:name=".baidu_map.activity.HistoryDetail"
             android:theme="@style/translucent"/>
         <!--<meta-data

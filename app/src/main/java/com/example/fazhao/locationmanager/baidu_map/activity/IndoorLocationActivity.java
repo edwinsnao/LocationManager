@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -65,6 +66,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.baidu_map.adapter.PicAdapter;
 import com.example.fazhao.locationmanager.baidu_map.mail.Mail;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
 import com.example.fazhao.locationmanager.baidu_map.service.StepService;
@@ -91,6 +93,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -134,6 +138,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private PolylineOptions polyline = null;
     private LatLng ll;
     private List<BDLocation> history = new ArrayList<>();
+    private List<Double> history_latitude = new ArrayList<>();
+    private List<Double> history_longitude = new ArrayList<>();
     private List<String> history_time = new ArrayList<>();
     private List<LatLng> pointList = new ArrayList<LatLng>();
     private int tmp;
@@ -167,6 +173,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
     private String server = BaseApplication.getmServer();
     private String subject = BaseApplication.getmSubject();
     private String pwd = BaseApplication.getmPwd();
+    private long exitTime = 0;
 
     private BDLocationListener mListener = new BDLocationListener() {
 
@@ -181,6 +188,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             // 设置定位数据
             mBaiduMap.setMyLocationData(locData);
             history.add(location);
+            history_latitude.add(location.getLatitude());
+            history_longitude.add(location.getLongitude());
             if (isFirstLoc) {
                 /**
                  * 如果是第一次定位就发送位置
@@ -282,6 +291,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             intent.setClass(IndoorLocationActivity.this,CustomPreferenceActivity.class);
             startActivity(intent);
         }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -331,6 +344,21 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     }
 
+
+
+    public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            /**
+             * 加上这一行就不可以注销静态的receiver了
+             * */
+//            System.exit(0);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -498,6 +526,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestination();
 
                                                         mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
                                                     }
                                                 });
                                                 break;
@@ -513,6 +542,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForTime();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForTime();
                                                         mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
                                                     }
                                                 });
                                                 break;
@@ -528,6 +558,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForDistance();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForDistance();
                                                         mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
                                                     }
                                                 });
                                                 break;
@@ -543,6 +574,33 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
                                                         mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
+                                                    }
+                                                });
+                                                break;
+                                            case 4:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        PicAdapter adapter = new PicAdapter(IndoorLocationActivity.this,mTraceDao.maxTag());
+                                                        historyDialog.lv.setAdapter(adapter);
+                                                    }
+                                                });
+                                                break;
+                                            case 5://平局速度
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForStep());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForStep());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
                                                     }
                                                 });
                                                 break;
@@ -573,6 +631,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                         int index1 = s.lastIndexOf("：");
                                         s = s.substring(index1 + 1);//截取冒号往后的内容
                                         int tag = Integer.parseInt(s);
+                                        Log.e("tag", String.valueOf(tag));
                                         bundle.putInt("choice", tag);
                                         bundle.putDouble("latitude", pointList.get(pointList.size() - 1).latitude);
                                         bundle.putDouble("longitude", pointList.get(pointList.size() - 1).longitude);
@@ -751,6 +810,34 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         crypto = new Crypto(this);
     }
 
+    public void saveBitmap(final String name) {
+// 截图，在SnapshotReadyCallback中保存图片到 sd 卡
+        mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
+            public void onSnapshotReady(Bitmap snapshot) {
+                File file = new File("/data/data/com.example.fazhao.locationmanager/files/"+name+".png");
+                FileOutputStream out;
+                try {
+                    out = new FileOutputStream(file);
+                    if (snapshot.compress(
+                            Bitmap.CompressFormat.PNG, 100, out)) {
+                        out.flush();
+                        out.close();
+                    }
+                    Toast.makeText(IndoorLocationActivity.this,
+                            "屏幕截图成功，图片存在: " + file.toString(),
+                            Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Toast.makeText(IndoorLocationActivity.this, "正在截取屏幕图片...",
+                Toast.LENGTH_SHORT).show();
+
+    }
+
     final Runnable saveHistory = new Runnable() {
         @Override
         public void run() {
@@ -758,6 +845,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 tag = mTraceDao.maxTag() + 1;
                 maxTag = tag - 1;
             }
+            saveBitmap(tag+"record");
             /**
              * 插入数据到多表
              * */
@@ -829,6 +917,14 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             Toast.makeText(IndoorLocationActivity.this, "当前无轨迹点", Toast.LENGTH_SHORT).show();
         } else if (DistanceUtil.getDistance(pointList.get(pointList.size() - 1), ll) > 100) {
+//            latLng = pointList.get(pointList.size() - 1);
+//            /**
+//             * 因为drawRealTime里面已经有一个pointList.add
+//             * 所以下面会导致重复的
+//             * */
+//            pointList.add(latLng);
+//            // 绘制实时点
+//            drawRealtimePoint(latLng);
 //            5秒走50米是不可能的，所以该定位点舍弃
             Toast.makeText(IndoorLocationActivity.this, "discard", Toast.LENGTH_SHORT).show();
         } else {
@@ -893,11 +989,70 @@ public class IndoorLocationActivity extends Activity implements TransferListener
          * */
 //        mBaiduMap.clear();
         polyline = null;
-        MapStatus mMapStatus = new MapStatus.Builder().target(point)
-                .zoom(20)
-                .build();
 
-        msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+        int zoomLevel[] = {2000000,1000000,500000,200000,100000,
+                50000,25000,20000,10000,5000,2000,1000,500,100,50,20,0};
+
+        double maxlat,minlat,maxlon,minlon;
+//        for (int i = 0; i < history_latitude.size() - 1; i++) {
+//            for (int j = 0; j < history_latitude.size() - 1 - i; j++) {
+//                if(history_latitude.get(j) > history_latitude.get(j+1)){
+//                    double tmp = history_latitude.get(j);
+//                    history_latitude.get(j) = history_latitude.get(j+1);
+//
+//                }
+//            }
+//        }
+        Collections.sort(history_latitude, new Comparator<Double>() {
+            @Override
+            public int compare(Double aDouble, Double t1) {
+                if (aDouble > t1) {
+                    return 1;
+                } else if (aDouble < t1) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        Log.e("his1", String.valueOf(history_latitude.get(0)));
+        Log.e("his2", String.valueOf(history_latitude.get(history_latitude.size()-1)));
+        Collections.sort(history_longitude, new Comparator<Double>() {
+            @Override
+            public int compare(Double aDouble, Double t1) {
+                if (aDouble > t1) {
+                    return 1;
+                } else if (aDouble < t1) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        Log.e("his3", String.valueOf(history_longitude.get(0)));
+        Log.e("his4", String.valueOf(history_longitude.get(history_longitude.size()-1)));
+        maxlat = history_latitude.get(history_latitude.size() - 1);
+        minlat = history_latitude.get(0);
+        minlon = history_longitude.get(0);
+        maxlon = history_longitude.get(history_longitude.size() - 1);
+        final double midlat = (maxlat+minlat)/2;
+        final double midlon = (maxlon+minlon)/2;
+        LatLng latlon = new LatLng(midlat, midlon);
+        int jl = (int)DistanceUtil.getDistance(new LatLng(maxlat, maxlon), new LatLng(minlat, minlon));
+        int i;
+        for(i=0;i<17;i++){
+            if(zoomLevel[i]<jl){
+                break;
+            }
+        }
+        float zoom = i+6;
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latlon, zoom);
+
+//        MapStatus mMapStatus = new MapStatus.Builder().target(point)
+//                .zoom(20)
+//                .build();
+
+//        msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
 
         if (pointList.size() >= 2 && pointList.size() <= 100000) {
             // 添加路线（轨迹）
@@ -908,7 +1063,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
          * 不要忘记加入pointList
          * */
         pointList.add(point);
-        mBaiduMap.animateMapStatus(msUpdate);
+        mBaiduMap.animateMapStatus(u);
         addMarker();
 
     }

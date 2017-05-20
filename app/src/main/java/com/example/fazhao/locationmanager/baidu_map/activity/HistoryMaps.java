@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.example.fazhao.locationmanager.R;
+import com.example.fazhao.locationmanager.baidu_map.adapter.PicAdapter;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceItem;
 import com.example.fazhao.locationmanager.baidu_map.adapter.HistoryAdapter;
 import com.example.fazhao.locationmanager.baidu_map.model.TraceDao;
@@ -43,16 +46,22 @@ import com.example.fazhao.locationmanager.baidu_map.widget.HistoryDialog;
 import com.example.fazhao.locationmanager.application.BaseApplication;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static com.baidu.location.h.j.V;
 import static com.baidu.navisdk.adapter.PackageUtil.getSdcardDir;
 
 
@@ -70,6 +79,8 @@ public class HistoryMaps extends Activity {
     private com.baidu.mapapi.map.PolylineOptions polyline = null;
     protected MapStatusUpdate msUpdate = null;
     private List<LatLng> historyFromLoad = new ArrayList<LatLng>();
+    private List<Double> history_latitude = new ArrayList<>();
+    private List<Double> history_longitude = new ArrayList<>();
     private Button detail, load;
     private TextView showTime, historyTitle;
     private int tag;
@@ -109,6 +120,7 @@ public class HistoryMaps extends Activity {
         try {
             initData(choice);
             operation();
+//            saveBitmap(choice+"record");
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
@@ -122,6 +134,34 @@ public class HistoryMaps extends Activity {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void saveBitmap(final String name) {
+// 截图，在SnapshotReadyCallback中保存图片到 sd 卡
+        mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
+            public void onSnapshotReady(Bitmap snapshot) {
+                File file = new File("/data/data/com.example.fazhao.locationmanager/files/"+name+".png");
+                FileOutputStream out;
+                try {
+                    out = new FileOutputStream(file);
+                    if (snapshot.compress(
+                            Bitmap.CompressFormat.PNG, 100, out)) {
+                        out.flush();
+                        out.close();
+                    }
+                    Toast.makeText(HistoryMaps.this,
+                            "屏幕截图成功，图片存在: " + file.toString(),
+                            Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Toast.makeText(HistoryMaps.this, "正在截取屏幕图片...",
+                Toast.LENGTH_SHORT).show();
 
     }
 
@@ -154,12 +194,57 @@ public class HistoryMaps extends Activity {
     }
 
     private void operation() {
-        MapStatus mMapStatus = new MapStatus.Builder().target(latLng1)
-                .zoom(20)
-                .build();
+        int zoomLevel[] = {2000000,1000000,500000,200000,100000,
+                50000,25000,20000,10000,5000,2000,1000,500,100,50,20,0};
 
-        msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
-        mBaiduMap.animateMapStatus(msUpdate);
+        double maxlat,minlat,maxlon,minlon;
+        Collections.sort(history_latitude, new Comparator<Double>() {
+            @Override
+            public int compare(Double aDouble, Double t1) {
+                if (aDouble > t1) {
+                    return 1;
+                } else if (aDouble < t1) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        Collections.sort(history_longitude, new Comparator<Double>() {
+            @Override
+            public int compare(Double aDouble, Double t1) {
+                if (aDouble > t1) {
+                    return 1;
+                } else if (aDouble < t1) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        maxlat = history_latitude.get(history_latitude.size() - 1);
+        minlat = history_latitude.get(0);
+        minlon = history_longitude.get(0);
+        maxlon = history_longitude.get(history_longitude.size() - 1);
+        final double midlat = (maxlat+minlat)/2;
+        final double midlon = (maxlon+minlon)/2;
+        LatLng latlon = new LatLng(midlat, midlon);
+        int jl = (int)DistanceUtil.getDistance(new LatLng(maxlat, maxlon), new LatLng(minlat, minlon));
+        int i;
+        for(i=0;i<17;i++){
+            if(zoomLevel[i]<jl){
+                Log.e("final", String.valueOf(i));
+                break;
+            }
+        }
+        float zoom = i+6;
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latlon, zoom);
+//        MapStatus mMapStatus = new MapStatus.Builder().target(latLng1)
+//                .zoom(20)
+//                .build();
+//
+//        msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+        mBaiduMap.animateMapStatus(u);
     }
 
     private void initData(int choice) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -169,9 +254,18 @@ public class HistoryMaps extends Activity {
         //TODO 线程
         traceItems = mTraceDao.searchData(choice);
         latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+        history_latitude.clear();
+        history_longitude.clear();
+        historyFromLoad.clear();
         for (int i = 0; i < traceItems.size(); i++) {
             LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
             historyFromLoad.add(latLng);
+        }
+        for (int i = 0; i < historyFromLoad.size(); i++) {
+            history_latitude.add(historyFromLoad.get(i).latitude);
+        }
+        for (int i = 0; i < historyFromLoad.size(); i++) {
+            history_longitude.add(historyFromLoad.get(i).longitude);
         }
         drawSolidLine1();
         int tmp = 0;
@@ -243,32 +337,32 @@ public class HistoryMaps extends Activity {
         BaiduNaviManager.getInstance().init(this, mSDCardPath, APP_FOLDER_NAME, new BaiduNaviManager.NaviInitListener() {
             @Override
             public void onAuthResult(int status, String msg) {
-                if (0 == status) {
-                    authinfo = "key校验成功!";
-                } else {
-                    authinfo = "key校验失败, " + msg;
-                }
-                HistoryMaps.this.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(HistoryMaps.this, authinfo, Toast.LENGTH_LONG).show();
-                    }
-                });
+//                if (0 == status) {
+//                    authinfo = "key校验成功!";
+//                } else {
+//                    authinfo = "key校验失败, " + msg;
+//                }
+//                HistoryMaps.this.runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(HistoryMaps.this, authinfo, Toast.LENGTH_LONG).show();
+//                    }
+//                });
             }
 
             public void initSuccess() {
-                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistoryMaps.this, "正在启动...", Toast.LENGTH_SHORT).show();
                 hasInitSuccess = true;
                 initSetting();
             }
 
             public void initStart() {
-                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
             }
 
             public void initFailed() {
-                Toast.makeText(HistoryMaps.this, "百度导航引擎初始化失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistoryMaps.this, "启动失败", Toast.LENGTH_SHORT).show();
             }
 
         }, null, ttsHandler, ttsPlayStateListener);
@@ -545,6 +639,16 @@ public class HistoryMaps extends Activity {
                                                     }
                                                 });
                                                 break;
+                                            case 4:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        PicAdapter adapter = new PicAdapter(HistoryMaps.this,mTraceDao.maxTag());
+                                                        historyDialog.lv.setAdapter(adapter);
+                                                    }
+                                                });
+                                                break;
                                             default:
                                                 ;
                                         }
@@ -559,7 +663,7 @@ public class HistoryMaps extends Activity {
                                 historyDialog.lv.setAdapter(mAdapter);
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                                    public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                                         /**
                                          * listview是从0开始，但是我的tag是从1开始，所以position+1
                                          * */
@@ -568,8 +672,14 @@ public class HistoryMaps extends Activity {
                                             @Override
                                             public void run() {
                                                 try {
-                                                    initData(position + 1);
+                                                    TextView tagView = (TextView)view.findViewById(R.id.number_history);
+                                                    String s = tagView.getText().toString();
+                                                    int index1 = s.lastIndexOf("：");
+                                                    s = s.substring(index1 + 1);//截取冒号往后的内容
+                                                    int tag = Integer.parseInt(s);
+                                                    initData(tag);
                                                     operation();
+//                                                    saveBitmap(tag +"record");
                                                     detail.setOnClickListener(new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
