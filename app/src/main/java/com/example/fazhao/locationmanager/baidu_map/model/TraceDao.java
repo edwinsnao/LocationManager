@@ -813,7 +813,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,step from route_item,trace_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag  group by trace_item.tag order by step DESC";
+        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,Max(step) from route_item,trace_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag  group by trace_item.tag order by Max(step) DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -943,7 +943,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address_start,date_start,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed >=3 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
+        String sql = "select address_start,date_start,latitude,longitude,Max(step),trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed >=3 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -1073,7 +1073,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address_start,date_start,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed <=2 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
+        String sql = "select address_start,date_start,latitude,longitude,Max(step),trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed <=2 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -1496,6 +1496,9 @@ public class TraceDao {
         db.execSQL(sql3, new Object[]{tag});
         db.execSQL(sql9, new Object[]{tag});
         String path = "/data/data/com.example.fazhao.locationmanager/files/";
+        File tmp = new File(path + tag + "record.png");
+        if(tmp.isFile() && tmp.exists())
+            tmp.delete();
         /**
          * 更新删除后序列不连续的问题
          * */
@@ -1510,9 +1513,9 @@ public class TraceDao {
             db.execSQL(sql6, new Object[]{i, i + 1});
             db.execSQL(sql7, new Object[]{i, i + 1});
             db.execSQL(sql8, new Object[]{i, i + 1});
-            int tmp = i + 1;
+            int tmpNum = i + 1;
             Log.e("time", String.valueOf(i));
-            File oldfile = new File(path + tmp + "record.png");
+            File oldfile = new File(path + tmpNum + "record.png");
             File newfile = new File(path + i + "record.png");
             oldfile.renameTo(newfile);
         }

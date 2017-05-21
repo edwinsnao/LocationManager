@@ -965,9 +965,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     @Override
     public void click() {
-        if (handler == null)
-            handler = new Handler();
-        handler.post(updateTitle);
+//        if (handler == null)
+//            handler = new Handler();
+//        handler.post(updateTitle);
     }
 
 

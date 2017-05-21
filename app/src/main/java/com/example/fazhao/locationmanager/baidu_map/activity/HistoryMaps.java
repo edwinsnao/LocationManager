@@ -799,9 +799,9 @@ public class HistoryMaps extends Activity {
     }
 
     public void click() {
-        if (handler == null)
-            handler = new Handler();
-        handler.post(updateTitle);
+//        if (handler == null)
+//            handler = new Handler();
+//        handler.post(updateTitle);
     }
 
     private Runnable updateTitle = new Runnable() {
