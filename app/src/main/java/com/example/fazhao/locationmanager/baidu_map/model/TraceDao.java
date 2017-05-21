@@ -27,6 +27,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import static android.R.attr.path;
+import static android.R.attr.tag;
 import static com.baidu.location.h.j.S;
 
 
@@ -44,41 +45,78 @@ public class TraceDao {
         db = dbHelper.getWritableDatabase();
     }
 
-    public void update(){
-        String sql = "insert into time_item (uptime,date_start,date_end,tag) values(?,?,?,?) ;";
-        db.beginTransaction();
-        SQLiteStatement ss = db.compileStatement(sql);
-        ss.bindLong(1,74);
-        ss.bindString(2,"KPF2xCW/WpIs5uo9nBjUI4joL5lvBUmj4OM4sP2zUzI=");
-        ss.bindString(3,"dzpkuFneNA4OzePc+CDmECb/KjsjL6APJyj9eVlZFn4=");
-        ss.bindString(4, String.valueOf(1));
-        ss.executeInsert();
-        SQLiteStatement ss1 = db.compileStatement(sql);
-        ss1.bindLong(1,129);
-        ss1.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
-        ss1.bindString(3,"P6cuQwuOLFunM0QDoupsEzBfEjeLYZxDDaBKlG+YEBY=");
-        ss1.bindString(4, String.valueOf(2));
-        ss1.executeInsert();
-        SQLiteStatement ss2 = db.compileStatement(sql);
-        ss2.bindLong(1,149);
-        ss2.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
-        ss2.bindString(3,"DG+nPyEitp4dqjQEmX21WvLgMVEtcL2huG70xlHgs0c=");
-        ss2.bindString(4, String.valueOf(3));
-        ss2.executeInsert();
-        SQLiteStatement ss3 = db.compileStatement(sql);
-        ss3.bindLong(1,260);
-        ss3.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
-        ss3.bindString(3,"OyQ6iWK9ZAZrLg/JGeX0XL7RWDZD+9t+apk59IOW5qY=");
-        ss3.bindString(4, String.valueOf(4));
-        ss3.executeInsert();
-        SQLiteStatement ss4 = db.compileStatement(sql);
-        ss4.bindLong(1,302);
-        ss4.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
-        ss4.bindString(3,"VFLYdUeTy/okuTenGgBIRiXJjVKWUcXTHX2lkz/TpS8=");
-        ss4.bindString(4, String.valueOf(5));
-        ss4.executeInsert();
-        db.setTransactionSuccessful();
-        db.endTransaction();
+    public void update() {
+//        String sql = "insert into time_item (uptime,date_start,date_end,tag) values(?,?,?,?) ;";
+//        db.beginTransaction();
+//        SQLiteStatement ss = db.compileStatement(sql);
+//        ss.bindLong(1,74);
+//        ss.bindString(2,"KPF2xCW/WpIs5uo9nBjUI4joL5lvBUmj4OM4sP2zUzI=");
+//        ss.bindString(3,"dzpkuFneNA4OzePc+CDmECb/KjsjL6APJyj9eVlZFn4=");
+//        ss.bindString(4, String.valueOf(1));
+//        ss.executeInsert();
+//        SQLiteStatement ss1 = db.compileStatement(sql);
+//        ss1.bindLong(1,129);
+//        ss1.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+//        ss1.bindString(3,"P6cuQwuOLFunM0QDoupsEzBfEjeLYZxDDaBKlG+YEBY=");
+//        ss1.bindString(4, String.valueOf(2));
+//        ss1.executeInsert();
+//        SQLiteStatement ss2 = db.compileStatement(sql);
+//        ss2.bindLong(1,149);
+//        ss2.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+//        ss2.bindString(3,"DG+nPyEitp4dqjQEmX21WvLgMVEtcL2huG70xlHgs0c=");
+//        ss2.bindString(4, String.valueOf(3));
+//        ss2.executeInsert();
+//        SQLiteStatement ss3 = db.compileStatement(sql);
+//        ss3.bindLong(1,260);
+//        ss3.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+//        ss3.bindString(3,"OyQ6iWK9ZAZrLg/JGeX0XL7RWDZD+9t+apk59IOW5qY=");
+//        ss3.bindString(4, String.valueOf(4));
+//        ss3.executeInsert();
+//        SQLiteStatement ss4 = db.compileStatement(sql);
+//        ss4.bindLong(1,302);
+//        ss4.bindString(2,"KPF2xCW/WpIs5uo9nBjUIzbR0hbXtDX6qXKvxezoEL4=");
+//        ss4.bindString(3,"VFLYdUeTy/okuTenGgBIRiXJjVKWUcXTHX2lkz/TpS8=");
+//        ss4.bindString(4, String.valueOf(5));
+//        ss4.executeInsert();
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
+//        List<String> list = new ArrayList<>();
+//        String sql = "select address from trace_item group by tag";
+//        Cursor c = db.rawQuery(sql, null);
+//
+//        try {
+//            while (c.moveToNext()) {
+//                String address = null;
+//
+//                try {
+//                    address = crypto.armorDecrypt(c.getString(0));
+//                } catch (InvalidKeyException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchAlgorithmException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchPaddingException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalBlockSizeException e) {
+//                    e.printStackTrace();
+//                } catch (BadPaddingException e) {
+//                    e.printStackTrace();
+//                } catch (InvalidAlgorithmParameterException e) {
+//                    e.printStackTrace();
+//                }
+//                list.add(address);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (c != null) {
+//                c.close();
+//            }
+//
+//        }
+//        for (int i = 0; i < list.size(); i++) {
+//            String sql1 = "update route_item set address_end = ? where tag = ?";
+//            db.execSQL(sql1, new Object[]{list.get(i), i + 1});
+//        }
     }
 
     public void add(TraceItem traceItem) {
@@ -119,7 +157,7 @@ public class TraceDao {
         db.endTransaction();
     }
 
-    public double getDistance(int tag){
+    public double getDistance(int tag) {
         String sql = "select distance from distance_item where tag = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         double distance = 0;
@@ -136,7 +174,7 @@ public class TraceDao {
         return distance;
     }
 
-    public long getTime(int tag){
+    public long getTime(int tag) {
         String sql = "select uptime from time_item where tag = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         long uptime = 0;
@@ -153,7 +191,7 @@ public class TraceDao {
         return uptime;
     }
 
-    public void addTime(long uptime,String date_start,String date_end, int tag) {
+    public void addTime(long uptime, String date_start, String date_end, int tag) {
         String sql = "insert into time_item (uptime,date_start,date_end,tag) values(?,?,?,?) ;";
         /**
          * 开启事务
@@ -170,6 +208,14 @@ public class TraceDao {
         String sql = "insert into distance_item (distance,tag) values(?,?) ;";
         SQLiteStatement ss = db.compileStatement(sql);
         ss.bindDouble(1, distance);
+        ss.bindString(2, String.valueOf(tag));
+        ss.executeInsert();
+    }
+
+    public void addSpeed(int speed, int tag) {
+        String sql = "insert into speed_item (speed,tag) values(?,?) ;";
+        SQLiteStatement ss = db.compileStatement(sql);
+        ss.bindDouble(1, speed);
         ss.bindString(2, String.valueOf(tag));
         ss.executeInsert();
     }
@@ -317,8 +363,8 @@ public class TraceDao {
     public TraceItem getLastStep() {
         int tag = maxTag();
         /**
-        * 防止出现很多个step数据需要加上group by tag
-        * */
+         * 防止出现很多个step数据需要加上group by tag
+         * */
         String sql = "select step from trace_item where tag = ? group by tag";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(tag)});
         TraceItem traceItem = null;
@@ -356,7 +402,7 @@ public class TraceDao {
 
         try {
             TraceItem traceItem = null;
-            while(c.moveToNext()) {
+            while (c.moveToNext()) {
                 traceItem = new TraceItem();
                 String address = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
@@ -423,7 +469,7 @@ public class TraceDao {
 
     public List<TraceItem> searchDistinctDataDestinationForStep() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date_end,latitude,longitude,step,trace_item.tag from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by step DESC ";
+        String sql = "select address_end,date_end,latitude,longitude,step,trace_item.tag from route_item,trace_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag group by trace_item.tag order by step DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -455,9 +501,80 @@ public class TraceDao {
         return traceItems;
 
     }
+
+    public List<TraceItem> searchDistinctDataDestinationForWalk() {
+        List<TraceItem> traceItems = new ArrayList<TraceItem>();
+        String sql = "select address_end,date_end,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed <=2 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag  ";
+        Cursor c = db.rawQuery(sql, null);
+        TraceItem traceItem = null;
+        try {
+            while (c.moveToNext()) {
+                traceItem = new TraceItem();
+                String address1 = crypto.armorDecrypt(c.getString(0));
+                String date = crypto.armorDecrypt(c.getString(1));
+                double latitude = c.getDouble(2);
+                double longitude = c.getDouble(3);
+                int step = c.getInt(4);
+                int tag1 = c.getInt(5);
+
+                traceItem.setAddress(address1);
+                traceItem.setDate(date);
+                traceItem.setLatitude(latitude);
+                traceItem.setLongitude(longitude);
+                traceItem.setStep(step);
+                traceItem.setTag(tag1);
+                traceItems.add(traceItem);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return traceItems;
+
+    }
+
+    public List<TraceItem> searchDistinctDataDestinationForBike() {
+        List<TraceItem> traceItems = new ArrayList<TraceItem>();
+        String sql = "select address_end,date_end,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed >=3 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag  ";
+        Cursor c = db.rawQuery(sql, null);
+        TraceItem traceItem = null;
+        try {
+            while (c.moveToNext()) {
+                traceItem = new TraceItem();
+                String address1 = crypto.armorDecrypt(c.getString(0));
+                String date = crypto.armorDecrypt(c.getString(1));
+                double latitude = c.getDouble(2);
+                double longitude = c.getDouble(3);
+                int step = c.getInt(4);
+                int tag1 = c.getInt(5);
+
+                traceItem.setAddress(address1);
+                traceItem.setDate(date);
+                traceItem.setLatitude(latitude);
+                traceItem.setLongitude(longitude);
+                traceItem.setStep(step);
+                traceItem.setTag(tag1);
+                traceItems.add(traceItem);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return traceItems;
+
+    }
+
     public List<TraceItem> searchDistinctDataDestinationForDistance() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date_end,latitude,longitude,distance,trace_item.tag from trace_item,distance_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = distance_item.tag group by trace_item.tag order by distance DESC ";
+        String sql = "select address_end,date_end,latitude,longitude,distance,trace_item.tag from route_item,trace_item,distance_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = distance_item.tag and trace_item.tag = route_item.tag group by trace_item.tag order by distance DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -489,9 +606,10 @@ public class TraceDao {
         return traceItems;
 
     }
+
     public List<TraceItem> searchDistinctDataDestinationForTime() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date_end,latitude,longitude,uptime,trace_item.tag from trace_item,time_item where time_item.tag = trace_item.tag group by trace_item.tag order by uptime DESC ";
+        String sql = "select address_end,date_end,latitude,longitude,uptime,trace_item.tag from route_item,trace_item,time_item where time_item.tag = trace_item.tag and trace_item.tag = route_item.tag group by trace_item.tag order by uptime DESC ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -526,7 +644,7 @@ public class TraceDao {
 
     public List<TraceItem> searchDistinctDataDestination() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
-        String sql = "select address,date_end,latitude,longitude,trace_item.tag,step from trace_item,time_item where time_item.tag = trace_item.tag group by trace_item.tag ";
+        String sql = "select address_end,date_end,latitude,longitude,trace_item.tag,step from trace_item,time_item,route_item where time_item.tag = trace_item.tag and trace_item.tag = route_item.tag group by trace_item.tag ";
         Cursor c = db.rawQuery(sql, null);
         TraceItem traceItem = null;
         try {
@@ -564,7 +682,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date_start,latitude,longitude,trace_item.tag,step from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by trace_item.tag ASC";
+        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,step from trace_item,time_item,route_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag group by trace_item.tag order by trace_item.tag ASC";
 //        String sql = "select address,min(date),latitude,longitude,tag,step from trace_item group by tag";
         Cursor c = db.rawQuery(sql, null);
         try {
@@ -695,7 +813,7 @@ public class TraceDao {
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date_start,latitude,longitude,trace_item.tag,step from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by step DESC";
+        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,step from route_item,trace_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag  group by trace_item.tag order by step DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -819,12 +937,273 @@ public class TraceDao {
         return traceItems;
 
     }
+
+    public List<TraceItem> searchDistinctDataStartForBike() {
+        List<TraceItem> traceItems = new ArrayList<TraceItem>();
+        int tag = 0;
+        String address;
+        LatLng latLng;
+        String sql = "select address_start,date_start,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed >=3 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
+        Cursor c = db.rawQuery(sql, null);
+        try {
+            TraceItem traceItem = null;
+
+            while (c.moveToNext()) {
+                tag++;
+                traceItem = new TraceItem();
+                address = c.getString(0);
+                if (address.equals("null") || address == null ||
+                        address.equals("没有联网下定位导致无法获取地址名称")
+                        || crypto.armorDecrypt(address).equals("没有联网下定位导致无法获取地址名称")) {
+                    address = "没有联网下定位导致无法获取地址名称";
+                } else {
+                    address = crypto.armorDecrypt(address);
+                }
+                /**
+                 * 同步功能：反地理位置
+                 * */
+                if (address.equals("没有联网下定位导致无法获取地址名称")) {
+                    double latitude = c.getDouble(2);
+                    double longitude = c.getDouble(3);
+                    latLng = new LatLng(latitude, longitude);
+                    IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                    String date = crypto.armorDecrypt(c.getString(1));
+                    String sql1 = "update trace_item set address = ? where tag = ?";
+                    db.execSQL(sql1, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                    String sql2 = "update route_item set address_start = ? where tag = ?";
+                    db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+
+                    /**
+                     * 同步Des的地址名字
+                     * */
+                    String sql_des = "select address,date,latitude,longitude,tag from trace_item group by tag ";
+                    Cursor c_des = db.rawQuery(sql_des, null);
+
+                    try {
+                        for (int i = 0; i < tag; i++) {
+                            c_des.moveToNext();
+                        }
+
+                        double latitude_des = c_des.getDouble(2);
+                        double longitude_des = c_des.getDouble(3);
+                        latLng = new LatLng(latitude_des, longitude_des);
+                        IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                        String sql1_des = "update trace_item set address = ? where tag = ?";
+                        db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                        String sql2_des = "update route_item  set address_end = ? where tag = ?";
+                        db.execSQL(sql2_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_des != null) {
+                            c_des.close();
+                        }
+                    }
+
+
+                    /**
+                     * 同步除了出发以及DES之外的地址名字
+                     * */
+                    String sql_other = "select _id,address,latitude,longitude from trace_item where tag = ?";
+                    final Cursor c_other = db.rawQuery(sql_other, new String[]{String.valueOf(tag)});
+
+                    try {
+                        while (c_other.moveToNext()) {
+                            int id = c_other.getInt(0);
+                            String address_other = crypto.armorDecrypt(c_other.getString(1));
+                            if (address_other.equals("null") || address_other == null ||
+                                    address_other.equals("没有联网下定位导致无法获取地址名称")
+                                    || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
+                                double latitude_other = c_other.getDouble(2);
+                                double longitude_other = c_other.getDouble(3);
+                                latLng = new LatLng(latitude_other, longitude_other);
+                                IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                                address = IndoorLocationActivity.reverseAddress;
+                                String sql1_other = "update trace_item set address = ? where _id = ?";
+                                db.execSQL(sql1_other, new Object[]{crypto.armorEncrypt(address.getBytes()), id});
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_other != null) {
+                            c_other.close();
+                        }
+                    }
+
+                    int tag1 = c.getInt(5);
+                    int step = c.getInt(4);
+                    traceItem.setAddress(IndoorLocationActivity.reverseAddress);
+                    traceItem.setDate(date);
+                    traceItem.setLatitude(latitude);
+                    traceItem.setLongitude(longitude);
+                    traceItem.setTag(tag1);
+                    traceItem.setStep(step);
+                    traceItems.add(traceItem);
+                } else {
+                    String address1 = crypto.armorDecrypt(c.getString(0));
+                    String date = crypto.armorDecrypt(c.getString(1));
+                    double latitude = c.getDouble(2);
+                    double longitude = c.getDouble(3);
+                    int tag1 = c.getInt(5);
+                    int step = c.getInt(4);
+                    traceItem.setAddress(address1);
+                    traceItem.setDate(date);
+                    traceItem.setLatitude(latitude);
+                    traceItem.setLongitude(longitude);
+                    traceItem.setTag(tag1);
+                    traceItem.setStep(step);
+                    traceItems.add(traceItem);
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return traceItems;
+
+    }
+
+    public List<TraceItem> searchDistinctDataStartForWalk() {
+        List<TraceItem> traceItems = new ArrayList<TraceItem>();
+        int tag = 0;
+        String address;
+        LatLng latLng;
+        String sql = "select address_start,date_start,latitude,longitude,step,trace_item.tag,speed,speed_item.tag from trace_item,speed_item,time_item,route_item where speed <=2 and speed_item.tag = trace_item.tag and speed_item.tag = time_item.tag and speed_item.tag = route_item.tag group by trace_item.tag";
+        Cursor c = db.rawQuery(sql, null);
+        try {
+            TraceItem traceItem = null;
+
+            while (c.moveToNext()) {
+                tag++;
+                traceItem = new TraceItem();
+                address = c.getString(0);
+                if (address.equals("null") || address == null ||
+                        address.equals("没有联网下定位导致无法获取地址名称")
+                        || crypto.armorDecrypt(address).equals("没有联网下定位导致无法获取地址名称")) {
+                    address = "没有联网下定位导致无法获取地址名称";
+                } else {
+                    address = crypto.armorDecrypt(address);
+                }
+                /**
+                 * 同步功能：反地理位置
+                 * */
+                if (address.equals("没有联网下定位导致无法获取地址名称")) {
+                    double latitude = c.getDouble(2);
+                    double longitude = c.getDouble(3);
+                    latLng = new LatLng(latitude, longitude);
+                    IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                    String date = crypto.armorDecrypt(c.getString(1));
+                    String sql1 = "update trace_item set address = ? where tag = ?";
+                    db.execSQL(sql1, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                    String sql2 = "update route_item set address_start = ? where tag = ?";
+                    db.execSQL(sql2, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+
+                    /**
+                     * 同步Des的地址名字
+                     * */
+                    String sql_des = "select address,date,latitude,longitude,tag from trace_item group by tag ";
+                    Cursor c_des = db.rawQuery(sql_des, null);
+
+                    try {
+                        for (int i = 0; i < tag; i++) {
+                            c_des.moveToNext();
+                        }
+
+                        double latitude_des = c_des.getDouble(2);
+                        double longitude_des = c_des.getDouble(3);
+                        latLng = new LatLng(latitude_des, longitude_des);
+                        IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                        String sql1_des = "update trace_item set address = ? where tag = ?";
+                        db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                        String sql2_des = "update route_item  set address_end = ? where tag = ?";
+                        db.execSQL(sql2_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_des != null) {
+                            c_des.close();
+                        }
+                    }
+
+
+                    /**
+                     * 同步除了出发以及DES之外的地址名字
+                     * */
+                    String sql_other = "select _id,address,latitude,longitude from trace_item where tag = ?";
+                    final Cursor c_other = db.rawQuery(sql_other, new String[]{String.valueOf(tag)});
+
+                    try {
+                        while (c_other.moveToNext()) {
+                            int id = c_other.getInt(0);
+                            String address_other = crypto.armorDecrypt(c_other.getString(1));
+                            if (address_other.equals("null") || address_other == null ||
+                                    address_other.equals("没有联网下定位导致无法获取地址名称")
+                                    || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
+                                double latitude_other = c_other.getDouble(2);
+                                double longitude_other = c_other.getDouble(3);
+                                latLng = new LatLng(latitude_other, longitude_other);
+                                IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                                address = IndoorLocationActivity.reverseAddress;
+                                String sql1_other = "update trace_item set address = ? where _id = ?";
+                                db.execSQL(sql1_other, new Object[]{crypto.armorEncrypt(address.getBytes()), id});
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (c_other != null) {
+                            c_other.close();
+                        }
+                    }
+
+                    int tag1 = c.getInt(5);
+                    int step = c.getInt(4);
+                    traceItem.setAddress(IndoorLocationActivity.reverseAddress);
+                    traceItem.setDate(date);
+                    traceItem.setLatitude(latitude);
+                    traceItem.setLongitude(longitude);
+                    traceItem.setTag(tag1);
+                    traceItem.setStep(step);
+                    traceItems.add(traceItem);
+                } else {
+                    String address1 = crypto.armorDecrypt(c.getString(0));
+                    String date = crypto.armorDecrypt(c.getString(1));
+                    double latitude = c.getDouble(2);
+                    double longitude = c.getDouble(3);
+                    int tag1 = c.getInt(5);
+                    int step = c.getInt(4);
+                    traceItem.setAddress(address1);
+                    traceItem.setDate(date);
+                    traceItem.setLatitude(latitude);
+                    traceItem.setLongitude(longitude);
+                    traceItem.setTag(tag1);
+                    traceItem.setStep(step);
+                    traceItems.add(traceItem);
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return traceItems;
+
+    }
+
     public List<TraceItem> searchDistinctDataStartForDistance() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date_start,latitude,longitude,trace_item.tag,distance from trace_item,distance_item,time_item where trace_item.tag = distance_item.tag and trace_item.tag = time_item.tag group by trace_item.tag order by distance DESC";
+        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,distance from route_item,trace_item,distance_item,time_item where trace_item.tag = distance_item.tag and trace_item.tag = route_item.tag and trace_item.tag = time_item.tag group by trace_item.tag order by distance DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -948,12 +1327,13 @@ public class TraceDao {
         return traceItems;
 
     }
+
     public List<TraceItem> searchDistinctDataStartForTime() {
         List<TraceItem> traceItems = new ArrayList<TraceItem>();
         int tag = 0;
         String address;
         LatLng latLng;
-        String sql = "select address,date_start,latitude,longitude,trace_item.tag,uptime from trace_item,time_item where trace_item.tag = time_item.tag group by trace_item.tag order by uptime DESC";
+        String sql = "select address_start,date_start,latitude,longitude,trace_item.tag,uptime from route_item,trace_item,time_item where trace_item.tag = time_item.tag and trace_item.tag = route_item.tag group by trace_item.tag order by uptime DESC";
         Cursor c = db.rawQuery(sql, null);
         try {
             TraceItem traceItem = null;
@@ -1109,10 +1489,12 @@ public class TraceDao {
         String sql1 = "delete from time_item where tag = ?";
         String sql2 = "delete from route_item where tag = ?";
         String sql3 = "delete from distance_item where tag = ?";
+        String sql9 = "delete from speed_item where tag = ?";
         db.execSQL(sql, new Object[]{tag});
         db.execSQL(sql1, new Object[]{tag});
         db.execSQL(sql2, new Object[]{tag});
         db.execSQL(sql3, new Object[]{tag});
+        db.execSQL(sql9, new Object[]{tag});
         String path = "/data/data/com.example.fazhao.locationmanager/files/";
         /**
          * 更新删除后序列不连续的问题
@@ -1122,14 +1504,16 @@ public class TraceDao {
             String sql5 = "update  time_item set tag = ? where tag = ?";
             String sql6 = "update  distance_item set tag = ? where tag = ?";
             String sql7 = "update  route_item set tag = ? where tag = ?";
+            String sql8 = "update  speed_item set tag = ? where tag = ?";
             db.execSQL(sql4, new Object[]{i, i + 1});
             db.execSQL(sql5, new Object[]{i, i + 1});
             db.execSQL(sql6, new Object[]{i, i + 1});
             db.execSQL(sql7, new Object[]{i, i + 1});
+            db.execSQL(sql8, new Object[]{i, i + 1});
             int tmp = i + 1;
             Log.e("time", String.valueOf(i));
-            File oldfile=new File(path+ tmp + "record.png");
-            File newfile=new File(path+ i + "record.png");
+            File oldfile = new File(path + tmp + "record.png");
+            File newfile = new File(path + i + "record.png");
             oldfile.renameTo(newfile);
         }
     }

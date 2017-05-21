@@ -49,6 +49,8 @@ public class DBHelper extends SQLiteOpenHelper
                 + " distance real, tag integer);";
         String route = "create table route_item( _id integer primary key autoincrement , "
                 + " address_start text , address_end text,tag integer);";
+        String speed = "create table speed_item( _id integer primary key autoincrement , "
+                + " speed integer ,tag integer);";
 //        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
 //                + " title text , link text , date text , imgLink text , content text , newstype integer ,currentpage integer );";
 //        String sql = "create table tb_newsItem( _id integer primary key autoincrement , "
@@ -58,6 +60,7 @@ public class DBHelper extends SQLiteOpenHelper
         db.execSQL(time);
         db.execSQL(distance);
         db.execSQL(route);
+        db.execSQL(speed);
 
     }
 

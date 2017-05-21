@@ -268,10 +268,10 @@ public class HistoryMaps extends Activity {
             history_longitude.add(historyFromLoad.get(i).longitude);
         }
         drawSolidLine1();
-        int tmp = 0;
-        for (int i = 1; i < historyFromLoad.size() -1; i++) {
-            tmp += DistanceUtil.getDistance(historyFromLoad.get(i),historyFromLoad.get(i - 1));
-        }
+        int tmp = (int) mTraceDao.getDistance(choice);
+//        for (int i = 1; i < historyFromLoad.size() -1; i++) {
+//            tmp += DistanceUtil.getDistance(historyFromLoad.get(i),historyFromLoad.get(i - 1));
+//        }
         ToastUtil.showShortToast(HistoryMaps.this, "距离出发点:" + String.valueOf(tmp));
         showTime.setText("时长：" + mTraceDao.getTime(choice) + "秒"
                 + ", 步数:" + traceItems.get(traceItems.size() - 1).getStep()
@@ -646,6 +646,38 @@ public class HistoryMaps extends Activity {
                                                     public void run() {
                                                         PicAdapter adapter = new PicAdapter(HistoryMaps.this,mTraceDao.maxTag());
                                                         historyDialog.lv.setAdapter(adapter);
+                                                    }
+                                                });
+                                                break;
+                                            case 5:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForWalk());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForWalk());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
+                                                    }
+                                                });
+                                                break;
+                                            case 6:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForBike());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForBike());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
                                                     }
                                                 });
                                                 break;

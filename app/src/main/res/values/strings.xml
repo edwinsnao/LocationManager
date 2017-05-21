@@ -22,6 +22,7 @@
         <item>按距离排序</item>
         <item>按步数排序</item>
         <item>缩略图显示</item>
-        <item>按平均速度排序</item>
+        <item>显示走路记录</item>
+        <item>显示骑车记录</item>
     </string-array>
 </resources>

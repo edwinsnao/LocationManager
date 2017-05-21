@@ -588,15 +588,15 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                     }
                                                 });
                                                 break;
-                                            case 5://平局速度
+                                            case 5:
                                                 historyDialog.getSpinner().setSelection(pos,false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
                                                         mDatas.clear();
                                                         mDatas1.clear();
-                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForStep());
-                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForStep());
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForWalk());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForWalk());
 //                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
 //                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
                                                         mAdapter.notifyDataSetChanged();
@@ -604,6 +604,23 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                     }
                                                 });
                                                 break;
+                                            case 6:
+                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mDatas.clear();
+                                                        mDatas1.clear();
+                                                        mDatas.addAll(mTraceDao.searchDistinctDataStartForBike());
+                                                        mDatas1.addAll(mTraceDao.searchDistinctDataDestinationForBike());
+//                                                        mDatas = mTraceDao.searchDistinctDataStartForStep();
+//                                                        mDatas1 = mTraceDao.searchDistinctDataDestinationForStep();
+                                                        mAdapter.notifyDataSetChanged();
+                                                        historyDialog.lv.setAdapter(mAdapter);
+                                                    }
+                                                });
+                                                break;
+
                                             default:
                                                 ;
                                         }
@@ -855,8 +872,9 @@ public class IndoorLocationActivity extends Activity implements TransferListener
              * */
             try {
                 int history_size = history.size() - 1;
-                mTraceDao.addTime(BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
-                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss")
+                long uptime = BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
+                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss");
+                mTraceDao.addTime(uptime
                         , crypto.armorEncrypt(history_time.get(0).getBytes())
                         , crypto.armorEncrypt(history_time.get(history_size).getBytes()), tag);
                 if (history.get(0).getAddress().address != null
@@ -871,6 +889,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
                 }
                 mTraceDao.addDistance(tmp, tag);
+                mTraceDao.addSpeed((int) Math.floor(tmp/uptime),tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {
