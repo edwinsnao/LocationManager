@@ -194,20 +194,20 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 /**
                  * 如果是第一次定位就发送位置
                  * */
-                if (isConnected()) {
-                    try {
-                        String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
-                        Mail mail = new Mail(server, from, pwd);
-                        mail.create(from, to, subject);
-                        mail.addContent(content);
-                        mail.send();
-                    Log.e("Send OK!", location.getAddress().address);
-//                    Log.e("Send OK!", String.valueOf(location.getAddress()));
-                        Toast.makeText(IndoorLocationActivity.this, "Send OK1!", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+//                if (isConnected()) {
+//                    try {
+//                        String content = "位置:" + location.getAddress().address + " 时间:" + location.getTime();
+//                        Mail mail = new Mail(server, from, pwd);
+//                        mail.create(from, to, subject);
+//                        mail.addContent(content,null);
+//                        mail.send();
+//                    Log.e("Send OK!", location.getAddress().address);
+////                    Log.e("Send OK!", String.valueOf(location.getAddress()));
+//                        Toast.makeText(IndoorLocationActivity.this, "Send OK1!", Toast.LENGTH_SHORT).show();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 isFirstLoc = false;
                 drawRealtimePoint(ll);
             } else {
@@ -787,6 +787,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             public void run() {
                 if (isConnected())
                     try {
+                        saveBitmap("/data/data/com.example.fazhao.locationmanager/files/"+"screenshot");
                         StringBuilder content = new StringBuilder("");
                         for (int i = 0; i < history.size(); i++) {
                             content.append("位置:" + history.get(i).getAddress().address);
@@ -794,7 +795,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                         }
                         Mail mail = new Mail(server, from, pwd);
                         mail.create(from, to, subject);
-                        mail.addContent(content.toString());
+                        mail.addContent(content.toString(),"/data/data/com.example.fazhao.locationmanager/files/screenshot.png");
                         mail.send();
                         Toast.makeText(IndoorLocationActivity.this, "Send OK!", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
@@ -803,7 +804,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             }
         };
         mTimer = new Timer();
-        mTimer.schedule(task, 1000, 30000);
+        mTimer.schedule(task, 10000, 30000);
     }
 
     public boolean isConnected() {
@@ -830,7 +831,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                File file = new File("/data/data/com.example.fazhao.locationmanager/files/"+name+".png");
+                File file = new File(name+".png");
                 FileOutputStream out;
                 try {
                     out = new FileOutputStream(file);
@@ -866,7 +867,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 tag = mTraceDao.maxTag() + 1;
                 maxTag = tag - 1;
             }
-            saveBitmap(tag+"record");
+            saveBitmap("/data/data/com.example.fazhao.locationmanager/files/"+tag+"record");
             /**
              * 插入数据到多表
              * */
