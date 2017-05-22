@@ -28,6 +28,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import static android.R.attr.path;
 import static android.R.attr.tag;
+import static android.R.id.list;
 import static com.baidu.location.h.j.S;
 
 
@@ -80,43 +81,49 @@ public class TraceDao {
 //        ss4.executeInsert();
 //        db.setTransactionSuccessful();
 //        db.endTransaction();
-//        List<String> list = new ArrayList<>();
-//        String sql = "select address from trace_item group by tag";
-//        Cursor c = db.rawQuery(sql, null);
-//
-//        try {
-//            while (c.moveToNext()) {
-//                String address = null;
-//
-//                try {
-//                    address = crypto.armorDecrypt(c.getString(0));
-//                } catch (InvalidKeyException e) {
-//                    e.printStackTrace();
-//                } catch (NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                } catch (NoSuchPaddingException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalBlockSizeException e) {
-//                    e.printStackTrace();
-//                } catch (BadPaddingException e) {
-//                    e.printStackTrace();
-//                } catch (InvalidAlgorithmParameterException e) {
-//                    e.printStackTrace();
-//                }
-//                list.add(address);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (c != null) {
-//                c.close();
-//            }
-//
-//        }
-//        for (int i = 0; i < list.size(); i++) {
-//            String sql1 = "update route_item set address_end = ? where tag = ?";
-//            db.execSQL(sql1, new Object[]{list.get(i), i + 1});
-//        }
+        List<String> list = new ArrayList<>();
+        List<String> list1 = new ArrayList<>();
+        String sql = "select latitude,longitude from trace_item";
+        Cursor c = db.rawQuery(sql, null);
+
+        try {
+            while (c.moveToNext()) {
+                String address = null;
+                String address1 = null;
+
+                try {
+                    address = crypto.armorEncrypt(String.valueOf(Double.parseDouble(c.getString(0))).getBytes());
+                    address1 = crypto.armorEncrypt(String.valueOf(Double.parseDouble(c.getString(1))).getBytes());
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (InvalidAlgorithmParameterException e) {
+                    e.printStackTrace();
+                }
+                list.add(address);
+                list1.add(address1);
+//                Log.e("list", address);
+//                Log.e("list1", address1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+
+        }
+        for (int i = 1; i <= list.size(); i++) {
+            String sql1 = "update trace_item set latitude = ? ,longitude = ? where _id = ?";
+            db.execSQL(sql1, new Object[]{list.get(i-1),list1.get(i-1), i});
+        }
     }
 
     public void add(TraceItem traceItem) {
@@ -147,8 +154,22 @@ public class TraceDao {
             } catch (InvalidAlgorithmParameterException e) {
                 e.printStackTrace();
             }
-        ss.bindDouble(2, traceItem.getLatitude());
-        ss.bindDouble(3, traceItem.getLongitude());
+        try {
+            ss.bindString(2, crypto.armorEncrypt(String.valueOf(traceItem.getLatitude()).getBytes()));
+            ss.bindString(3, crypto.armorEncrypt(String.valueOf(traceItem.getLongitude()).getBytes()));
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
         ss.bindString(4, traceItem.getDate());
         ss.bindString(5, String.valueOf(traceItem.getTag()));
         ss.bindString(6, String.valueOf(traceItem.getStep()));
@@ -406,8 +427,10 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+//                Log.e("test1",(c.getString(2)));
+//                Log.e("test",crypto.armorDecrypt(c.getString(2)));
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 int step = c.getInt(4);
 
                 traceItem.setAddress(address);
@@ -444,8 +467,8 @@ public class TraceDao {
 
                 String address = c.getString(0);
                 String date = c.getString(3);
-                double latitude = c.getDouble(1);
-                double longitude = c.getDouble(2);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(1)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
                 int step = c.getInt(4);
 
                 traceItem.setAddress(address);
@@ -477,8 +500,8 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 int step = c.getInt(4);
                 int tag1 = c.getInt(5);
 
@@ -512,8 +535,8 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 int step = c.getInt(4);
                 int tag1 = c.getInt(5);
 
@@ -547,8 +570,8 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 int step = c.getInt(4);
                 int tag1 = c.getInt(5);
 
@@ -582,8 +605,8 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 double distance = c.getDouble(4);
                 int tag1 = c.getInt(5);
 
@@ -617,8 +640,8 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 long uptime = c.getInt(4);
                 int tag1 = c.getInt(5);
 
@@ -652,8 +675,9 @@ public class TraceDao {
                 traceItem = new TraceItem();
                 String address1 = crypto.armorDecrypt(c.getString(0));
                 String date = crypto.armorDecrypt(c.getString(1));
-                double latitude = c.getDouble(2);
-                double longitude = c.getDouble(3);
+//                Log.e("test",crypto.armorDecrypt(c.getString(2)));
+                double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                 int tag1 = c.getInt(4);
                 int step = c.getInt(5);
 
@@ -703,8 +727,9 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+//                    Log.e("test",crypto.armorDecrypt(c.getString(2)));
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -724,9 +749,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -754,9 +779,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -783,8 +808,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(4);
                     int step = c.getInt(5);
                     traceItem.setAddress(address1);
@@ -833,8 +858,8 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -854,9 +879,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -884,9 +909,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -913,8 +938,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(4);
                     int step = c.getInt(5);
                     traceItem.setAddress(address1);
@@ -963,8 +988,8 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -984,9 +1009,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -1014,9 +1039,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -1043,8 +1068,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(5);
                     int step = c.getInt(4);
                     traceItem.setAddress(address1);
@@ -1093,8 +1118,8 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -1114,9 +1139,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -1144,9 +1169,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -1173,8 +1198,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(5);
                     int step = c.getInt(4);
                     traceItem.setAddress(address1);
@@ -1223,8 +1248,8 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -1244,9 +1269,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -1274,9 +1299,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -1303,8 +1328,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(4);
                     double distance = c.getDouble(5);
                     traceItem.setAddress(address1);
@@ -1353,8 +1378,8 @@ public class TraceDao {
                  * 同步功能：反地理位置
                  * */
                 if (address.equals("没有联网下定位导致无法获取地址名称")) {
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     latLng = new LatLng(latitude, longitude);
                     IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                     String date = crypto.armorDecrypt(c.getString(1));
@@ -1374,9 +1399,9 @@ public class TraceDao {
                             c_des.moveToNext();
                         }
 
-                        double latitude_des = c_des.getDouble(2);
-                        double longitude_des = c_des.getDouble(3);
-                        latLng = new LatLng(latitude_des, longitude_des);
+                        double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                        double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                        latLng = new LatLng(latitude1, longitude1);
                         IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                         String sql1_des = "update trace_item set address = ? where tag = ?";
                         db.execSQL(sql1_des, new Object[]{crypto.armorEncrypt(IndoorLocationActivity.reverseAddress.getBytes()), tag});
@@ -1404,9 +1429,9 @@ public class TraceDao {
                             if (address_other.equals("null") || address_other == null ||
                                     address_other.equals("没有联网下定位导致无法获取地址名称")
                                     || crypto.armorDecrypt(address_other).equals("没有联网下定位导致无法获取地址名称")) {
-                                double latitude_other = c_other.getDouble(2);
-                                double longitude_other = c_other.getDouble(3);
-                                latLng = new LatLng(latitude_other, longitude_other);
+                                double latitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                                double longitude1 = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
+                                latLng = new LatLng(latitude1, longitude1);
                                 IndoorLocationActivity.geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
                                 address = IndoorLocationActivity.reverseAddress;
                                 String sql1_other = "update trace_item set address = ? where _id = ?";
@@ -1433,8 +1458,8 @@ public class TraceDao {
                 } else {
                     String address1 = crypto.armorDecrypt(c.getString(0));
                     String date = crypto.armorDecrypt(c.getString(1));
-                    double latitude = c.getDouble(2);
-                    double longitude = c.getDouble(3);
+                    double latitude = Double.parseDouble(crypto.armorDecrypt(c.getString(2)));
+                    double longitude = Double.parseDouble(crypto.armorDecrypt(c.getString(3)));
                     int tag1 = c.getInt(4);
                     long time = c.getInt(5);
                     traceItem.setAddress(address1);
@@ -1514,7 +1539,7 @@ public class TraceDao {
             db.execSQL(sql7, new Object[]{i, i + 1});
             db.execSQL(sql8, new Object[]{i, i + 1});
             int tmpNum = i + 1;
-            Log.e("time", String.valueOf(i));
+//            Log.e("time", String.valueOf(i));
             File oldfile = new File(path + tmpNum + "record.png");
             File newfile = new File(path + i + "record.png");
             oldfile.renameTo(newfile);

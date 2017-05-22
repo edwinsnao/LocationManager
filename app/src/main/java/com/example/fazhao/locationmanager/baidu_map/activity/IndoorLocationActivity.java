@@ -124,7 +124,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
     private Button compute, save, load;
     private CheckBox traffice, satelite, scale, scaleBtn;
-//    private ImageButton requestLocButton;
+    //    private ImageButton requestLocButton;
     public boolean isFirstLoc = true; // 是否首次定位
 
     protected MapStatusUpdate msUpdate = null;
@@ -224,8 +224,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     save.setBackground(getResources().getDrawable(R.drawable.button_style));
                 }
             }
-            Log.e("BaiduMapResult","address:" + location.getAddress().address + " latitude:" + location.getLatitude() + "\n"
-            + " longitude:" + location.getLongitude() + " time:" + location.getTime());
+            Log.e("BaiduMapResult", "address:" + location.getAddress().address + " latitude:" + location.getLatitude() + "\n"
+                    + " longitude:" + location.getLongitude() + " time:" + location.getTime());
         }
 
         @Override
@@ -288,7 +288,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         if (keyCode == KeyEvent.KEYCODE_MENU) {
 //            super.openOptionsMenu();
             Intent intent = new Intent();
-            intent.setClass(IndoorLocationActivity.this,CustomPreferenceActivity.class);
+            intent.setClass(IndoorLocationActivity.this, CustomPreferenceActivity.class);
             startActivity(intent);
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -308,7 +308,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         switch (item.getItemId()) {
             case R.id.file:
                 Intent intent = new Intent();
-                intent.setClass(IndoorLocationActivity.this,CustomPreferenceActivity.class);
+                intent.setClass(IndoorLocationActivity.this, CustomPreferenceActivity.class);
                 startActivity(intent);
         }
         return super.onMenuItemSelected(featureId, item);
@@ -343,7 +343,6 @@ public class IndoorLocationActivity extends Activity implements TransferListener
         return true;
 
     }
-
 
 
     public void exit() {
@@ -471,7 +470,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             List<String> route = BaseApplication.getRoute();
             try {
                 info.setText("上次定位出发地:" + route.get(0) + ",目的地:" + route.get(1) + ",距离:" +
-                        String.valueOf(distance) +" 米" + ",时长：" + String.valueOf(time)
+                        String.valueOf(distance) + " 米" + ",时长：" + String.valueOf(time)
                         + "秒" + ",步数:" + BaseApplication.getLastStep());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -531,7 +530,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 });
                                                 break;
                                             case 1:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -547,7 +546,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 });
                                                 break;
                                             case 2:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -563,7 +562,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 });
                                                 break;
                                             case 3:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -579,17 +578,17 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 });
                                                 break;
                                             case 4:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        PicAdapter adapter = new PicAdapter(IndoorLocationActivity.this,mTraceDao.maxTag());
+                                                        PicAdapter adapter = new PicAdapter(IndoorLocationActivity.this, mTraceDao.maxTag());
                                                         historyDialog.lv.setAdapter(adapter);
                                                     }
                                                 });
                                                 break;
                                             case 5:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -605,7 +604,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                                 });
                                                 break;
                                             case 6:
-                                                historyDialog.getSpinner().setSelection(pos,false);
+                                                historyDialog.getSpinner().setSelection(pos, false);
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -631,7 +630,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 
                                     }
 
-                        });
+                                });
                                 historyDialog.lv.setAdapter(mAdapter);
                                 historyDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                     @Override
@@ -643,7 +642,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                                 historyDialog.lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        TextView tagView = (TextView)view.findViewById(R.id.number_history);
+                                        TextView tagView = (TextView) view.findViewById(R.id.number_history);
                                         String s = tagView.getText().toString();
                                         int index1 = s.lastIndexOf("：");
                                         s = s.substring(index1 + 1);//截取冒号往后的内容
@@ -787,7 +786,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
             public void run() {
                 if (isConnected())
                     try {
-                        saveBitmap("/data/data/com.example.fazhao.locationmanager/files/"+"screenshot");
+                        saveBitmap("/data/data/com.example.fazhao.locationmanager/files/" + "screenshot");
                         StringBuilder content = new StringBuilder("");
                         for (int i = 0; i < history.size(); i++) {
                             content.append("位置:" + history.get(i).getAddress().address);
@@ -795,16 +794,16 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                         }
                         Mail mail = new Mail(server, from, pwd);
                         mail.create(from, to, subject);
-                        mail.addContent(content.toString(),"/data/data/com.example.fazhao.locationmanager/files/screenshot.png");
+                        mail.addContent(content.toString(), "/data/data/com.example.fazhao.locationmanager/files/screenshot.png");
                         mail.send();
-                        Toast.makeText(IndoorLocationActivity.this, "Send OK!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(IndoorLocationActivity.this, "Send OK!", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
             }
         };
         mTimer = new Timer();
-        mTimer.schedule(task, 10000, 30000);
+        mTimer.schedule(task, 10000, 60000);
     }
 
     public boolean isConnected() {
@@ -831,7 +830,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                File file = new File(name+".png");
+                File file = new File(name + ".png");
                 FileOutputStream out;
                 try {
                     out = new FileOutputStream(file);
@@ -867,14 +866,14 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 tag = mTraceDao.maxTag() + 1;
                 maxTag = tag - 1;
             }
-            saveBitmap("/data/data/com.example.fazhao.locationmanager/files/"+tag+"record");
+            saveBitmap("/data/data/com.example.fazhao.locationmanager/files/" + tag + "record");
             /**
              * 插入数据到多表
              * */
             try {
                 int history_size = history.size() - 1;
                 long uptime = BaiduUtils.dateDiffForSecond(IndoorLocationActivity.this,
-                        history_time.get(0),history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss");
+                        history_time.get(0), history_time.get(history_size), "yyyy-MM-dd-HH:mm:ss");
                 mTraceDao.addTime(uptime
                         , crypto.armorEncrypt(history_time.get(0).getBytes())
                         , crypto.armorEncrypt(history_time.get(history_size).getBytes()), tag);
@@ -890,7 +889,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     tmp += (int) DistanceUtil.getDistance(pointList.get(i), pointList.get(i - 1));
                 }
                 mTraceDao.addDistance(tmp, tag);
-                mTraceDao.addSpeed((int) Math.floor(tmp/uptime),tag);
+                mTraceDao.addSpeed((int) Math.floor(tmp / uptime), tag);
                 for (int i = 0; i < history.size(); i++) {
                     mTraceItem = new TraceItem();
                     if (history.get(i).getAddress().address != null) {
@@ -898,6 +897,7 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                     } else {
                         mTraceItem.setAddress(crypto.armorEncrypt("没有联网下定位导致无法获取地址名称".getBytes()));
                     }
+                    Log.e("log1", String.valueOf(history.get(i).getLatitude()));
                     mTraceItem.setLatitude(history.get(i).getLatitude());
                     mTraceItem.setLongitude(history.get(i).getLongitude());
                     mTraceItem.setTag(tag);
@@ -1014,10 +1014,10 @@ public class IndoorLocationActivity extends Activity implements TransferListener
 //        mBaiduMap.clear();
         polyline = null;
 
-        int zoomLevel[] = {2000000,1000000,500000,200000,100000,
-                50000,25000,20000,10000,5000,2000,1000,500,100,50,20,0};
+        int zoomLevel[] = {2000000, 1000000, 500000, 200000, 100000,
+                50000, 25000, 20000, 10000, 5000, 2000, 1000, 500, 100, 50, 20, 0};
 
-        double maxlat,minlat,maxlon,minlon;
+        double maxlat, minlat, maxlon, minlon;
 //        for (int i = 0; i < history_latitude.size() - 1; i++) {
 //            for (int j = 0; j < history_latitude.size() - 1 - i; j++) {
 //                if(history_latitude.get(j) > history_latitude.get(j+1)){
@@ -1039,8 +1039,8 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 }
             }
         });
-        Log.e("his1", String.valueOf(history_latitude.get(0)));
-        Log.e("his2", String.valueOf(history_latitude.get(history_latitude.size()-1)));
+//        Log.e("his1", String.valueOf(history_latitude.get(0)));
+//        Log.e("his2", String.valueOf(history_latitude.get(history_latitude.size() - 1)));
         Collections.sort(history_longitude, new Comparator<Double>() {
             @Override
             public int compare(Double aDouble, Double t1) {
@@ -1053,23 +1053,23 @@ public class IndoorLocationActivity extends Activity implements TransferListener
                 }
             }
         });
-        Log.e("his3", String.valueOf(history_longitude.get(0)));
-        Log.e("his4", String.valueOf(history_longitude.get(history_longitude.size()-1)));
+//        Log.e("his3", String.valueOf(history_longitude.get(0)));
+//        Log.e("his4", String.valueOf(history_longitude.get(history_longitude.size() - 1)));
         maxlat = history_latitude.get(history_latitude.size() - 1);
         minlat = history_latitude.get(0);
         minlon = history_longitude.get(0);
         maxlon = history_longitude.get(history_longitude.size() - 1);
-        final double midlat = (maxlat+minlat)/2;
-        final double midlon = (maxlon+minlon)/2;
+        final double midlat = (maxlat + minlat) / 2;
+        final double midlon = (maxlon + minlon) / 2;
         LatLng latlon = new LatLng(midlat, midlon);
-        int jl = (int)DistanceUtil.getDistance(new LatLng(maxlat, maxlon), new LatLng(minlat, minlon));
+        int jl = (int) DistanceUtil.getDistance(new LatLng(maxlat, maxlon), new LatLng(minlat, minlon));
         int i;
-        for(i=0;i<17;i++){
-            if(zoomLevel[i]<jl){
+        for (i = 0; i < 17; i++) {
+            if (zoomLevel[i] < jl) {
                 break;
             }
         }
-        float zoom = i+6;
+        float zoom = i + 5;
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latlon, zoom);
 
 //        MapStatus mMapStatus = new MapStatus.Builder().target(point)

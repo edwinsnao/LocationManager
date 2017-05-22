@@ -70,14 +70,14 @@ import static com.baidu.navisdk.adapter.PackageUtil.getSdcardDir;
  */
 public class HistoryMaps extends Activity {
     private MapView mapView;
-    private LatLng latLng1;
-    private Marker myLocation;
+//    private LatLng latLng1;
+//    private Marker myLocation;
     private BaiduMap mBaiduMap;
     private TraceDao mTraceDao;
     private List<TraceItem> mDatas, mDatas1, traceItems;
     private CheckBox traffice, satelite, scale, scaleBtn;
     private com.baidu.mapapi.map.PolylineOptions polyline = null;
-    protected MapStatusUpdate msUpdate = null;
+//    protected MapStatusUpdate msUpdate = null;
     private List<LatLng> historyFromLoad = new ArrayList<LatLng>();
     private List<Double> history_latitude = new ArrayList<>();
     private List<Double> history_longitude = new ArrayList<>();
@@ -86,7 +86,7 @@ public class HistoryMaps extends Activity {
     private int tag;
     private HistoryAdapter mAdapter;
     private HistoryDialog historyDialog;
-    private Handler handler;
+//    private Handler handler;
     private ImageButton mNaviButton;
 
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
@@ -183,8 +183,8 @@ public class HistoryMaps extends Activity {
     protected void onDestroy() {
         mBaiduMap.setMyLocationEnabled(false);
         mapView.onDestroy();
-        if (handler != null)
-            handler.removeCallbacksAndMessages(null);
+//        if (handler != null)
+//            handler.removeCallbacksAndMessages(null);
         mapView = null;
         /**
          * 在这里关闭db
@@ -233,11 +233,11 @@ public class HistoryMaps extends Activity {
         int i;
         for(i=0;i<17;i++){
             if(zoomLevel[i]<jl){
-                Log.e("final", String.valueOf(i));
+//                Log.e("final", String.valueOf(i));
                 break;
             }
         }
-        float zoom = i+6;
+        float zoom = i+5;
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latlon, zoom);
 //        MapStatus mMapStatus = new MapStatus.Builder().target(latLng1)
 //                .zoom(20)
@@ -253,12 +253,13 @@ public class HistoryMaps extends Activity {
         mTraceDao = BaseApplication.getmTaceDao();
         //TODO 线程
         traceItems = mTraceDao.searchData(choice);
-        latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
+//        latLng1 = new LatLng(traceItems.get(0).getLatitude(), traceItems.get(0).getLongitude());
         history_latitude.clear();
         history_longitude.clear();
         historyFromLoad.clear();
-        for (int i = 0; i < traceItems.size(); i++) {
+        for (int i = 0; i < traceItems.size() - 1; i++) {
             LatLng latLng = new LatLng(traceItems.get(i).getLatitude(), traceItems.get(i).getLongitude());
+//            Log.e("loglog", i+":"+String.valueOf(traceItems.get(i).getLatitude()));
             historyFromLoad.add(latLng);
         }
         for (int i = 0; i < historyFromLoad.size(); i++) {
@@ -791,10 +792,13 @@ public class HistoryMaps extends Activity {
     }
 
     protected void drawSolidLine1() {
-        polyline = new com.baidu.mapapi.map.PolylineOptions().width(10)
-                .color(Color.RED).points(historyFromLoad);
-        if (null != polyline) {
-            mBaiduMap.addOverlay(polyline);
+        mBaiduMap.clear();
+        if(historyFromLoad.size() >= 2) {
+            polyline = new com.baidu.mapapi.map.PolylineOptions().width(10)
+                    .color(Color.RED).points(historyFromLoad);
+            if (null != polyline) {
+                mBaiduMap.addOverlay(polyline);
+            }
         }
     }
 
